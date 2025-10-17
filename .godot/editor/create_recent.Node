@@ -1,3 +1,6 @@
+TextureProgressBar
+Label
+AnimatedSprite2D
 Sprite2D
 Camera2D
 Node2D
@@ -10,5 +13,3 @@ SubViewport
 CanvasLayer
 HBoxContainer
 TextureRect
-MarginContainer
-Button

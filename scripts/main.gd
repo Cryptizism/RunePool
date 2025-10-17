@@ -1,11 +1,16 @@
 extends Node2D
 
+@onready var portrait_player = $AnimatedPlayer
+@onready var portrait_enemy = $AnimatedEnemy
+@onready var label_enemy = $AnimatedEnemy/LabelEnemy
+@onready var health_bar_enemy = $AnimatedEnemy/HealthBarEnemy
 var gem_scene = preload("res://scenes/gem.tscn")
 var brick_scene = preload("res://scenes/brick.tscn")
 var level_data = preload("res://scripts/levels.gd")
+var current_enemy: EnemyData
 
 const TILE_SIZE: int = 8
-const WIDTH: int = 8
+const WIDTH: int = 10
 const HEIGHT: int = 13
 const START_INTERVAL: float = 3
 const FALL_INTERVAL: float = 0.5
@@ -40,6 +45,7 @@ var current_gem_cluster: Node2D
 var current_gem_cluster_position: Vector2i = Vector2i(0, 0)
 var current_gem_cluster_offsets: Array = [Vector2i(0, 0), Vector2i(0, 0)]
 var next_color_index: int = 0
+var combo_length: int = 0
 var preview_gem1: Node2D
 var preview_gem2: Node2D
 var start_timer: float = 0.0
@@ -53,7 +59,7 @@ func new_game(level_name: String) -> void:
 	load_level(level_name)
 	remove_random_color()
 	create_runes(20, HEIGHT * 0.4)
-	check_gem_lines()
+	destroy_all_gem_lines()
 	start_timer = 0
 	randomize_preview_gems()
 
@@ -62,6 +68,8 @@ func _ready() -> void:
 	new_game(level_data.get_random_level_name())
 
 func _physics_process(delta: float) -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		get_tree().change_scene_to_file("res://scenes/main.tscn")
 	#check victory
 	if $Runes.get_child_count() <= 0:
 		#VICTORY
@@ -104,8 +112,10 @@ func _physics_process(delta: float) -> void:
 		fall_timer = 0
 		if !move_gem(Vector2.DOWN):
 			lock_gem_cluster()
-			if !(randi() % 8):
-				drop_enemy_gem()
+			if combo_length > 1:
+				damage_enemy(clamp(combo_length - 1, 0, current_enemy.max_hp))
+				combo_length = 0
+			enemy_turn()
 
 func reset_board() -> void:
 	board.resize(WIDTH)
@@ -266,15 +276,28 @@ func lock_gem_cluster() -> void:
 	for gem in current_gem_cluster.get_children():
 		gem.reparent($Gems)
 	current_gem_cluster.queue_free()
-	check_gem_lines()
+	destroy_all_gem_lines()
 
 func drop_enemy_gem(count: int = 1) -> void:
 	for i in range(count):
-		var x = randi() % WIDTH
+		var x
 		var y = 0
-		if board[x][y] or is_colliding(Vector2i(x, y)):
-			continue
-		create_gem(x, y, get_random_color())
+		var safe_location = false
+		var attempts = 0
+		while (!safe_location):
+			attempts += 1
+			if (attempts > 50):
+				return
+			x = randi() % WIDTH
+			if board[x][y] or is_colliding(Vector2i(x, y)):
+				continue
+			if board[x][y + 2] and board[x][y + 2].is_in_group("bricks"):
+				continue
+			safe_location = true
+		var gem = create_gem(x, y, get_random_color())
+		gem.target_position = gem.position
+		gem.position = center_in_cell(Vector2i(WIDTH + 2, HEIGHT - 1))
+		gem.move_speed = 5
 	drop_gems()
 
 func drop_gems() -> bool:
@@ -420,36 +443,6 @@ func get_gem_line(start: Vector2i, delta: Vector2i) -> Array:
 		pos += delta
 	return line
 
-
-func destroy_gem_line(start_position: Vector2i, direction: Vector2i) -> void:
-	var line = get_gem_line(start_position, direction)
-	if line.size() <= 3:
-		return
-	for gem_position in line:
-		var gem = board[gem_position.x][gem_position.y]
-		if !gem or !gem.is_in_group("gems"):
-			continue
-		destroy_gem(gem)
-		board[gem_position.x][gem_position.y] = null
-
-func destroy_gem_lines(start_position: Vector2i) -> void:
-	destroy_gem_line(start_position, Vector2i(0, -1))
-	destroy_gem_line(start_position, Vector2i(0, 1))
-	destroy_gem_line(start_position, Vector2i(1, 0))
-	destroy_gem_line(start_position, Vector2i(-1, 0))
-
-func check_gem_lines() -> bool:
-	var line_found = false
-	for x in range(WIDTH):
-		for y in range(HEIGHT):
-			var gem = board[x][y]
-			var start_position = Vector2i(x, y)
-			if !gem or !gem.is_in_group("gems"):
-				continue
-			destroy_gem_lines(start_position)
-			line_found = true
-	return line_found
-
 func get_all_gem_lines() -> Array:
 	var gems_to_destroy = []
 	for x in range(WIDTH):
@@ -461,6 +454,7 @@ func get_all_gem_lines() -> Array:
 			for dir in [Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)]:
 				var line = get_gem_line(start_pos, dir)
 				if line.size() > 3:
+					combo_length += 1
 					for pos in line:
 						if not gems_to_destroy.has(pos):
 							gems_to_destroy.append(pos)
@@ -478,9 +472,36 @@ func destroy_all_gem_lines() -> void:
 
 func load_level(level_name: String) -> void:
 	reset_board()
+	init_enemy(level_name)
 	var layout = level_data.LEVEL_LAYOUTS[level_name]
 	for y in range(layout.size()):
 		for x in range(layout[y].length()):
 			var c = layout[y][x]
 			if c == "#":
 				create_brick(x, y)
+
+func damage_enemy(amount: int) -> void:
+	current_enemy.hp -= amount
+	health_bar_enemy.value = clamp(current_enemy.hp, 0, current_enemy.max_hp)
+	if current_enemy.hp > 0:
+		return
+	label_enemy.text = ""
+	portrait_enemy.sprite_frames = load("res://animations/ghost.tres")
+	portrait_enemy.play()
+
+func init_enemy(level_name: String) -> void:
+	current_enemy = EnemyData.new(level_name)
+	label_enemy.text = current_enemy.name
+	portrait_enemy.sprite_frames = load(current_enemy.animation_path)
+	portrait_enemy.frame = 1
+	portrait_enemy.play()
+	health_bar_enemy.max_value = current_enemy.max_hp
+	health_bar_enemy.value = current_enemy.hp
+
+func enemy_turn() -> void:
+	if !current_enemy or current_enemy.hp <= 0:
+		return
+	current_enemy.turns_since_attack += 1
+	if current_enemy.turns_since_attack >= current_enemy.attack_speed:
+		drop_enemy_gem(current_enemy.attacks_per_turn)
+		current_enemy.turns_since_attack = 0

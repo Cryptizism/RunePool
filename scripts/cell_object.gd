@@ -5,7 +5,7 @@ var board_y: float
 var target_position: Vector2i
 var starting_scale: float = 0
 var target_scale: float = 1
-var move_speed: float = 25
+var move_speed: float = 30
 var pulsate: bool = false
 
 func _ready() -> void:

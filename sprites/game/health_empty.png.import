@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwwt0kk4fdu2l"
-path="res://.godot/imported/bg.png-928d8c5427d4dddfd0fdda07cdf23b10.ctex"
+uid="uid://uuqso3841tuq"
+path="res://.godot/imported/health_empty.png-3024858b9d6391d34b6c2d2ef527d2ac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ui/bg.png"
-dest_files=["res://.godot/imported/bg.png-928d8c5427d4dddfd0fdda07cdf23b10.ctex"]
+source_file="res://sprites/game/health_empty.png"
+dest_files=["res://.godot/imported/health_empty.png-3024858b9d6391d34b6c2d2ef527d2ac.ctex"]
 
 [params]
 

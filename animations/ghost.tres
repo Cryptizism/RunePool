@@ -1,0 +1,46 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://dimkkyhw8qawr"]
+
+[ext_resource type="Texture2D" uid="uid://drqlrktqdn0ci" path="res://sprites/characters/ghost_idle.png" id="1_rudc5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7opsp"]
+atlas = ExtResource("1_rudc5")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cck56"]
+atlas = ExtResource("1_rudc5")
+region = Rect2(32, 0, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7opsp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cck56")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cck56")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]

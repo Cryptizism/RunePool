@@ -279,6 +279,8 @@ func lock_gem_cluster() -> void:
 	destroy_all_gem_lines()
 
 func drop_enemy_gem(count: int = 1) -> void:
+	flash_portrait(portrait_player)
+	shake_portrait(portrait_player)
 	for i in range(count):
 		var x
 		var y = 0
@@ -481,6 +483,9 @@ func load_level(level_name: String) -> void:
 				create_brick(x, y)
 
 func damage_enemy(amount: int) -> void:
+	if amount > 0 and current_enemy.hp > 0:
+		flash_portrait(portrait_enemy)
+		shake_portrait(portrait_enemy)
 	current_enemy.hp -= amount
 	health_bar_enemy.value = clamp(current_enemy.hp, 0, current_enemy.max_hp)
 	if current_enemy.hp > 0:
@@ -505,3 +510,23 @@ func enemy_turn() -> void:
 	if current_enemy.turns_since_attack >= current_enemy.attack_speed:
 		drop_enemy_gem(current_enemy.attacks_per_turn)
 		current_enemy.turns_since_attack = 0
+
+func shake_portrait(portrait: AnimatedSprite2D) -> void:
+	if !portrait:
+		return
+	var original_position = portrait.position
+	var speed = 0.02
+	var tween = get_tree().create_tween()
+	for i in range(12):
+		var offset = Vector2(randf_range(-1, 1), randf_range(-1, 1))
+		tween.tween_property(portrait, "position", original_position + offset, speed)
+	tween.tween_property(portrait, "position", original_position, speed)
+
+func flash_portrait(portrait: AnimatedSprite2D) -> void:
+	if !portrait:
+		return
+	var red = Color(1, 0.2, 0.2)
+	var tween = get_tree().create_tween()
+	tween.tween_property(portrait, "modulate", red, 0.05)
+	tween.tween_property(portrait, "modulate", red, 0.1)
+	tween.tween_property(portrait, "modulate", Color(1, 1, 1), 0.2)

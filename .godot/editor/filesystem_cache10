@@ -2,28 +2,29 @@ ea4bc82a6ad023ab7ee23ee620429895
 ::res://::1760720474
 brick.gd::GDScript/GDScript::1734217342060436800::1760668080::0::1::::<>Sprite2D<><>0<>0<><>::
 export_presets.cfg::TextFile/TextFile::-1::1760563655::0::1::::<><><>0<>0<><>::
-::res://animations/::1760720533
+::res://animations/::1760726795
+ghost.tres::SpriteFrames::7746171633517335565::1760726795::0::1::::<><><>0<>0<><>::uid://drqlrktqdn0ci::::res://sprites/characters/ghost_idle.png
 turtle.tres::SpriteFrames::9103939136523020276::1760720533::0::1::::<><><>0<>0<><>::uid://n82lxsh1a24w::::res://sprites/characters/turtle_idle.png
 ::res://fonts/::1760651932
 Runepool Pixel.ttf::FontFile/FontFile::4244890995999353999::1760651931::1760651932::1::::<><><>0<>0<>60875e12d9afebe7b14b3cfc528d2a39<>res://.godot/imported/Runepool Pixel.ttf-785cbf0a5ffd59f0ab30b26ff6784453.fontdata::
-::res://scenes/::1760725664
+::res://scenes/::1760728965
 brick.tscn::PackedScene/PackedScene::5553467940364482129::1760712385::0::1::::<><><>0<>0<><>::uid://gn3oowoke0ms::::res://sprites/ui/brick.png<>uid://yyckoa51x0u3::::res://brick.gd
 gem.tscn::PackedScene/PackedScene::4265392362968255407::1760712463::0::1::::<><><>0<>0<><>::uid://bm0iq37ov8u0m::::res://sprites/game/red.png<>uid://capej5uaeq3yo::::res://scripts/gem.gd
-main.tscn::PackedScene::5345713011752407441::1760725664::0::1::::<><><>0<>0<><>::uid://cu3m4ebkbuisy::::res://scripts/main.gd<>uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://d2yasu5anptvw::::res://animations/turtle.tres<>uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://uuqso3841tuq::::res://sprites/game/health_empty.png<>uid://bkp82r02rfi7m::::res://sprites/game/health_full.png
-menu.tscn::PackedScene::3011489727080448637::1760725485::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://2p8nm41yms72::::res://sprites/ui/logo.png<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://d1bk5x23vo3av::::res://scripts/button_story_mode.gd<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres<>uid://bvyp88k3cskdn::::res://themes/yellow_theme.tres<>uid://h65ybd5p2txj::::res://scripts/button_close.gd
-::res://scripts/::1760725664
+main.tscn::PackedScene::5345713011752407441::1760728965::0::1::::<><><>0<>0<><>::uid://cu3m4ebkbuisy::::res://scripts/main.gd<>uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://d2yasu5anptvw::::res://animations/turtle.tres<>uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://uuqso3841tuq::::res://sprites/game/health_empty.png<>uid://dimkkyhw8qawr::::res://animations/ghost.tres<>uid://bkp82r02rfi7m::::res://sprites/game/health_full.png
+menu.tscn::PackedScene::3011489727080448637::1760728965::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://2p8nm41yms72::::res://sprites/ui/logo.png<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://d1bk5x23vo3av::::res://scripts/button_story_mode.gd<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres<>uid://bvyp88k3cskdn::::res://themes/yellow_theme.tres<>uid://h65ybd5p2txj::::res://scripts/button_close.gd
+::res://scripts/::1760728054
 button_close.gd::GDScript/GDScript::557182043220746283::1760654921::0::1::::<>Button<><>0<>0<><>::
 button_story_mode.gd::GDScript/GDScript::8986898358214626565::1760654894::0::1::::<>Button<><>0<>0<><>::
 cell_object.gd::GDScript::1948700848391291611::1760724839::0::1::::<>Sprite2D<><>0<>0<><>::
 gem.gd::GDScript/GDScript::4804067580415908718::1760668072::0::1::::<>Sprite2D<><>0<>0<><>::
 levels.gd::GDScript::6386881461486526664::1760719619::0::1::::<>Node<><>0<>0<><>::
-main.gd::GDScript::6235201421291654604::1760725664::0::1::::<>Node2D<><>0<>0<><>::
+main.gd::GDScript::6235201421291654604::1760728054::0::1::::<>Node2D<><>0<>0<><>::
 main_old.gd::GDScript::3154597952887746892::1760494688::0::1::::<>Node2D<><>0<>0<><>::
-enemy_data.gd::GDScript::5459905668587325557::1760724808::0::1::::EnemyData<>RefCounted<><>0<>0<><>::
+enemy_data.gd::GDScript::5459905668587325557::1760727887::0::1::::EnemyData<>RefCounted<><>0<>0<><>::
 ::res://sprites/::1760718575
-::res://sprites/characters/::1760726674
+::res://sprites/characters/::1760726699
 ghost_idle.png::CompressedTexture2D::8386201237723925512::1760726692::1760726699::1::::<><><>0<>0<>e98e19cdcdbe14097455d35ea92cadbd<>res://.godot/imported/ghost_idle.png-5b56bec54843562912d1644354fe0825.ctex::
-turtle_idle.png::CompressedTexture2D::982239671912399708::1760723213::1760723215::1::::<><><>0<>0<>edabb4fe7730621995b8e6d923450ca1<>res://.godot/imported/turtle_idle.png-dc038b0af1ad5922cab8a6d95fc8d696.ctex::
+turtle_idle.png::CompressedTexture2D::982239671912399708::1760729527::1760729540::1::::<><><>0<>0<>edabb4fe7730621995b8e6d923450ca1<>res://.godot/imported/turtle_idle.png-dc038b0af1ad5922cab8a6d95fc8d696.ctex::
 ::res://sprites/game/::1760723629
 blue.png::CompressedTexture2D/CompressedTexture2D::2158280461756265073::1760553345::1760652271::1::::<><><>0<>0<>12804b230e6f459a88582e661469915a<>res://.godot/imported/blue.png-c3d5ab7828b7d78250dc3768522e3ffa.ctex::
 button_highlight.png::CompressedTexture2D/CompressedTexture2D::1104775069127166265::1760648439::1760652271::1::::<><><>0<>0<>340428ab183ed23a16576ae2ee40c048<>res://.godot/imported/button_highlight.png-f00128f62c24d03f8621911658a5c05f.ctex::

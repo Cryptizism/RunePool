@@ -1,0 +1,16 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://jiywn80kpn3r"]
+
+[ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_lbubo"]
+[ext_resource type="Texture2D" uid="uid://bsu12x2ay7cxw" path="res://sprites/ui/gear.png" id="2_t6a5y"]
+[ext_resource type="StyleBox" uid="uid://0gp06sqe7mvi" path="res://themes/green_button_highlight.tres" id="2_wftqk"]
+[ext_resource type="StyleBox" uid="uid://bs1vw3cji77ir" path="res://themes/green_button.tres" id="3_t6a5y"]
+
+[resource]
+Button/colors/font_color = Color(0.733333, 0.937255, 0.462745, 1)
+Button/font_sizes/font_size = 8
+Button/fonts/font = ExtResource("1_lbubo")
+Button/icons/icon = ExtResource("2_t6a5y")
+Button/styles/focus = ExtResource("2_wftqk")
+Button/styles/hover = ExtResource("2_wftqk")
+Button/styles/normal = ExtResource("3_t6a5y")
+Button/styles/pressed = ExtResource("3_t6a5y")

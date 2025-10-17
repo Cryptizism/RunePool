@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://clee2njsjnq2d"]
+
+[ext_resource type="Texture2D" uid="uid://gn3oowoke0ms" path="res://sprites/ui/brick.png" id="1_5l4w1"]
+[ext_resource type="Script" uid="uid://yyckoa51x0u3" path="res://brick.gd" id="2_0w5h4"]
+
+[node name="Brick" type="Sprite2D"]
+texture = ExtResource("1_5l4w1")
+script = ExtResource("2_0w5h4")

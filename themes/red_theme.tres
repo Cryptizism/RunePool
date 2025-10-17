@@ -1,0 +1,14 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://iqwg5jjhcii4"]
+
+[ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_w64s7"]
+[ext_resource type="StyleBox" uid="uid://bpux46tibufpb" path="res://themes/red_button_highlight.tres" id="2_6o431"]
+[ext_resource type="StyleBox" uid="uid://mundnqmmxpjo" path="res://themes/red_button.tres" id="3_28sv4"]
+
+[resource]
+Button/colors/font_color = Color(1, 0.364706, 0.329412, 1)
+Button/font_sizes/font_size = 8
+Button/fonts/font = ExtResource("1_w64s7")
+Button/styles/focus = ExtResource("2_6o431")
+Button/styles/hover = ExtResource("2_6o431")
+Button/styles/normal = ExtResource("3_28sv4")
+Button/styles/pressed = ExtResource("3_28sv4")

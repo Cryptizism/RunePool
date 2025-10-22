@@ -448,7 +448,6 @@ func destroy_gem(gem: Sprite2D) -> void:
 	add_child(particle)
 	board[gem.board_x][gem.board_y] = null
 	disconnect_gem(gem)
-	gems_in_combo += 1
 	gem.queue_free()
 
 ########################################################
@@ -545,11 +544,16 @@ func get_all_gem_lines() -> Array:
 	return lines
 
 func destroy_lines(gem_lines: Array) -> void:
+	var checked_gems: Array = []
 	for line in gem_lines:
 		for location in line:
 			var gem = board[location.x][location.y]
 			if !gem or !gem.is_in_group("gems"):
 				continue
+			if checked_gems.has(gem):
+				continue
+			checked_gems.append(gem)
+			gems_in_combo += 1
 			destroy_gem(gem)
 
 func load_level(level_name: String) -> void:

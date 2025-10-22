@@ -1,0 +1,345 @@
+[gd_scene load_steps=8 format=4 uid="uid://dfepcl7lsgjud"]
+
+[ext_resource type="Script" uid="uid://74osieajwmqb" path="res://level_menu.gd" id="1_2go0k"]
+[ext_resource type="TileSet" uid="uid://gddegmnma88p" path="res://tilesets/game.tres" id="2_6flmm"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="4_7obll"]
+[ext_resource type="Theme" uid="uid://ddem14d4s7d5r" path="res://themes/blue_theme.tres" id="4_frxpb"]
+[ext_resource type="Theme" uid="uid://bvyp88k3cskdn" path="res://themes/yellow_theme.tres" id="6_yedrf"]
+[ext_resource type="Theme" uid="uid://iqwg5jjhcii4" path="res://themes/red_theme.tres" id="7_tkofx"]
+[ext_resource type="Theme" uid="uid://jiywn80kpn3r" path="res://themes/green_theme.tres" id="9_ojubo"]
+
+[node name="LevelMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2go0k")
+
+[node name="LayerBorder" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD/////AAACAAIAAAD//wAAAAACAAIAAAD//wEAAAACAAIAAAD//wIAAAACAAIAAAD//wMAAAACAAIAAAD//wQAAAACAAIAAAD//wUAAAACAAIAAAD//wYAAAACAAIAAAD//wcAAAACAAIAAAD//wgAAAACAAIAAAD//wkAAAACAAIAAAD//woAAAACAAIAAAD//wsAAAACAAIAAAD//wwAAAACAAIAAAD//w0AAAACAAIAAAD//w4AAAACAAIAAAD//w8AAAACAAIAAAD//xAAAAACAAIAAAD//xEAAAACAAIAAAAAAP//AAACAAIAAAAAAAAAAAACAAIAAAAAAAEAAAACAAIAAAAAAAIAAAACAAIAAAAAAAMAAAACAAIAAAAAAAQAAAACAAIAAAAAAAUAAAACAAIAAAAAAAYAAAACAAIAAAAAAAcAAAACAAIAAAAAAAgAAAACAAIAAAAAAAkAAAACAAIAAAAAAAoAAAACAAIAAAAAAAsAAAACAAIAAAAAAAwAAAACAAIAAAAAAA0AAAACAAIAAAAAAA4AAAACAAIAAAAAAA8AAAACAAIAAAAAABAAAAACAAIAAAAAABEAAAACAAIAAAABAP//AAACAAIAAAABAAAAAAACAAIAAAABAAEAAAACAAIAAAABAAIAAAACAAIAAAABAAMAAAACAAIAAAABAAQAAAACAAIAAAABAAUAAAACAAIAAAABAAYAAAACAAIAAAABAAcAAAACAAIAAAABAAgAAAACAAIAAAABAAkAAAACAAIAAAABAAoAAAACAAIAAAABAAsAAAACAAIAAAABAAwAAAACAAIAAAABAA0AAAACAAIAAAABAA4AAAACAAIAAAABAA8AAAACAAIAAAABABAAAAACAAIAAAABABEAAAACAAIAAAACAP//AAACAAIAAAACAAAAAAACAAIAAAACAAEAAAACAAIAAAACAAIAAAACAAIAAAACAAMAAAACAAIAAAACAAQAAAACAAIAAAACAAUAAAACAAIAAAACAAYAAAACAAIAAAACAAcAAAACAAIAAAACAAgAAAACAAIAAAACAAkAAAACAAIAAAACAAoAAAACAAIAAAACAAsAAAACAAIAAAACAAwAAAACAAIAAAACAA0AAAACAAIAAAACAA4AAAACAAIAAAACAA8AAAACAAIAAAACABAAAAACAAIAAAACABEAAAACAAIAAAADAP//AAACAAIAAAADAAAAAAACAAIAAAADAAEAAAACAAIAAAADAAIAAAACAAIAAAADAAMAAAACAAIAAAADAAQAAAACAAIAAAADAAUAAAACAAIAAAADAAYAAAACAAIAAAADAAcAAAACAAIAAAADAAgAAAACAAIAAAADAAkAAAACAAIAAAADAAoAAAACAAIAAAADAAsAAAACAAIAAAADAAwAAAACAAIAAAADAA0AAAACAAIAAAADAA4AAAACAAIAAAADAA8AAAACAAIAAAADABAAAAACAAIAAAADABEAAAACAAIAAAAEAP//AAACAAIAAAAEAAAAAAACAAIAAAAEAAEAAAACAAIAAAAEAAIAAAACAAIAAAAEAAMAAAACAAIAAAAEAAQAAAACAAIAAAAEAAUAAAACAAIAAAAEAAYAAAACAAIAAAAEAAcAAAACAAIAAAAEAAgAAAACAAIAAAAEAAkAAAACAAIAAAAEAAoAAAACAAIAAAAEAAsAAAACAAIAAAAEAAwAAAACAAIAAAAEAA0AAAACAAIAAAAEAA4AAAACAAIAAAAEAA8AAAACAAIAAAAEABAAAAACAAIAAAAEABEAAAACAAIAAAAFAP//AAACAAIAAAAFAAAAAAACAAIAAAAFAAEAAAACAAIAAAAFAAIAAAACAAIAAAAFAAMAAAACAAIAAAAFAAQAAAACAAIAAAAFAAUAAAACAAIAAAAFAAYAAAACAAIAAAAFAAcAAAACAAIAAAAFAAgAAAACAAIAAAAFAAkAAAACAAIAAAAFAAoAAAACAAIAAAAFAAsAAAACAAIAAAAFAAwAAAACAAIAAAAFAA0AAAACAAIAAAAFAA4AAAACAAIAAAAFAA8AAAACAAIAAAAFABAAAAACAAIAAAAFABEAAAACAAIAAAAGAP//AAACAAIAAAAGAAAAAAACAAIAAAAGAAEAAAACAAIAAAAGAAIAAAACAAIAAAAGAAMAAAACAAIAAAAGAAQAAAACAAIAAAAGAAUAAAACAAIAAAAGAAYAAAACAAIAAAAGAAcAAAACAAIAAAAGAAgAAAACAAIAAAAGAAkAAAACAAIAAAAGAAoAAAACAAIAAAAGAAsAAAACAAIAAAAGAAwAAAACAAIAAAAGAA0AAAACAAIAAAAGAA4AAAACAAIAAAAGAA8AAAACAAIAAAAGABAAAAACAAIAAAAGABEAAAACAAIAAAAHAP//AAACAAIAAAAHAAAAAAACAAIAAAAHAAEAAAACAAIAAAAHAAIAAAACAAIAAAAHAAMAAAACAAIAAAAHAAQAAAACAAIAAAAHAAUAAAACAAIAAAAHAAYAAAACAAIAAAAHAAcAAAACAAIAAAAHAAgAAAACAAIAAAAHAAkAAAACAAIAAAAHAAoAAAACAAIAAAAHAAsAAAACAAIAAAAHAAwAAAACAAIAAAAHAA0AAAACAAIAAAAHAA4AAAACAAIAAAAHAA8AAAACAAIAAAAHABAAAAACAAIAAAAHABEAAAACAAIAAAAIAP//AAACAAIAAAAIAAAAAAACAAIAAAAIAAEAAAACAAIAAAAIAAIAAAACAAIAAAAIAAMAAAACAAIAAAAIAAQAAAACAAIAAAAIAAUAAAACAAIAAAAIAAYAAAACAAIAAAAIAAcAAAACAAIAAAAIAAgAAAACAAIAAAAIAAkAAAACAAIAAAAIAAoAAAACAAIAAAAIAAsAAAACAAIAAAAIAAwAAAACAAIAAAAIAA0AAAACAAIAAAAIAA4AAAACAAIAAAAIAA8AAAACAAIAAAAIABAAAAACAAIAAAAIABEAAAACAAIAAAAJAP//AAACAAIAAAAJAAAAAAACAAIAAAAJAAEAAAACAAIAAAAJAAIAAAACAAIAAAAJAAMAAAACAAIAAAAJAAQAAAACAAIAAAAJAAUAAAACAAIAAAAJAAYAAAACAAIAAAAJAAcAAAACAAIAAAAJAAgAAAACAAIAAAAJAAkAAAACAAIAAAAJAAoAAAACAAIAAAAJAAsAAAACAAIAAAAJAAwAAAACAAIAAAAJAA0AAAACAAIAAAAJAA4AAAACAAIAAAAJAA8AAAACAAIAAAAJABAAAAACAAIAAAAJABEAAAACAAIAAAAKAP//AAACAAIAAAAKAAAAAAACAAIAAAAKAAEAAAACAAIAAAAKAAIAAAACAAIAAAAKAAMAAAACAAIAAAAKAAQAAAACAAIAAAAKAAUAAAACAAIAAAAKAAYAAAACAAIAAAAKAAcAAAACAAIAAAAKAAgAAAACAAIAAAAKAAkAAAACAAIAAAAKAAoAAAACAAIAAAAKAAsAAAACAAIAAAAKAAwAAAACAAIAAAAKAA0AAAACAAIAAAAKAA4AAAACAAIAAAAKAA8AAAACAAIAAAAKABAAAAACAAIAAAAKABEAAAACAAIAAAALAP//AAACAAIAAAALAAAAAAACAAIAAAALAAEAAAACAAIAAAALAAIAAAACAAIAAAALAAMAAAACAAIAAAALAAQAAAACAAIAAAALAAUAAAACAAIAAAALAAYAAAACAAIAAAALAAcAAAACAAIAAAALAAgAAAACAAIAAAALAAkAAAACAAIAAAALAAoAAAACAAIAAAALAAsAAAACAAIAAAALAAwAAAACAAIAAAALAA0AAAACAAIAAAALAA4AAAACAAIAAAALAA8AAAACAAIAAAALABAAAAACAAIAAAALABEAAAACAAIAAAAMAP//AAACAAIAAAAMAAAAAAACAAIAAAAMAAEAAAACAAIAAAAMAAIAAAACAAIAAAAMAAMAAAACAAIAAAAMAAQAAAACAAIAAAAMAAUAAAACAAIAAAAMAAYAAAACAAIAAAAMAAcAAAACAAIAAAAMAAgAAAACAAIAAAAMAAkAAAACAAIAAAAMAAoAAAACAAIAAAAMAAsAAAACAAIAAAAMAAwAAAACAAIAAAAMAA0AAAACAAIAAAAMAA4AAAACAAIAAAAMAA8AAAACAAIAAAAMABAAAAACAAIAAAAMABEAAAACAAIAAAANAP//AAACAAIAAAANAAAAAAACAAIAAAANAAEAAAACAAIAAAANAAIAAAACAAIAAAANAAMAAAACAAIAAAANAAQAAAACAAIAAAANAAUAAAACAAIAAAANAAYAAAACAAIAAAANAAcAAAACAAIAAAANAAgAAAACAAIAAAANAAkAAAACAAIAAAANAAoAAAACAAIAAAANAAsAAAACAAIAAAANAAwAAAACAAIAAAANAA0AAAACAAIAAAANAA4AAAACAAIAAAANAA8AAAACAAIAAAANABAAAAACAAIAAAANABEAAAACAAIAAAAOAP//AAACAAIAAAAOAAAAAAACAAIAAAAOAAEAAAACAAIAAAAOAAIAAAACAAIAAAAOAAMAAAACAAIAAAAOAAQAAAACAAIAAAAOAAUAAAACAAIAAAAOAAYAAAACAAIAAAAOAAcAAAACAAIAAAAOAAgAAAACAAIAAAAOAAkAAAACAAIAAAAOAAoAAAACAAIAAAAOAAsAAAACAAIAAAAOAAwAAAACAAIAAAAOAA0AAAACAAIAAAAOAA4AAAACAAIAAAAOAA8AAAACAAIAAAAOABAAAAACAAIAAAAOABEAAAACAAIAAAAPAP//AAACAAIAAAAPAAAAAAACAAIAAAAPAAEAAAACAAIAAAAPAAIAAAACAAIAAAAPAAMAAAACAAIAAAAPAAQAAAACAAIAAAAPAAUAAAACAAIAAAAPAAYAAAACAAIAAAAPAAcAAAACAAIAAAAPAAgAAAACAAIAAAAPAAkAAAACAAIAAAAPAAoAAAACAAIAAAAPAAsAAAACAAIAAAAPAAwAAAACAAIAAAAPAA0AAAACAAIAAAAPAA4AAAACAAIAAAAPAA8AAAACAAIAAAAPABAAAAACAAIAAAAPABEAAAACAAIAAAAQAP//AAACAAIAAAAQAAAAAAACAAIAAAAQAAEAAAACAAIAAAAQAAIAAAACAAIAAAAQAAMAAAACAAIAAAAQAAQAAAACAAIAAAAQAAUAAAACAAIAAAAQAAYAAAACAAIAAAAQAAcAAAACAAIAAAAQAAgAAAACAAIAAAAQAAkAAAACAAIAAAAQAAoAAAACAAIAAAAQAAsAAAACAAIAAAAQAAwAAAACAAIAAAAQAA0AAAACAAIAAAAQAA4AAAACAAIAAAAQAA8AAAACAAIAAAAQABAAAAACAAIAAAAQABEAAAACAAIAAAARAP//AAACAAIAAAARAAAAAAACAAIAAAARAAEAAAACAAIAAAARAAIAAAACAAIAAAARAAMAAAACAAIAAAARAAQAAAACAAIAAAARAAUAAAACAAIAAAARAAYAAAACAAIAAAARAAcAAAACAAIAAAARAAgAAAACAAIAAAARAAkAAAACAAIAAAARAAoAAAACAAIAAAARAAsAAAACAAIAAAARAAwAAAACAAIAAAARAA0AAAACAAIAAAARAA4AAAACAAIAAAARAA8AAAACAAIAAAARABAAAAACAAIAAAARABEAAAACAAIAAAASAP//AAACAAIAAAASAAAAAAACAAIAAAASAAEAAAACAAIAAAASAAIAAAACAAIAAAASAAMAAAACAAIAAAASAAQAAAACAAIAAAASAAUAAAACAAIAAAASAAYAAAACAAIAAAASAAcAAAACAAIAAAASAAgAAAACAAIAAAASAAkAAAACAAIAAAASAAoAAAACAAIAAAASAAsAAAACAAIAAAASAAwAAAACAAIAAAASAA0AAAACAAIAAAASAA4AAAACAAIAAAASAA8AAAACAAIAAAASABAAAAACAAIAAAASABEAAAACAAIAAAATAP//AAACAAIAAAATAAAAAAACAAIAAAATAAEAAAACAAIAAAATAAIAAAACAAIAAAATAAMAAAACAAIAAAATAAQAAAACAAIAAAATAAUAAAACAAIAAAATAAYAAAACAAIAAAATAAcAAAACAAIAAAATAAgAAAACAAIAAAATAAkAAAACAAIAAAATAAoAAAACAAIAAAATAAsAAAACAAIAAAATAAwAAAACAAIAAAATAA0AAAACAAIAAAATAA4AAAACAAIAAAATAA8AAAACAAIAAAATABAAAAACAAIAAAATABEAAAACAAIAAAAUAP//AAACAAIAAAAUAAAAAAACAAIAAAAUAAEAAAACAAIAAAAUAAIAAAACAAIAAAAUAAMAAAACAAIAAAAUAAQAAAACAAIAAAAUAAUAAAACAAIAAAAUAAYAAAACAAIAAAAUAAcAAAACAAIAAAAUAAgAAAACAAIAAAAUAAkAAAACAAIAAAAUAAoAAAACAAIAAAAUAAsAAAACAAIAAAAUAAwAAAACAAIAAAAUAA0AAAACAAIAAAAUAA4AAAACAAIAAAAUAA8AAAACAAIAAAAUABAAAAACAAIAAAAUABEAAAACAAIAAAAVAP//AAACAAIAAAAVAAAAAAACAAIAAAAVAAEAAAACAAIAAAAVAAIAAAACAAIAAAAVAAMAAAACAAIAAAAVAAQAAAACAAIAAAAVAAUAAAACAAIAAAAVAAYAAAACAAIAAAAVAAcAAAACAAIAAAAVAAgAAAACAAIAAAAVAAkAAAACAAIAAAAVAAoAAAACAAIAAAAVAAsAAAACAAIAAAAVAAwAAAACAAIAAAAVAA0AAAACAAIAAAAVAA4AAAACAAIAAAAVAA8AAAACAAIAAAAVABAAAAACAAIAAAAVABEAAAACAAIAAAAWAP//AAACAAIAAAAWAAAAAAACAAIAAAAWAAEAAAACAAIAAAAWAAIAAAACAAIAAAAWAAMAAAACAAIAAAAWAAQAAAACAAIAAAAWAAUAAAACAAIAAAAWAAYAAAACAAIAAAAWAAcAAAACAAIAAAAWAAgAAAACAAIAAAAWAAkAAAACAAIAAAAWAAoAAAACAAIAAAAWAAsAAAACAAIAAAAWAAwAAAACAAIAAAAWAA0AAAACAAIAAAAWAA4AAAACAAIAAAAWAA8AAAACAAIAAAAWABAAAAACAAIAAAAWABEAAAACAAIAAAAXAP//AAACAAIAAAAXAAAAAAACAAIAAAAXAAEAAAACAAIAAAAXAAIAAAACAAIAAAAXAAMAAAACAAIAAAAXAAQAAAACAAIAAAAXAAUAAAACAAIAAAAXAAYAAAACAAIAAAAXAAcAAAACAAIAAAAXAAgAAAACAAIAAAAXAAkAAAACAAIAAAAXAAoAAAACAAIAAAAXAAsAAAACAAIAAAAXAAwAAAACAAIAAAAXAA0AAAACAAIAAAAXAA4AAAACAAIAAAAXAA8AAAACAAIAAAAXABAAAAACAAIAAAAXABEAAAACAAIAAAAYAP//AAACAAIAAAAYAAAAAAACAAIAAAAYAAEAAAACAAIAAAAYAAIAAAACAAIAAAAYAAMAAAACAAIAAAAYAAQAAAACAAIAAAAYAAUAAAACAAIAAAAYAAYAAAACAAIAAAAYAAcAAAACAAIAAAAYAAgAAAACAAIAAAAYAAkAAAACAAIAAAAYAAoAAAACAAIAAAAYAAsAAAACAAIAAAAYAAwAAAACAAIAAAAYAA0AAAACAAIAAAAYAA4AAAACAAIAAAAYAA8AAAACAAIAAAAYABAAAAACAAIAAAAYABEAAAACAAIAAAAZAP//AAACAAIAAAAZAAAAAAACAAIAAAAZAAEAAAACAAIAAAAZAAIAAAACAAIAAAAZAAMAAAACAAIAAAAZAAQAAAACAAIAAAAZAAUAAAACAAIAAAAZAAYAAAACAAIAAAAZAAcAAAACAAIAAAAZAAgAAAACAAIAAAAZAAkAAAACAAIAAAAZAAoAAAACAAIAAAAZAAsAAAACAAIAAAAZAAwAAAACAAIAAAAZAA0AAAACAAIAAAAZAA4AAAACAAIAAAAZAA8AAAACAAIAAAAZABAAAAACAAIAAAAZABEAAAACAAIAAAAaAP//AAACAAIAAAAaAAAAAAACAAIAAAAaAAEAAAACAAIAAAAaAAIAAAACAAIAAAAaAAMAAAACAAIAAAAaAAQAAAACAAIAAAAaAAUAAAACAAIAAAAaAAYAAAACAAIAAAAaAAcAAAACAAIAAAAaAAgAAAACAAIAAAAaAAkAAAACAAIAAAAaAAoAAAACAAIAAAAaAAsAAAACAAIAAAAaAAwAAAACAAIAAAAaAA0AAAACAAIAAAAaAA4AAAACAAIAAAAaAA8AAAACAAIAAAAaABAAAAACAAIAAAAaABEAAAACAAIAAAAbAP//AAACAAIAAAAbAAAAAAACAAIAAAAbAAEAAAACAAIAAAAbAAIAAAACAAIAAAAbAAMAAAACAAIAAAAbAAQAAAACAAIAAAAbAAUAAAACAAIAAAAbAAYAAAACAAIAAAAbAAcAAAACAAIAAAAbAAgAAAACAAIAAAAbAAkAAAACAAIAAAAbAAoAAAACAAIAAAAbAAsAAAACAAIAAAAbAAwAAAACAAIAAAAbAA0AAAACAAIAAAAbAA4AAAACAAIAAAAbAA8AAAACAAIAAAAbABAAAAACAAIAAAAbABEAAAACAAIAAAAcAP//AAACAAIAAAAcAAAAAAACAAIAAAAcAAEAAAACAAIAAAAcAAIAAAACAAIAAAAcAAMAAAACAAIAAAAcAAQAAAACAAIAAAAcAAUAAAACAAIAAAAcAAYAAAACAAIAAAAcAAcAAAACAAIAAAAcAAgAAAACAAIAAAAcAAkAAAACAAIAAAAcAAoAAAACAAIAAAAcAAsAAAACAAIAAAAcAAwAAAACAAIAAAAcAA0AAAACAAIAAAAcAA4AAAACAAIAAAAcAA8AAAACAAIAAAAcABAAAAACAAIAAAAcABEAAAACAAIAAAAdAP//AAACAAIAAAAdAAAAAAACAAIAAAAdAAEAAAACAAIAAAAdAAIAAAACAAIAAAAdAAMAAAACAAIAAAAdAAQAAAACAAIAAAAdAAUAAAACAAIAAAAdAAYAAAACAAIAAAAdAAcAAAACAAIAAAAdAAgAAAACAAIAAAAdAAkAAAACAAIAAAAdAAoAAAACAAIAAAAdAAsAAAACAAIAAAAdAAwAAAACAAIAAAAdAA0AAAACAAIAAAAdAA4AAAACAAIAAAAdAA8AAAACAAIAAAAdABAAAAACAAIAAAAdABEAAAACAAIAAAAeAP//AAACAAIAAAAeAAAAAAACAAIAAAAeAAEAAAACAAIAAAAeAAIAAAACAAIAAAAeAAMAAAACAAIAAAAeAAQAAAACAAIAAAAeAAUAAAACAAIAAAAeAAYAAAACAAIAAAAeAAcAAAACAAIAAAAeAAgAAAACAAIAAAAeAAkAAAACAAIAAAAeAAoAAAACAAIAAAAeAAsAAAACAAIAAAAeAAwAAAACAAIAAAAeAA0AAAACAAIAAAAeAA4AAAACAAIAAAAeAA8AAAACAAIAAAAeABAAAAACAAIAAAAeABEAAAACAAIAAAA=")
+tile_set = ExtResource("2_6flmm")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Player1Menu" type="VBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonLevelLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_frxpb")
+text = "<"
+
+[node name="LabelLevelName" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Classic"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonLevelRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_frxpb")
+text = ">"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonCharacterLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("7_tkofx")
+text = "<"
+
+[node name="LabelCharacter" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer2"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Tippi"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonCharacterRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("7_tkofx")
+text = ">"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonSpeedLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("6_yedrf")
+text = "<"
+
+[node name="LabelSpeed" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Slow"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonSpeedRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("6_yedrf")
+text = ">"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonDifficultyLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("9_ojubo")
+text = "<"
+
+[node name="LabelDifficulty" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Yikes"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonDifficultyRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("9_ojubo")
+text = ">"
+
+[node name="Player2Menu" type="VBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonLevelLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_frxpb")
+text = "<"
+
+[node name="LabelLevelName" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Classic"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonLevelRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_frxpb")
+text = ">"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonCharacterLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("7_tkofx")
+text = "<"
+
+[node name="LabelCharacter" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer2"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Tippi"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonCharacterRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("7_tkofx")
+text = ">"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonSpeedLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("6_yedrf")
+text = "<"
+
+[node name="LabelSpeed" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Slow"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonSpeedRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("6_yedrf")
+text = ">"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="ButtonDifficultyLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("9_ojubo")
+text = "<"
+
+[node name="LabelDifficulty" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+text = "Yikes"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 1
+
+[node name="ButtonDifficultyRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("9_ojubo")
+text = ">"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+theme = ExtResource("7_tkofx")
+text = "BACK"
+
+[node name="ButtonPlay" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("4_frxpb")
+text = "PLAY"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="LabelLevelName" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Classic"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 2
+
+[node name="SliderLevelName" type="HSlider" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("7_tkofx")
+max_value = 5.0
+value = 2.0
+tick_count = 6
+ticks_on_borders = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="LabelEnemy" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "VS Enemy"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 2
+
+[node name="SliderEnemy" type="HSlider" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer2"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_frxpb")
+max_value = 5.0
+tick_count = 6
+ticks_on_borders = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="LabelSpeed" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer3"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Speed"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 2
+
+[node name="SliderSpeed" type="HSlider" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer3"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("6_yedrf")
+max_value = 5.0
+tick_count = 6
+ticks_on_borders = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="LabelDifficulty" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer4"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+text = "Difficulty"
+label_settings = ExtResource("4_7obll")
+horizontal_alignment = 2
+
+[node name="SliderDifficulty" type="HSlider" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer4"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("9_ojubo")
+max_value = 5.0
+tick_count = 6
+ticks_on_borders = true
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer5"]
+layout_mode = 2
+theme = ExtResource("9_ojubo")
+text = "BACK"
+
+[node name="ButtonPlayer1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("7_tkofx")
+text = "P1"
+
+[node name="ButtonPlayer2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("4_frxpb")
+text = "P2"
+
+[node name="ButtonPlay" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer2/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("6_yedrf")
+text = "PLAY"

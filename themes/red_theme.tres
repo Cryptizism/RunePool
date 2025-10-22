@@ -1,8 +1,21 @@
-[gd_resource type="Theme" load_steps=4 format=3 uid="uid://iqwg5jjhcii4"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://iqwg5jjhcii4"]
 
 [ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_w64s7"]
 [ext_resource type="StyleBox" uid="uid://bpux46tibufpb" path="res://themes/red_button_highlight.tres" id="2_6o431"]
 [ext_resource type="StyleBox" uid="uid://mundnqmmxpjo" path="res://themes/red_button.tres" id="3_28sv4"]
+[ext_resource type="Texture2D" uid="uid://cucj5cdixsehh" path="res://sprites/game/rune_red.png" id="4_4dcba"]
+[ext_resource type="Texture2D" uid="uid://bmnq5uy3gaa6e" path="res://sprites/game/white.png" id="5_6trbw"]
+[ext_resource type="Texture2D" uid="uid://ce76nitq6i3dw" path="res://sprites/ui/hslider_tick.png" id="6_2wn4w"]
+[ext_resource type="Texture2D" uid="uid://c5t22nr4om41b" path="res://sprites/ui/hslider.png" id="7_11grh"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2uyyx"]
+texture = ExtResource("7_11grh")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4dcba"]
+content_margin_bottom = 8.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+draw_center = false
+border_color = Color(0.8, 0.8, 0.8, 0)
 
 [resource]
 Button/colors/font_color = Color(1, 0.364706, 0.329412, 1)
@@ -12,3 +25,10 @@ Button/styles/focus = ExtResource("2_6o431")
 Button/styles/hover = ExtResource("2_6o431")
 Button/styles/normal = ExtResource("3_28sv4")
 Button/styles/pressed = ExtResource("3_28sv4")
+HSlider/icons/grabber = ExtResource("4_4dcba")
+HSlider/icons/grabber_disabled = ExtResource("5_6trbw")
+HSlider/icons/grabber_highlight = ExtResource("4_4dcba")
+HSlider/icons/tick = ExtResource("6_2wn4w")
+HSlider/styles/grabber_area = SubResource("StyleBoxTexture_2uyyx")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_4dcba")
+HSlider/styles/slider = SubResource("StyleBoxFlat_4dcba")

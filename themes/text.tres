@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bu1ij5gm8t32c"]
+
+[ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_7pmjw"]
+
+[resource]
+font = ExtResource("1_7pmjw")
+font_size = 8
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)

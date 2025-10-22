@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpsiu6w353ghv"]
+
+[ext_resource type="Texture2D" uid="uid://bm0iq37ov8u0m" path="res://sprites/game/red.png" id="1_y25om"]
+[ext_resource type="Script" uid="uid://bul7qdtap85bh" path="res://scenes/particle.gd" id="2_y25om"]
+
+[node name="Sprite2D" type="Sprite2D"]
+texture = ExtResource("1_y25om")
+script = ExtResource("2_y25om")

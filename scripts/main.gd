@@ -5,6 +5,7 @@ extends Node2D
 @onready var label_enemy = $AnimatedEnemy/LabelEnemy
 @onready var health_bar_enemy = $AnimatedEnemy/HealthBarEnemy
 var gem_scene = preload("res://scenes/gem.tscn")
+var particle_scene = preload("res://scenes/particle.tscn")
 var brick_scene = preload("res://scenes/brick.tscn")
 var level_data = preload("res://scripts/levels.gd")
 var current_enemy: EnemyData
@@ -13,9 +14,11 @@ const TILE_SIZE: int = 8
 const WIDTH: int = 10
 const HEIGHT: int = 13
 const START_INTERVAL: float = 3
-const FALL_INTERVAL: float = 0.5
-const INPUT_INTERVAL: float = 0.08
-const DROP_INTERVAL: float = 0.1
+const CLUSTER_FALL_INTERVAL: float = 0.5
+const GEM_FALL_INTERVAL: float = 0.15
+const INPUT_DELAY_INTERVAL: float = 0.08
+const SETTLE_INTERVAL: float = 0.3
+const MOVE_CUTOFF: float = 0.1
 const COLOR_OPTIONS = {
 	"red": "res://sprites/game/red.png",
 	"blue": "res://sprites/game/blue.png",
@@ -45,79 +48,134 @@ var current_gem_cluster: Node2D
 var current_gem_cluster_position: Vector2i = Vector2i(0, 0)
 var current_gem_cluster_offsets: Array = [Vector2i(0, 0), Vector2i(0, 0)]
 var next_color_index: int = 0
-var combo_length: int = 0
+var gems_in_combo: int = 0
 var preview_gem1: Node2D
 var preview_gem2: Node2D
-var start_timer: float = 0.0
+var start_game_delay: float = 0.0
+var cluster_fall_delay: float = 0.0
+var input_delay: float = 0.0
+var gem_move_delay: float = 0.0
+var settle_delay: float = 0.0
+var enemy_has_attacked = true
+
+enum GamePhase { IDLE, FALLING, SETTLING, PLAYER }
+var phase: int = GamePhase.FALLING
 var fall_timer: float = 0.0
-var input_timer: float = 0.0
-var drop_timer: float = 0.0
+
+var rune_count: int = 20
 
 func new_game(level_name: String) -> void:
 	randomize()
 	reset_board()
 	load_level(level_name)
 	remove_random_color()
-	create_runes(20, HEIGHT * 0.4)
-	destroy_all_gem_lines()
-	start_timer = 0
+	create_runes(rune_count, HEIGHT * 0.6)
+	destroy_lines(get_all_gem_lines())
+	start_game_delay = 0
 	randomize_preview_gems()
+	print("starting new " + str(WIDTH) + "x" + str(HEIGHT) + " game with " + str(rune_count) + " runes.")
 
 func _ready() -> void:
 	create_preview_gems()
+	#new_game("wide")
 	new_game(level_data.get_random_level_name())
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().change_scene_to_file("res://scenes/main.tscn")
-	#check victory
-	if $Runes.get_child_count() <= 0:
-		#VICTORY
-		new_game("thin")
-	#handle timers
-	fall_timer += delta
-	input_timer += delta
-	drop_timer += delta
-	if start_timer < START_INTERVAL:
-		start_timer += delta
-		if start_timer >= START_INTERVAL:
-			try_spawn_gem_cluster()
+	debug_button()
+	#system
+	check_victory()
+	if timer_is_waiting(delta):
 		return
-	if drop_timer <= DROP_INTERVAL:
+	var lines = get_all_gem_lines()
+	if lines.size() > 0:
+		destroy_lines(lines)
+	if any_gem_can_fall():
+		set_gems_to_fall()
+		gem_move_delay = 0
+		settle_delay = 0
 		return
-	#handle game physics
-	if drop_gems():
-		destroy_all_gem_lines()
-		drop_timer = 0
+	#enemy
+	if !current_gem_cluster and !enemy_has_attacked:
+		enemy_has_attacked = true
+		handle_enemy_turn()
 		return
-	if gems_are_moving():
+	#player
+	if settle_delay <= SETTLE_INTERVAL:
 		return
 	if !current_gem_cluster:
-		try_spawn_gem_cluster()
-	#handle controls
+		try_spawning_gem_cluster()
+		enemy_has_attacked = false
+		gems_in_combo = 0
+	handle_control_inputs(delta)
+	if !placement_delayed() and !move_cluster_in_direction(Vector2.DOWN):
+		lock_gem_cluster()
+
+func timer_is_waiting(delta: float) -> bool:
+	cluster_fall_delay += delta
+	input_delay += delta
+	gem_move_delay += delta
+	settle_delay += delta
+	if start_game_delay < START_INTERVAL:
+		start_game_delay += delta
+		if start_game_delay >= START_INTERVAL:
+			try_spawning_gem_cluster()
+		return true
+	if gem_move_delay <= GEM_FALL_INTERVAL:
+		return true
+	return false
+
+func placement_delayed() -> bool:
+	if cluster_fall_delay < CLUSTER_FALL_INTERVAL:
+		return true
+	cluster_fall_delay = 0
+	return false
+
+func handle_enemy_turn() -> void:
+	attack_enemy_with_combo()
+	run_enemy_turn()
+
+func debug_button() -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func check_victory() -> void:
+	if $Runes.get_child_count() > 0:
+		return
+	new_game("thin")
+
+func handle_control_inputs(delta: float) -> void:
+	if !current_gem_cluster:
+		return
 	if Input.is_action_pressed("move_down"):
-		fall_timer += delta * 8
+		cluster_fall_delay += delta * 8
 	if Input.is_action_just_pressed("rotate_left") or Input.is_action_just_pressed("ui_accept"):
 		rotate_gem(1)
 	if Input.is_action_just_pressed("rotate_right"):
 		rotate_gem(-1)
-	if input_timer >= INPUT_INTERVAL:
-		input_timer = 0
+	if input_delay >= INPUT_DELAY_INTERVAL:
+		input_delay = 0
 		if Input.is_action_pressed("move_left"):
-			move_gem(Vector2.LEFT)
+			move_cluster_in_direction(Vector2.LEFT)
 		elif Input.is_action_pressed("move_right"):
-			move_gem(Vector2.RIGHT)
-	#handle falling
-	if fall_timer >= FALL_INTERVAL:
-		fall_timer = 0
-		if !move_gem(Vector2.DOWN):
-			lock_gem_cluster()
-			if combo_length > 1:
-				damage_enemy(clamp(combo_length - 1, 0, current_enemy.max_hp))
-				combo_length = 0
-			enemy_turn()
+			move_cluster_in_direction(Vector2.RIGHT)
+
+func attack_enemy_with_combo() -> void:
+	print("turn ended, " + str(gems_in_combo) + " gems in combo.")
+	if !current_enemy or current_enemy.hp <= 0:
+		return
+	if gems_in_combo <= 4:
+		print("dealing 0 damage.")
+		gems_in_combo = 0
+		return
+	var damage = 1 + int((gems_in_combo - 4) / 2)
+	damage = clamp(damage, 0, current_enemy.max_hp)
+	print("dealing " + str(damage) + " damage.")
+	damage_enemy(damage)
+	gems_in_combo = 0
 
 func reset_board() -> void:
+	gems_in_combo = 0
+	enemy_has_attacked = true
 	board.resize(WIDTH)
 	for x in range(WIDTH):
 		board[x] = []
@@ -198,14 +256,15 @@ func spawn_gem_cluster(spawn_position: Vector2i) -> void:
 	current_gem_cluster_position = spawn_position
 	current_gem_cluster_offsets = [Vector2i(0, 0), Vector2i(1, 0)]
 	randomize_preview_gems()
-	update_gem_world_position()
+	update_cluster_position()
 
-func try_spawn_gem_cluster() -> void:
-	fall_timer = 0
+func try_spawning_gem_cluster() -> void:
+	cluster_fall_delay = 0
 	var spawn_location = Vector2i(WIDTH / 2 - 1, 0)
 	if is_colliding(spawn_location):
 		#GAME OVER
-		get_tree().change_scene_to_file("res://scenes/menu.tscn")
+		print("game over")
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 		return
 	spawn_gem_cluster(spawn_location)
 
@@ -221,13 +280,13 @@ func create_brick(x:int, y:int) -> Node2D:
 	add_child(brick)
 	return brick
 
-func move_gem(direction: Vector2i) -> bool:
+func move_cluster_in_direction(direction: Vector2i) -> bool:
 	for offset in current_gem_cluster_offsets:
 		var next_position = current_gem_cluster_position + offset + direction
 		if is_colliding(next_position):
 			return false
 	current_gem_cluster_position += direction
-	update_gem_world_position()
+	update_cluster_position()
 	return true
 
 func _rotation_collides(offsets: Array) -> bool:
@@ -260,7 +319,7 @@ func rotate_gem(dir: int) -> void:
 		current_gem_cluster_position.x += dx
 		if not _rotation_collides(new_offsets):
 			current_gem_cluster_offsets = new_offsets
-			update_gem_world_position()
+			update_cluster_position()
 			return
 		current_gem_cluster_position.x -= dx
 
@@ -276,7 +335,6 @@ func lock_gem_cluster() -> void:
 	for gem in current_gem_cluster.get_children():
 		gem.reparent($Gems)
 	current_gem_cluster.queue_free()
-	destroy_all_gem_lines()
 
 func drop_enemy_gem(count: int = 1) -> void:
 	flash_portrait(portrait_player)
@@ -299,38 +357,67 @@ func drop_enemy_gem(count: int = 1) -> void:
 		var gem = create_gem(x, y, get_random_color())
 		gem.target_position = gem.position
 		gem.position = center_in_cell(Vector2i(WIDTH + 2, HEIGHT - 1))
-		gem.move_speed = 5
-	drop_gems()
+		gem.move_speed = 8
+	set_gems_to_fall()
 
-func drop_gems() -> bool:
-	var moved = false
-	for x in range(WIDTH):
-		for y in range(HEIGHT - 2, -1, -1):
+func disconnect_gem(gem: Node2D) -> void:
+	if !gem or !is_in_group("gems"):
+		return
+	if !gem.connected_gem:
+		return
+	gem.connected_gem.connected_gem = null
+	gem.connected_gem = null
+
+func move_gem_in_direction(gem: Node2D, direction: Vector2) -> void:
+	if !gem or !gem.is_in_group("gems"):
+		return
+	if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF:
+		return
+	var target_position = board[gem.board_x + direction.x][gem.board_y + direction.y]
+	if target_position:
+		return
+	var x = int(gem.board_x + direction.x)
+	var y = int(gem.board_y + direction.y)
+	if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT:
+		return
+	board[x][y] = gem
+	board[gem.board_x][gem.board_y] = null
+	gem.board_x += direction.x
+	gem.board_y += direction.y
+	gem.target_position = center_in_cell(Vector2i(gem.board_x, gem.board_y))
+
+func gem_can_fall(gem: Node2D) -> bool:
+	if !gem or !gem.is_in_group("gems"):
+		return false
+	if gem == gem.connected_gem:
+		return false
+	if gem.board_y + 1 >= HEIGHT:
+		return false
+	if board[gem.board_x][gem.board_y + 1]:
+		return false
+	return true
+
+func set_gems_to_fall() -> bool:
+	var gems_moved = false
+	for y in range(HEIGHT - 2, -1, -1):
+		for x in range(WIDTH):
 			var gem = board[x][y]
-			if gem == null or !gem.is_in_group("gems"):
+			if !gem or !gem.is_in_group("gems"):
 				continue
-			if y + 1 >= HEIGHT or board[x][y + 1] != null:
+			if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF:
 				continue
-			if gem == gem.connected_gem:
+			if !gem_can_fall(gem):
 				continue
-			if gem.connected_gem:
-				var nx = gem.connected_gem.board_x
-				var ny = gem.connected_gem.board_y + 1
-				if ny < HEIGHT and nx >= 0 and nx < WIDTH:
-					if board[nx][ny] != null and board[nx][ny] != gem:
-						continue
-			board[x][y + 1] = gem
-			board[x][y] = null
-			gem.board_y += 1
-			gem.target_position = center_in_cell(Vector2i(gem.board_x, gem.board_y))
-			moved = true
-	return moved
-
-func gems_are_moving() -> bool:
-	for gem in $Gems.get_children():
-		if gem and gem.position.distance_to(gem.target_position) > 0.1:
-			return true
-	return false
+			if gem.connected_gem and gem != gem.connected_gem:
+				if !gem_can_fall(gem.connected_gem):
+					continue
+				if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF or \
+					gem.connected_gem.position.distance_to(gem.connected_gem.target_position) > MOVE_CUTOFF:
+					continue
+				move_gem_in_direction(gem.connected_gem, Vector2.DOWN)
+			move_gem_in_direction(gem, Vector2.DOWN)
+			gems_moved = true
+	return gems_moved
 
 func create_preview_gem(location: Vector2i) -> Node2D:
 	var gem = gem_scene.instantiate()
@@ -353,9 +440,15 @@ func randomize_preview_gems() -> void:
 	set_gem_color(preview_gem2, get_random_color(), color_options)
 
 func destroy_gem(gem: Sprite2D) -> void:
-	gem.texture = load(PARTICLES[gem.gem_color])
-	gem.pulsate = true
-	await get_tree().create_timer(0.75).timeout
+	if !gem or !gem.is_in_group("gems"):
+		return
+	var particle = particle_scene.instantiate()
+	particle.texture = load(PARTICLES[gem.gem_color])
+	particle.pulsate = true
+	particle.position = gem.position
+	add_child(particle)
+	board[gem.board_x][gem.board_y] = null
+	disconnect_gem(gem)
 	gem.queue_free()
 
 ########################################################
@@ -377,22 +470,6 @@ func get_random_cell(vertical_gap: int) -> Vector2i:
 			return location
 	return Vector2i(-1, -1)
 
-func remove_unused_colors() -> void:
-	if $Runes.get_child_count() == 0:
-		return
-	var remaining = {}
-	for r in $Runes.get_children():
-		if r.gem_color:
-			remaining[r.gem_color] = true
-	for color in color_options.keys():
-		if not remaining.has(color):
-			color_options.erase(color)
-			rune_options.erase(color)
-			for gem in $Gems.get_children():
-				if gem.gem_color == color:
-					destroy_gem(gem)
-			randomize_preview_gems()
-
 func remove_random_color() -> void:
 	var keys = COLOR_OPTIONS.keys()
 	var random = keys[randi() % keys.size()]
@@ -413,7 +490,7 @@ func center_in_cell(cell_position: Vector2i) -> Vector2:
 	var location = (cell_position * TILE_SIZE) + Vector2i(TILE_SIZE/2, TILE_SIZE + 1)
 	return location - Vector2i(WIDTH * TILE_SIZE / 2, HEIGHT * TILE_SIZE / 2)
 
-func update_gem_world_position() -> void:
+func update_cluster_position() -> void:
 	if !current_gem_cluster:
 		return
 	for i in range(current_gem_cluster.get_child_count()):
@@ -446,31 +523,35 @@ func get_gem_line(start: Vector2i, delta: Vector2i) -> Array:
 	return line
 
 func get_all_gem_lines() -> Array:
-	var gems_to_destroy = []
+	var lines := []
+	var seen_positions := {}
 	for x in range(WIDTH):
 		for y in range(HEIGHT):
 			var gem = board[x][y]
 			if !gem or !gem.is_in_group("gems"):
 				continue
+			#if gem_can_fall(gem):
+				#continue
 			var start_pos = Vector2i(x, y)
 			for dir in [Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0)]:
 				var line = get_gem_line(start_pos, dir)
 				if line.size() > 3:
-					combo_length += 1
+					var key := ""
 					for pos in line:
-						if not gems_to_destroy.has(pos):
-							gems_to_destroy.append(pos)
-	return gems_to_destroy
+						key += str(pos.x) + "," + str(pos.y) + ";"
+					if not seen_positions.has(key):
+						seen_positions[key] = true
+						lines.append(line)
+	return lines
 
-func destroy_all_gem_lines() -> void:
-	var gems_to_destroy = get_all_gem_lines()
-	for pos in gems_to_destroy:
-		var gem = board[pos.x][pos.y]
-		if !gem.is_in_group("gems"):
-			continue
-		if gem:
+func destroy_lines(gem_lines: Array) -> void:
+	for line in gem_lines:
+		for location in line:
+			var gem = board[location.x][location.y]
+			if !gem or !gem.is_in_group("gems"):
+				continue
+			gems_in_combo += 1
 			destroy_gem(gem)
-			board[pos.x][pos.y] = null
 
 func load_level(level_name: String) -> void:
 	reset_board()
@@ -503,7 +584,7 @@ func init_enemy(level_name: String) -> void:
 	health_bar_enemy.max_value = current_enemy.max_hp
 	health_bar_enemy.value = current_enemy.hp
 
-func enemy_turn() -> void:
+func run_enemy_turn() -> void:
 	if !current_enemy or current_enemy.hp <= 0:
 		return
 	current_enemy.turns_since_attack += 1
@@ -530,3 +611,20 @@ func flash_portrait(portrait: AnimatedSprite2D) -> void:
 	tween.tween_property(portrait, "modulate", red, 0.05)
 	tween.tween_property(portrait, "modulate", red, 0.1)
 	tween.tween_property(portrait, "modulate", Color(1, 1, 1), 0.2)
+
+func any_gem_can_fall() -> bool:
+	for x in range(WIDTH):
+		for y in range(HEIGHT - 2, -1, -1):
+			var gem = board[x][y]
+			if !gem or !gem.is_in_group("gems"):
+				continue
+			if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF:
+				return true
+			if gem.connected_gem:
+				if gem.connected_gem.position.distance_to(gem.connected_gem.target_position) > MOVE_CUTOFF:
+					return true
+				if gem_can_fall(gem) and gem_can_fall(gem.connected_gem):
+					return true
+			elif gem_can_fall(gem):
+				return true
+	return false

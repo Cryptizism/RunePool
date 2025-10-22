@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cu2kbwffxggvh"
-path="res://.godot/imported/button.png-d257d06895cc43ed61dfab28e711171a.ctex"
+uid="uid://ce76nitq6i3dw"
+path="res://.godot/imported/hslider_tick.png-7bae33dd80fb155c331e83e3cbbad4d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/ui/button.png"
-dest_files=["res://.godot/imported/button.png-d257d06895cc43ed61dfab28e711171a.ctex"]
+source_file="res://sprites/ui/hslider_tick.png"
+dest_files=["res://.godot/imported/hslider_tick.png-7bae33dd80fb155c331e83e3cbbad4d9.ctex"]
 
 [params]
 

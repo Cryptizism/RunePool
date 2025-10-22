@@ -59,10 +59,6 @@ var gem_move_delay: float = 0.0
 var settle_delay: float = 0.0
 var enemy_has_attacked = true
 
-enum GamePhase { IDLE, FALLING, SETTLING, PLAYER }
-var phase: int = GamePhase.FALLING
-var fall_timer: float = 0.0
-
 var rune_count: int = 20
 
 func new_game(level_name: String) -> void:
@@ -70,7 +66,7 @@ func new_game(level_name: String) -> void:
 	reset_board()
 	load_level(level_name)
 	remove_random_color()
-	create_runes(rune_count, HEIGHT * 0.6)
+	create_runes(rune_count, HEIGHT * 0.5)
 	destroy_lines(get_all_gem_lines())
 	start_game_delay = 0
 	randomize_preview_gems()
@@ -78,8 +74,7 @@ func new_game(level_name: String) -> void:
 
 func _ready() -> void:
 	create_preview_gems()
-	new_game("wide")
-	#new_game(level_data.get_random_level_name())
+	new_game(level_data.get_random_level_name())
 
 func _physics_process(delta: float) -> void:
 	debug_button()
@@ -114,7 +109,6 @@ func _physics_process(delta: float) -> void:
 func debug_button() -> void:
 	if !Input.is_action_just_pressed("ui_cancel"):
 		return
-	#damage_enemy(1)
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func timer_is_waiting(delta: float) -> bool:
@@ -188,10 +182,6 @@ func reset_board() -> void:
 		rune.queue_free()
 	color_options = COLOR_OPTIONS.duplicate(true)
 	rune_options = RUNE_OPTIONS.duplicate(true)
-
-########################################################
-# gems
-########################################################
 
 func create_rune(spawn_position: Vector2i) -> void:
 	if is_colliding(spawn_position):
@@ -293,10 +283,10 @@ func _rotation_collides(offsets: Array) -> bool:
 	return false
 
 var ROTATIONS: Array = [
-	[Vector2i(0,0), Vector2i(1,0)],  # horizontal (right)
-	[Vector2i(0,1), Vector2i(0,0)],  # vertical (down)
-	[Vector2i(1,0), Vector2i(0,0)],  # horizontal (left)  (this arrangement matches your prior mapping)
-	[Vector2i(0,0), Vector2i(0,1)]   # vertical (up)
+	[Vector2i(0,0), Vector2i(1,0)],
+	[Vector2i(0,1), Vector2i(0,0)],
+	[Vector2i(1,0), Vector2i(0,0)],
+	[Vector2i(0,0), Vector2i(0,1)]
 ]
 
 func rotate_gem(dir: int) -> void:
@@ -411,6 +401,23 @@ func set_gems_to_fall() -> void:
 			elif gem_can_fall(gem):
 				move_gem_in_direction(gem, Vector2.DOWN)
 
+func any_gem_can_fall() -> bool:
+	for x in range(WIDTH):
+		for y in range(HEIGHT - 2, -1, -1):
+			var gem = board[x][y]
+			if !gem or !gem.is_in_group("gems"):
+				continue
+			if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF:
+				return true
+			if gem.connected_gem:
+				if gem.connected_gem.position.distance_to(gem.connected_gem.target_position) > MOVE_CUTOFF:
+					return true
+				if gem_can_fall(gem) and gem_can_fall(gem.connected_gem):
+					return true
+			elif gem_can_fall(gem):
+				return true
+	return false
+
 func create_preview_gem(location: Vector2i) -> Node2D:
 	var gem = gem_scene.instantiate()
 	set_gem_color(gem, get_random_color(), color_options)
@@ -443,10 +450,6 @@ func destroy_gem(gem: Sprite2D) -> void:
 	disconnect_gem(gem)
 	gem.queue_free()
 
-########################################################
-# misc
-########################################################
-
 func is_colliding(gem_position: Vector2i) -> bool:
 	if gem_position.x < 0 or gem_position.x >= WIDTH or gem_position.y < 0 or gem_position.y >= HEIGHT:
 		return true
@@ -475,10 +478,8 @@ func set_gem_color(gem: Sprite2D, gem_color: String, type) -> void:
 	gem.texture = load(type[gem_color])
 
 func get_random_color() -> String: return color_options.keys()[randi() % color_options.size()]
-func get_random_rune() -> String: return rune_options.keys()[randi() % rune_options.size()]
 
 func center_in_cell(cell_position: Vector2i) -> Vector2:
-	@warning_ignore("integer_division")
 	var location = (cell_position * TILE_SIZE) + Vector2i(TILE_SIZE/2, TILE_SIZE + 1)
 	return location - Vector2i(WIDTH * TILE_SIZE / 2, HEIGHT * TILE_SIZE / 2)
 
@@ -491,10 +492,6 @@ func update_cluster_position() -> void:
 		gem.board_x = new_position.x
 		gem.board_y = new_position.y
 		gem.target_position = center_in_cell(new_position)
-
-########################################################
-# gem lines
-########################################################
 
 func get_gem_line(start: Vector2i, delta: Vector2i) -> Array:
 	var line = []
@@ -622,21 +619,3 @@ func show_damage_text(amount: int, pos: Vector2, direction: int = 1) -> void:
 	tween.tween_property(label, "position:x", label.position.x + dx, 1).set_ease(Tween.EASE_OUT)
 	tween.tween_property(label, "position:y", label.position.y - dy, 1).set_ease(Tween.EASE_OUT)
 	tween.tween_property(label, "modulate:a", 0.0, 1).set_ease(Tween.EASE_OUT)
-	#tween.tween_callback(Callable(label, "queue_free"))
-
-func any_gem_can_fall() -> bool:
-	for x in range(WIDTH):
-		for y in range(HEIGHT - 2, -1, -1):
-			var gem = board[x][y]
-			if !gem or !gem.is_in_group("gems"):
-				continue
-			if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF:
-				return true
-			if gem.connected_gem:
-				if gem.connected_gem.position.distance_to(gem.connected_gem.target_position) > MOVE_CUTOFF:
-					return true
-				if gem_can_fall(gem) and gem_can_fall(gem.connected_gem):
-					return true
-			elif gem_can_fall(gem):
-				return true
-	return false

@@ -114,8 +114,8 @@ func _physics_process(delta: float) -> void:
 func debug_button() -> void:
 	if !Input.is_action_just_pressed("ui_cancel"):
 		return
-	damage_enemy(1)
-	#get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	#damage_enemy(1)
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func timer_is_waiting(delta: float) -> bool:
 	cluster_fall_delay += delta
@@ -163,7 +163,6 @@ func handle_control_inputs(delta: float) -> void:
 			move_cluster_in_direction(Vector2.RIGHT)
 
 func attack_enemy_with_combo() -> void:
-	print("combo: " + str(gems_in_combo))
 	if !current_enemy or current_enemy.hp <= 0:
 		return
 	if gems_in_combo <= 4:
@@ -262,7 +261,6 @@ func try_spawning_gem_cluster() -> void:
 	var spawn_location = Vector2i(WIDTH / 2 - 1, 0)
 	if is_colliding(spawn_location):
 		#GAME OVER
-		print("game over")
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 		return
 	spawn_gem_cluster(spawn_location)
@@ -392,12 +390,13 @@ func gem_can_fall(gem: Node2D) -> bool:
 		return false
 	if gem.board_y + 1 >= HEIGHT:
 		return false
-	if board[gem.board_x][gem.board_y + 1]:
-		return false
+	var gem_below = board[gem.board_x][gem.board_y + 1]
+	if gem_below:
+		if gem.connected_gem != gem_below:
+			return false
 	return true
 
-func set_gems_to_fall() -> bool:
-	var gems_moved = false
+func set_gems_to_fall() -> void:
 	for y in range(HEIGHT - 2, -1, -1):
 		for x in range(WIDTH):
 			var gem = board[x][y]
@@ -405,18 +404,12 @@ func set_gems_to_fall() -> bool:
 				continue
 			if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF:
 				continue
-			if !gem_can_fall(gem):
-				continue
 			if gem.connected_gem and gem != gem.connected_gem:
-				if !gem_can_fall(gem.connected_gem):
-					continue
-				if gem.position.distance_to(gem.target_position) > MOVE_CUTOFF or \
-					gem.connected_gem.position.distance_to(gem.connected_gem.target_position) > MOVE_CUTOFF:
-					continue
-				move_gem_in_direction(gem.connected_gem, Vector2.DOWN)
-			move_gem_in_direction(gem, Vector2.DOWN)
-			gems_moved = true
-	return gems_moved
+				if gem_can_fall(gem) and gem_can_fall(gem.connected_gem):
+					move_gem_in_direction(gem, Vector2.DOWN)
+					move_gem_in_direction(gem.connected_gem, Vector2.DOWN)
+			elif gem_can_fall(gem):
+				move_gem_in_direction(gem, Vector2.DOWN)
 
 func create_preview_gem(location: Vector2i) -> Node2D:
 	var gem = gem_scene.instantiate()

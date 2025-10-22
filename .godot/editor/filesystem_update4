@@ -1,8 +1,8 @@
-res://scenes/singleplayer.tscn
+res://scenes/damage_text.tscn
 res://tilesets/ui.tres
 res://tilesets/game.tres
-res://animations/turtle.tres
 res://themes/text.tres
+res://animations/turtle.tres
 res://animations/ghost.tres
 res://themes/blue_button_highlight.tres
 res://themes/blue_theme.tres
@@ -14,9 +14,8 @@ res://themes/red_theme.tres
 res://themes/green_button_highlight.tres
 res://themes/green_button.tres
 res://themes/green_theme.tres
-res://scripts/main.gd
+res://scripts/enemy_data.gd
+res://scenes/singleplayer.tscn
 res://scenes/main_menu.tscn
 res://scenes/level_menu.tscn
-res://scenes/particle.tscn
-res://scenes/particle.gd
-res://scripts/cell_object.gd
+res://scripts/main.gd

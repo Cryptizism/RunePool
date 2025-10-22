@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cf0ps5pw36p24"]
+
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="1_0x2rp"]
+[ext_resource type="Script" uid="uid://ci6n5pnfx4dr3" path="res://scripts/damage_text.gd" id="2_6p0u7"]
+
+[node name="Label" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "-1"
+label_settings = ExtResource("1_0x2rp")
+script = ExtResource("2_6p0u7")

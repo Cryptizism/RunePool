@@ -1,9 +1,9 @@
+Label
 AnimatedSprite2D
 CanvasLayer
 HBoxContainer
 VBoxContainer
 Button
-Label
 HSlider
 TextureButton
 TextureProgressBar

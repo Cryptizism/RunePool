@@ -7,6 +7,7 @@ extends Node2D
 var gem_scene = preload("res://scenes/gem.tscn")
 var particle_scene = preload("res://scenes/particle.tscn")
 var brick_scene = preload("res://scenes/brick.tscn")
+var damage_text_scene = preload("res://scenes/damage_text.tscn")
 var level_data = preload("res://scripts/levels.gd")
 var current_enemy: EnemyData
 
@@ -77,8 +78,8 @@ func new_game(level_name: String) -> void:
 
 func _ready() -> void:
 	create_preview_gems()
-	#new_game("wide")
-	new_game(level_data.get_random_level_name())
+	new_game("wide")
+	#new_game(level_data.get_random_level_name())
 
 func _physics_process(delta: float) -> void:
 	debug_button()
@@ -105,10 +106,16 @@ func _physics_process(delta: float) -> void:
 	if !current_gem_cluster:
 		try_spawning_gem_cluster()
 		enemy_has_attacked = false
-		gems_in_combo = 0
 	handle_control_inputs(delta)
 	if !placement_delayed() and !move_cluster_in_direction(Vector2.DOWN):
 		lock_gem_cluster()
+		gems_in_combo = 0
+
+func debug_button() -> void:
+	if !Input.is_action_just_pressed("ui_cancel"):
+		return
+	damage_enemy(1)
+	#get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func timer_is_waiting(delta: float) -> bool:
 	cluster_fall_delay += delta
@@ -134,10 +141,6 @@ func handle_enemy_turn() -> void:
 	attack_enemy_with_combo()
 	run_enemy_turn()
 
-func debug_button() -> void:
-	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-
 func check_victory() -> void:
 	if $Runes.get_child_count() > 0:
 		return
@@ -160,18 +163,14 @@ func handle_control_inputs(delta: float) -> void:
 			move_cluster_in_direction(Vector2.RIGHT)
 
 func attack_enemy_with_combo() -> void:
-	print("turn ended, " + str(gems_in_combo) + " gems in combo.")
+	print("combo: " + str(gems_in_combo))
 	if !current_enemy or current_enemy.hp <= 0:
 		return
 	if gems_in_combo <= 4:
-		print("dealing 0 damage.")
-		gems_in_combo = 0
 		return
 	var damage = 1 + int((gems_in_combo - 4) / 2)
 	damage = clamp(damage, 0, current_enemy.max_hp)
-	print("dealing " + str(damage) + " damage.")
 	damage_enemy(damage)
-	gems_in_combo = 0
 
 func reset_board() -> void:
 	gems_in_combo = 0
@@ -449,6 +448,7 @@ func destroy_gem(gem: Sprite2D) -> void:
 	add_child(particle)
 	board[gem.board_x][gem.board_y] = null
 	disconnect_gem(gem)
+	gems_in_combo += 1
 	gem.queue_free()
 
 ########################################################
@@ -550,7 +550,6 @@ func destroy_lines(gem_lines: Array) -> void:
 			var gem = board[location.x][location.y]
 			if !gem or !gem.is_in_group("gems"):
 				continue
-			gems_in_combo += 1
 			destroy_gem(gem)
 
 func load_level(level_name: String) -> void:
@@ -569,6 +568,7 @@ func damage_enemy(amount: int) -> void:
 		shake_portrait(portrait_enemy)
 	current_enemy.hp -= amount
 	health_bar_enemy.value = clamp(current_enemy.hp, 0, current_enemy.max_hp)
+	show_damage_text(amount, portrait_enemy.global_position, 1)
 	if current_enemy.hp > 0:
 		return
 	label_enemy.text = ""
@@ -590,6 +590,7 @@ func run_enemy_turn() -> void:
 	current_enemy.turns_since_attack += 1
 	if current_enemy.turns_since_attack >= current_enemy.attack_speed:
 		drop_enemy_gem(current_enemy.attacks_per_turn)
+		show_damage_text(current_enemy.attacks_per_turn, portrait_player.global_position, -1)
 		current_enemy.turns_since_attack = 0
 
 func shake_portrait(portrait: AnimatedSprite2D) -> void:
@@ -611,6 +612,20 @@ func flash_portrait(portrait: AnimatedSprite2D) -> void:
 	tween.tween_property(portrait, "modulate", red, 0.05)
 	tween.tween_property(portrait, "modulate", red, 0.1)
 	tween.tween_property(portrait, "modulate", Color(1, 1, 1), 0.2)
+
+func show_damage_text(amount: int, pos: Vector2, direction: int = 1) -> void:
+	var label = damage_text_scene.instantiate()
+	label.text = "-" + str(amount)
+	label.position = to_local(pos)
+	add_child(label)
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	var dx = direction * (5 + randi() % 10)
+	var dy = 10 + randi() % 10
+	tween.tween_property(label, "position:x", label.position.x + dx, 1).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "position:y", label.position.y - dy, 1).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, 1).set_ease(Tween.EASE_OUT)
+	#tween.tween_callback(Callable(label, "queue_free"))
 
 func any_gem_can_fall() -> bool:
 	for x in range(WIDTH):

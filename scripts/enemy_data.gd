@@ -5,7 +5,7 @@ var animation_path: String
 var max_hp: int
 var hp: int
 var attack_speed: float
-var turns_since_attack: int = 0
+var turns_since_attack: int = 1
 var attacks_per_turn: int = 1
 
 func _init(level_name: String):

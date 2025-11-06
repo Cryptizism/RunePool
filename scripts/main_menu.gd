@@ -6,11 +6,11 @@ func _ready() -> void:
 	button_story_mode.grab_focus()
 
 func _on_button_story_mode_pressed() -> void:
-	Global.current_mode = Global.MODE.STORY
+	#Global.current_mode = Global.MODE.STORY
 	get_tree().change_scene_to_file("res://scenes/singleplayer.tscn")
 
 func _on_button_battle_mode_pressed() -> void:
-	Global.current_mode = Global.MODE.BATTLE
+	#Global.current_mode = Global.MODE.BATTLE
 	get_tree().change_scene_to_file("res://scenes/level_menu.tscn")
 
 func _on_button_close_pressed() -> void:

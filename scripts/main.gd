@@ -1,5 +1,6 @@
 extends Node2D
 
+@onready var board_p2: Node2D = $"../GameManager2"
 @onready var portrait_player = $AnimatedPlayer
 @onready var portrait_enemy = $AnimatedEnemy
 @onready var label_enemy = $AnimatedEnemy/LabelEnemy
@@ -11,11 +12,13 @@ var damage_text_scene = preload("res://scenes/damage_text.tscn")
 var level_data = preload("res://scripts/levels.gd")
 var current_enemy: EnemyData
 
+@export var player: int = 1
+@export var has_enemy: bool = true
+var cluster_fall_interval: float = 0.5
 const TILE_SIZE: int = 8
 const WIDTH: int = 10
 const HEIGHT: int = 13
 const START_INTERVAL: float = 3
-const CLUSTER_FALL_INTERVAL: float = 0.5
 const GEM_FALL_INTERVAL: float = 0.15
 const INPUT_DELAY_INTERVAL: float = 0.08
 const SETTLE_INTERVAL: float = 0.3
@@ -58,23 +61,22 @@ var input_delay: float = 0.0
 var gem_move_delay: float = 0.0
 var settle_delay: float = 0.0
 var enemy_has_attacked = true
-
 var rune_count: int = 20
 
 func new_game(level_name: String) -> void:
 	randomize()
-	reset_board()
-	load_level(level_name)
-	remove_random_color()
-	create_runes(rune_count, HEIGHT * 0.5)
+	if player == 1:
+		reset_board()
+		load_level(level_name)
+		remove_random_color()
+		create_runes(rune_count, HEIGHT * 0.5)
 	destroy_lines(get_all_gem_lines())
 	start_game_delay = 0
 	randomize_preview_gems()
-	print("starting new " + str(WIDTH) + "x" + str(HEIGHT) + " game with " + str(rune_count) + " runes.")
 
 func _ready() -> void:
 	create_preview_gems()
-	new_game(level_data.get_random_level_name())
+	new_game(Global.selected_level)
 
 func _physics_process(delta: float) -> void:
 	debug_button()
@@ -126,7 +128,7 @@ func timer_is_waiting(delta: float) -> bool:
 	return false
 
 func placement_delayed() -> bool:
-	if cluster_fall_delay < CLUSTER_FALL_INTERVAL:
+	if cluster_fall_delay < cluster_fall_interval:
 		return true
 	cluster_fall_delay = 0
 	return false
@@ -166,6 +168,16 @@ func attack_enemy_with_combo() -> void:
 	damage_enemy(damage)
 
 func reset_board() -> void:
+	if player == 1:
+		cluster_fall_interval = Global.speed_p1
+		rune_count = Global.difficulty_p1
+		if board_p2:
+			board_p2.reset_board()
+	else:
+		cluster_fall_interval = Global.speed_p2
+		rune_count = Global.difficulty_p2
+	if !has_enemy:
+		current_enemy = null
 	gems_in_combo = 0
 	enemy_has_attacked = true
 	board.resize(WIDTH)
@@ -199,11 +211,15 @@ func create_rune(spawn_position: Vector2i) -> void:
 	$Runes.add_child(rune)
 
 func _create_runes_async(amount: int, vertical_gap: int) -> void:
+	if player == 2:
+		return
 	for i in range(amount):
 		var location = get_random_cell(vertical_gap)
 		if location == Vector2i(-1, -1):
 			continue
 		create_rune(location)
+		if board_p2:
+			board_p2.create_rune(location)
 		await get_tree().create_timer(0.1).timeout
 
 func create_runes(amount: int, vertical_gap: int) -> void:
@@ -226,7 +242,12 @@ func copy_preview_gem(parent_gem: Node2D) -> Node2D:
 	while (!color_options.has(parent_gem.gem_color)):
 		set_gem_color(parent_gem, get_random_color(), color_options)
 	set_gem_color(gem, parent_gem.gem_color, color_options)
-	gem.position = center_in_cell(Vector2i(WIDTH + 2, 1))
+	var pos
+	if player == 1:
+		pos = Vector2i(WIDTH + 2, 1)
+	else:
+		pos = Vector2i(-3, 1)
+	gem.position = center_in_cell(pos)
 	gem.target_position = gem.position
 	gem.add_to_group("gems")
 	current_gem_cluster.add_child(gem)
@@ -237,13 +258,19 @@ func spawn_gem_cluster(spawn_position: Vector2i) -> void:
 		current_gem_cluster.queue_free()
 	current_gem_cluster = Node2D.new()
 	add_child(current_gem_cluster)
+	var gem1_color = Global.next_gem_cluster[0]
+	var gem2_color = Global.next_gem_cluster[1]
 	var gem1 = copy_preview_gem(preview_gem1)
 	var gem2 = copy_preview_gem(preview_gem2)
+	set_gem_color(gem1, gem1_color, color_options)
+	set_gem_color(gem2, gem2_color, color_options)
 	gem1.connected_gem = gem2
 	gem2.connected_gem = gem1
 	current_gem_cluster_position = spawn_position
-	current_gem_cluster_offsets = [Vector2i(0, 0), Vector2i(1, 0)]
+	current_gem_cluster_offsets = [Vector2i(0,0), Vector2i(1,0)]
+	Global.next_gem_cluster.clear()
 	randomize_preview_gems()
+   
 	update_cluster_position()
 
 func try_spawning_gem_cluster() -> void:
@@ -331,9 +358,9 @@ func drop_enemy_gem(count: int = 1) -> void:
 		var y = 0
 		var safe_location = false
 		var attempts = 0
-		while (!safe_location):
+		while !safe_location:
 			attempts += 1
-			if (attempts > 50):
+			if attempts > 50:
 				return
 			x = randi() % WIDTH
 			if board[x][y] or is_colliding(Vector2i(x, y)):
@@ -429,14 +456,24 @@ func create_preview_gem(location: Vector2i) -> Node2D:
 func create_preview_gems() -> void:
 	if preview_gem1 and preview_gem2:
 		return
-	preview_gem1 = create_preview_gem(center_in_cell(Vector2i(WIDTH + 1, 1)))
-	preview_gem2 = create_preview_gem(center_in_cell(Vector2i(WIDTH + 2, 1)))
+	var first
+	var second
+	if player == 1:
+		first = Vector2i(WIDTH + 1, 1)
+		second = Vector2i(WIDTH + 2, 1)
+	else:
+		first = Vector2i(-3, 1)
+		second = Vector2i(-2, 1)
+	preview_gem1 = create_preview_gem(center_in_cell(first))
+	preview_gem2 = create_preview_gem(center_in_cell(second))
 	preview_gem1.connected_gem = preview_gem2
 	preview_gem2.connected_gem = preview_gem1
 
 func randomize_preview_gems() -> void:
-	set_gem_color(preview_gem1, get_random_color(), color_options)
-	set_gem_color(preview_gem2, get_random_color(), color_options)
+	if Global.next_gem_cluster.size() == 0:
+		Global.next_gem_cluster = [get_random_color(), get_random_color()]
+	set_gem_color(preview_gem1, Global.next_gem_cluster[0], color_options)
+	set_gem_color(preview_gem2, Global.next_gem_cluster[1], color_options)
 
 func destroy_gem(gem: Sprite2D) -> void:
 	if !gem or !gem.is_in_group("gems"):
@@ -470,6 +507,9 @@ func remove_random_color() -> void:
 	var random = keys[randi() % keys.size()]
 	color_options.erase(random)
 	rune_options.erase(random)
+	if board_p2:
+		board_p2.color_options.erase(random)
+		board_p2.rune_options.erase(random)
 
 func set_gem_color(gem: Sprite2D, gem_color: String, type) -> void:
 	if !type.has(gem_color):
@@ -554,27 +594,36 @@ func load_level(level_name: String) -> void:
 		for x in range(layout[y].length()):
 			var c = layout[y][x]
 			if c == "#":
+				if board_p2:
+					board_p2.create_brick(x, y)
 				create_brick(x, y)
 
 func damage_enemy(amount: int) -> void:
+	if !current_enemy:
+		return
 	if amount > 0 and current_enemy.hp > 0:
 		flash_portrait(portrait_enemy)
 		shake_portrait(portrait_enemy)
 	current_enemy.hp -= amount
 	health_bar_enemy.value = clamp(current_enemy.hp, 0, current_enemy.max_hp)
-	show_damage_text(amount, portrait_enemy.global_position, 1)
+	if portrait_enemy:
+		show_damage_text(amount, portrait_enemy.global_position, 1)
 	if current_enemy.hp > 0:
 		return
 	label_enemy.text = ""
-	portrait_enemy.sprite_frames = load("res://animations/ghost.tres")
-	portrait_enemy.play()
+	if portrait_enemy:
+		portrait_enemy.sprite_frames = load("res://animations/ghost.tres")
+		portrait_enemy.play()
 
 func init_enemy(level_name: String) -> void:
+	if !has_enemy:
+		return
 	current_enemy = EnemyData.new(level_name)
 	label_enemy.text = current_enemy.name
-	portrait_enemy.sprite_frames = load(current_enemy.animation_path)
-	portrait_enemy.frame = 1
-	portrait_enemy.play()
+	if portrait_enemy:
+		portrait_enemy.sprite_frames = load(current_enemy.animation_path)
+		portrait_enemy.frame = 1
+		portrait_enemy.play()
 	health_bar_enemy.max_value = current_enemy.max_hp
 	health_bar_enemy.value = current_enemy.hp
 
@@ -584,7 +633,8 @@ func run_enemy_turn() -> void:
 	current_enemy.turns_since_attack += 1
 	if current_enemy.turns_since_attack >= current_enemy.attack_speed:
 		drop_enemy_gem(current_enemy.attacks_per_turn)
-		show_damage_text(current_enemy.attacks_per_turn, portrait_player.global_position, -1)
+		if portrait_player:
+			show_damage_text(current_enemy.attacks_per_turn, portrait_player.global_position, -1)
 		current_enemy.turns_since_attack = 0
 
 func shake_portrait(portrait: AnimatedSprite2D) -> void:

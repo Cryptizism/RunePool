@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://ddem14d4s7d5r"]
+[gd_resource type="Theme" format=3 uid="uid://ddem14d4s7d5r"]
 
 [ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_be54d"]
 [ext_resource type="StyleBox" uid="uid://efshi4837idd" path="res://themes/blue_button_highlight.tres" id="2_8yxeo"]

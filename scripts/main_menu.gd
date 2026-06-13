@@ -17,4 +17,4 @@ func _on_button_close_pressed() -> void:
 	get_tree().quit()
 
 func _on_button_gear_pressed() -> void:
-	pass # Replace with function body.
+	pass

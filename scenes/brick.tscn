@@ -1,8 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://clee2njsjnq2d"]
+[gd_scene format=3 uid="uid://clee2njsjnq2d"]
 
 [ext_resource type="Texture2D" uid="uid://gn3oowoke0ms" path="res://sprites/ui/brick.png" id="1_5l4w1"]
 [ext_resource type="Script" uid="uid://yyckoa51x0u3" path="res://scripts/brick.gd" id="2_0w5h4"]
 
-[node name="Brick" type="Sprite2D"]
-texture = ExtResource("1_5l4w1")
+[node name="Brick" type="Node2D" unique_id=207164298]
 script = ExtResource("2_0w5h4")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1616224410]
+texture = ExtResource("1_5l4w1")

@@ -1,4 +1,5 @@
-extends "res://scripts/cell_object.gd"
+extends CellObject
+class_name Particle
 
 func _ready() -> void:
 	super()

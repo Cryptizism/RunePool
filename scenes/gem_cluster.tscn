@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ny3hfreh4wi5"]
+
+[ext_resource type="Script" uid="uid://dfhu03giib1lj" path="res://scripts/gem_cluster.gd" id="1_2eskt"]
+
+[node name="GemCluster" type="Node2D" unique_id=1239077323]
+script = ExtResource("1_2eskt")

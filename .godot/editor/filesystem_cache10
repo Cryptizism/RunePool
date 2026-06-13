@@ -1,35 +1,44 @@
-ea4bc82a6ad023ab7ee23ee620429895
-::res://::1762225746
+63f7b34db8d8cdea90c76aacccf841ec
+::res://::1781305333
 export_presets.cfg::TextFile/TextFile::-1::1760563655::0::1::::<><><>0<>0<><>::
-::res://animations/::1761363497
-ghost.tres::SpriteFrames::7746171633517335565::1761363497::0::1::::<><><>0<>0<><>::uid://drqlrktqdn0ci::::res://sprites/characters/ghost_idle.png
-turtle.tres::SpriteFrames::9103939136523020276::1761363497::0::1::::<><><>0<>0<><>::uid://n82lxsh1a24w::::res://sprites/characters/turtle_idle.png
+::res://animations/::1781305441
+ghost.tres::SpriteFrames::7746171633517335565::1781305441::0::1::::<><><>0<>0<><>::uid://drqlrktqdn0ci::::res://sprites/characters/ghost_idle.png
+turtle.tres::SpriteFrames::9103939136523020276::1781305441::0::1::::<><><>0<>0<><>::uid://n82lxsh1a24w::::res://sprites/characters/turtle_idle.png
 ::res://fonts/::1761169900
 Runepool Pixel.ttf::FontFile/FontFile::4244890995999353999::1760651931::1761169900::1::::<><><>0<>0<>60875e12d9afebe7b14b3cfc528d2a39<>res://.godot/imported/Runepool Pixel.ttf-785cbf0a5ffd59f0ab30b26ff6784453.fontdata::
-::res://scenes/::1761363497
-battle_menu.tscn::PackedScene::7519378734479694463::1761363497::0::1::::<><><>0<>0<><>::uid://camfu7dkat1bv::::res://scripts/battle_menu.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://bvyp88k3cskdn::::res://themes/yellow_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres
-brick.tscn::PackedScene/PackedScene::5553467940364482129::1760742967::0::1::::<><><>0<>0<><>::uid://gn3oowoke0ms::::res://sprites/ui/brick.png<>uid://yyckoa51x0u3::::res://scripts/brick.gd
+::res://scenes/::1781306910
+battle_menu.tscn::PackedScene::7519378734479694463::1777340058::0::1::::<><><>0<>0<><>::uid://camfu7dkat1bv::::res://scripts/battle_menu.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://bvyp88k3cskdn::::res://themes/yellow_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres
+board.tscn::PackedScene::7348757173140823529::1781305519::0::1::::<><><>0<>0<><>::uid://bhos1xnpban5x::::res://scripts/board.gd<>uid://cw7dx5eu5q1s0::::res://sprites/ui/bg_board_10x13.png<>uid://b5ki7e1lxlloc::::res://sprites/ui/bg_cluster_preview.png
+brick.tscn::PackedScene::5553467940364482129::1780624745::0::1::::<><><>0<>0<><>::uid://gn3oowoke0ms::::res://sprites/ui/brick.png<>uid://yyckoa51x0u3::::res://scripts/brick.gd
+character.tscn::PackedScene::1781265055285379270::1781306910::0::1::::<><><>0<>0<><>::uid://cxmlguxr8jd0w::::res://sprites/ui/bg_character.png<>uid://bw0styvr88gwc::::res://scripts/character.gd
 damage_text.tscn::PackedScene/PackedScene::5176339528520447527::1761169693::0::1::::<><><>0<>0<><>::uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://ci6n5pnfx4dr3::::res://scripts/damage_text.gd
-gem.tscn::PackedScene/PackedScene::4265392362968255407::1760712463::0::1::::<><><>0<>0<><>::uid://bm0iq37ov8u0m::::res://sprites/game/red.png<>uid://capej5uaeq3yo::::res://scripts/gem.gd
-level_menu.tscn::PackedScene::6821058103153911782::1761363497::0::1::::<><><>0<>0<><>::uid://74osieajwmqb::::res://scripts/level_menu.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://o5p230ijl6l2::::res://scripts/display_level.gd<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres
-main_menu.tscn::PackedScene::3011489727080448637::1761363496::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://d1qchq5eibbxc::::res://scripts/main_menu.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://2p8nm41yms72::::res://sprites/ui/logo.png<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://bvyp88k3cskdn::::res://themes/yellow_theme.tres<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres<>uid://bsu12x2ay7cxw::::res://sprites/ui/gear.png
-multiplayer.tscn::PackedScene::5868657206435011884::1761363497::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://cu3m4ebkbuisy::::res://scripts/main.gd<>uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://bu1ij5gm8t32c::::res://themes/text.tres
+gem.tscn::PackedScene::4265392362968255407::1780623732::0::1::::<><><>0<>0<><>::uid://bm0iq37ov8u0m::::res://sprites/game/red.png<>uid://capej5uaeq3yo::::res://scripts/gem.gd
+gem_cluster.tscn::PackedScene::963712898817338270::1781279879::0::1::::<><><>0<>0<><>::uid://dfhu03giib1lj::::res://scripts/gem_cluster.gd
+level_menu.tscn::PackedScene::6821058103153911782::1777340058::0::1::::<><><>0<>0<><>::uid://74osieajwmqb::::res://scripts/level_menu.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://o5p230ijl6l2::::res://scripts/display_level.gd<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres
+main_menu.tscn::PackedScene::3011489727080448637::1780540989::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://d1qchq5eibbxc::::res://scripts/main_menu.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://2p8nm41yms72::::res://sprites/ui/logo.png<>uid://ddem14d4s7d5r::::res://themes/blue_theme.tres<>uid://bvyp88k3cskdn::::res://themes/yellow_theme.tres<>uid://iqwg5jjhcii4::::res://themes/red_theme.tres<>uid://jiywn80kpn3r::::res://themes/green_theme.tres<>uid://bsu12x2ay7cxw::::res://sprites/ui/gear.png
+multiplayer.tscn::PackedScene::5868657206435011884::1779326732::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://cu3m4ebkbuisy::::res://scripts/game_manager.gd<>uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://bu1ij5gm8t32c::::res://themes/text.tres
 particle.tscn::PackedScene/PackedScene::8249776620566035803::1761159650::0::1::::<><><>0<>0<><>::uid://bm0iq37ov8u0m::::res://sprites/game/red.png<>uid://bul7qdtap85bh::::res://scripts/particle.gd
-singleplayer.tscn::PackedScene::5345713011752407441::1761363497::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://cu3m4ebkbuisy::::res://scripts/main.gd<>uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://d2yasu5anptvw::::res://animations/turtle.tres<>uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://dimkkyhw8qawr::::res://animations/ghost.tres<>uid://uuqso3841tuq::::res://sprites/game/health_empty.png<>uid://bkp82r02rfi7m::::res://sprites/game/health_full.png
-::res://scripts/::1761186888
-battle_menu.gd::GDScript/GDScript::4797954887113598647::1761184121::0::1::::<>Control<><>0<>0<><>::
-brick.gd::GDScript/GDScript::1734217342060436800::1760668080::0::1::::<>Sprite2D<><>0<>0<><>::
-cell_object.gd::GDScript/GDScript::1948700848391291611::1761158216::0::1::::<>Sprite2D<><>0<>0<><>::
+rune.tscn::PackedScene::3086191248893235825::1780625823::0::1::::<><><>0<>0<><>::uid://bc3v0ftnt6ubr::::res://scripts/rune.gd
+singleplayer.tscn::PackedScene::5345713011752407441::1780699283::0::1::::<><><>0<>0<><>::uid://bpfp32dm1bc7t::::res://tilesets/ui.tres<>uid://gddegmnma88p::::res://tilesets/game.tres<>uid://dwli7dbw3elyk::::res://scripts/tile_layer_scroll.gd<>uid://cu3m4ebkbuisy::::res://scripts/game_manager.gd<>uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://d2yasu5anptvw::::res://animations/turtle.tres<>uid://bu1ij5gm8t32c::::res://themes/text.tres<>uid://dimkkyhw8qawr::::res://animations/ghost.tres<>uid://uuqso3841tuq::::res://sprites/game/health_empty.png<>uid://bkp82r02rfi7m::::res://sprites/game/health_full.png
+::res://scripts/::1781305519
+battle_menu.gd::GDScript::4797954887113598647::1779326887::0::1::::<>Control<><>0<>0<><>::
+board.gd::GDScript::2907784443029882743::1781305441::0::1::::Board<>Node2D<><>0<>0<><>::
+brick.gd::GDScript::1734217342060436800::1780623726::0::1::::Brick<>CellObject<><>0<>0<><>::
+cell_object.gd::GDScript::1948700848391291611::1780625546::0::1::::CellObject<>Node2D<><>0<>0<><>::
+character.gd::GDScript::3983312817354399486::1781305519::0::1::::Character<>Node2D<><>0<>0<><>::
+character_data.gd::GDScript::5973377889587656592::1781282021::0::1::::<>Resource<><>0<>0<><>::
 damage_text.gd::GDScript/GDScript::5399191529781191458::1761159608::0::1::::<>Label<><>0<>0<><>::
 display_level.gd::GDScript/GDScript::1045535624531069237::1761179093::0::1::::<>Control<><>0<>0<><>::
 enemy_data.gd::GDScript/GDScript::5459905668587325557::1761167538::0::1::::EnemyData<>RefCounted<><>0<>0<><>::
-gem.gd::GDScript/GDScript::4804067580415908718::1760668072::0::1::::<>Sprite2D<><>0<>0<><>::
-global.gd::GDScript/GDScript::6547530630212713102::1761186773::0::1::::<>Node<><>0<>0<><>::
+game_manager.gd::GDScript::6235201421291654604::1781282658::0::1::::<>Node2D<><>0<>0<><>::
+gem.gd::GDScript::4804067580415908718::1781279735::0::1::::Gem<>CellObject<><>0<>0<><>::
+gem_cluster.gd::GDScript::7525917378547709551::1781283586::0::1::::GemCluster<>CellObject<><>0<>0<><>::
+global.gd::GDScript::6547530630212713102::1780624822::0::1::::<>Node<><>0<>0<><>::
 levels.gd::GDScript/GDScript::6386881461486526664::1761178343::0::1::::<>Node<><>0<>0<><>::
-level_menu.gd::GDScript/GDScript::2306792559852713361::1761183832::0::1::::<>Control<><>0<>0<><>::
-main.gd::GDScript/GDScript::6235201421291654604::1761186888::0::1::::<>Node2D<><>0<>0<><>::
-main_menu.gd::GDScript/GDScript::9017336851186177180::1761179872::0::1::::<>Control<><>0<>0<><>::
-particle.gd::GDScript/GDScript::3814877415162122585::1761158250::0::1::::<>Sprite2D<><>0<>0<><>::
+level_menu.gd::GDScript::2306792559852713361::1779326687::0::1::::<>Control<><>0<>0<><>::
+main_menu.gd::GDScript::9017336851186177180::1779326788::0::1::::<>Control<><>0<>0<><>::
+particle.gd::GDScript::3814877415162122585::1780543625::0::1::::Particle<>CellObject<><>0<>0<><>::
+rune.gd::GDScript::2585920942363884811::1781279726::0::1::::Rune<>Gem<><>0<>0<><>::
 tile_layer_scroll.gd::GDScript/GDScript::8726667807909783878::1761175922::0::1::::<>TileMapLayer<><>0<>0<><>::
 ::res://sprites/::1760718575
 ::res://sprites/characters/::1761169900
@@ -53,7 +62,10 @@ rune_yellow.png::CompressedTexture2D/CompressedTexture2D::7989135876120529888::1
 water.png::CompressedTexture2D/CompressedTexture2D::6399753182209451203::1760577120::1761169900::1::::<><><>0<>0<>516379301892b000865a594d8fbec53b<>res://.godot/imported/water.png-4d23f617b1e29e6c95790b33e258fb18.ctex::
 white.png::CompressedTexture2D/CompressedTexture2D::3256549852676196866::1760459563::1761169900::1::::<><><>0<>0<>f4d1e456f36c936288ed1c28c75c6379<>res://.godot/imported/white.png-cb65f0ce16556af7827a5949412c4083.ctex::
 yellow.png::CompressedTexture2D/CompressedTexture2D::5151468297474083608::1760553458::1761169900::1::::<><><>0<>0<>87a9ce91f3a5645e46fc1374a784b8af<>res://.godot/imported/yellow.png-4edb9cf258c3ad19c9f78e41c5c3c7fb.ctex::
-::res://sprites/ui/::1761169900
+::res://sprites/ui/::1781280124
+bg_board_10x13.png::CompressedTexture2D::6383280822620119493::1780697045::1780697047::1::::<><><>0<>0<>61b12d6e9727f9f24b74c61c201518bc<>res://.godot/imported/bg_board_10x13.png-1383c30e3dc703f4384658a2df31ec6d.ctex::
+bg_character.png::CompressedTexture2D::6412636992607888556::1781306978::1781306979::1::::<><><>0<>0<>b312a3c1b269ba8be3a9d7325e383ee1<>res://.godot/imported/bg_character.png-f1bbc95d2efae275619d09f5422691e8.ctex::
+bg_cluster_preview.png::CompressedTexture2D::4513272902511045042::1780696065::1780696123::1::::<><><>0<>0<>9a9d465a06f13061758cb0bdc9b9ac48<>res://.godot/imported/bg_cluster_preview.png-fe775e2bbccb97207ac719f391cf1811.ctex::
 brick.png::CompressedTexture2D/CompressedTexture2D::449695819505345934::1760714275::1761169900::1::::<><><>0<>0<>7e278f184e58be7074a38b8b09b66f33<>res://.godot/imported/brick.png-2befe013dce1414d1e3466ea5c2a617c.ctex::
 button_blue.png::CompressedTexture2D/CompressedTexture2D::781508676304031780::1760651251::1761169900::1::::<><><>0<>0<>21f9af145fa5e9e28103a7dd25c34d3e<>res://.godot/imported/button_blue.png-d741ad009afbf6c53df1100a05b34e35.ctex::
 button_blue_highlight.png::CompressedTexture2D/CompressedTexture2D::6218670725369796395::1760651378::1761169900::1::::<><><>0<>0<>71d2cd1232ff3c3009710ab6cce9ca18<>res://.godot/imported/button_blue_highlight.png-71a2cb12597c2511344f27dfc09b5c34.ctex::
@@ -68,21 +80,21 @@ gear.png::CompressedTexture2D/CompressedTexture2D::3692735532286345196::17606540
 hslider.png::CompressedTexture2D/CompressedTexture2D::6919418139496505097::1760739363::1761169900::1::::<><><>0<>0<>1ca6042830b79436dabd444863afa930<>res://.godot/imported/hslider.png-1936fc18fed88ec56463d99c5b9aea70.ctex::
 hslider_tick.png::CompressedTexture2D/CompressedTexture2D::5121562722471593692::1760739633::1761169900::1::::<><><>0<>0<>3c408e658be2bb2c90a53588f5b28100<>res://.godot/imported/hslider_tick.png-7bae33dd80fb155c331e83e3cbbad4d9.ctex::
 logo.png::CompressedTexture2D/CompressedTexture2D::1928091996913244419::1760636524::1761169900::1::::<><><>0<>0<>476adcf74f49508da05b0531fa0eaae1<>res://.godot/imported/logo.png-75ba518391f99cda97bbf74dea4d1e6b.ctex::
-ui_tileset.png::CompressedTexture2D/CompressedTexture2D::1406659965001563357::1760732318::1761169900::1::::<><><>0<>0<>b9be9484a0e1fe11c9f03b259cfb68eb<>res://.godot/imported/ui_tileset.png-092a246aabf394737e8d5d6789a0b3ee.ctex::
-::res://themes/::1761363497
+ui_tileset.png::CompressedTexture2D/CompressedTexture2D::1406659965001563357::1781280035::1761169900::1::::<><><>0<>0<>b9be9484a0e1fe11c9f03b259cfb68eb<>res://.godot/imported/ui_tileset.png-092a246aabf394737e8d5d6789a0b3ee.ctex::
+::res://themes/::1780696276
 blue_button.tres::StyleBoxTexture/StyleBoxTexture::7776700387931944007::1760652570::0::1::::<><><>0<>0<><>::uid://letll1qs32yi::::res://sprites/ui/button_blue.png
 blue_button_highlight.tres::StyleBoxTexture/StyleBoxTexture::292183136273741737::1761167295::0::1::::<><><>0<>0<><>::uid://cuumulvdmjngd::::res://sprites/ui/button_blue_highlight.png
-blue_theme.tres::Theme::7378862656718875289::1761363496::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://efshi4837idd::::res://themes/blue_button_highlight.tres<>uid://di2deb2abljlf::::res://themes/blue_button.tres<>uid://c7ad5akrrulbi::::res://sprites/game/rune_blue.png<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
+blue_theme.tres::Theme::7378862656718875289::1780696276::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://efshi4837idd::::res://themes/blue_button_highlight.tres<>uid://di2deb2abljlf::::res://themes/blue_button.tres<>uid://c7ad5akrrulbi::::res://sprites/game/rune_blue.png<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
 green_button.tres::StyleBoxTexture/StyleBoxTexture::3704809509261558977::1761167295::0::1::::<><><>0<>0<><>::uid://b4xqq5afgyqki::::res://sprites/ui/button_green.png
 green_button_highlight.tres::StyleBoxTexture/StyleBoxTexture::1768064413978206018::1761167295::0::1::::<><><>0<>0<><>::uid://cbac56xsc7ayr::::res://sprites/ui/button_green_highlight.png
-green_theme.tres::Theme::649711844999024629::1761363496::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://0gp06sqe7mvi::::res://themes/green_button_highlight.tres<>uid://bs1vw3cji77ir::::res://themes/green_button.tres<>uid://cff2pxs6k3ira::::res://sprites/game/rune_green.png<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
-red_button.tres::StyleBoxTexture::884349065107868148::1761363496::0::1::::<><><>0<>0<><>::
+green_theme.tres::Theme::649711844999024629::1780696276::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://0gp06sqe7mvi::::res://themes/green_button_highlight.tres<>uid://bs1vw3cji77ir::::res://themes/green_button.tres<>uid://cff2pxs6k3ira::::res://sprites/game/rune_green.png<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
+red_button.tres::StyleBoxTexture::884349065107868148::1780696276::0::1::::<><><>0<>0<><>::
 red_button_highlight.tres::StyleBoxTexture/StyleBoxTexture::3481990830142403459::1761167295::0::1::::<><><>0<>0<><>::uid://bau524w7hpplo::::res://sprites/ui/button_red_highlight.png
-red_theme.tres::Theme::595888871795612461::1761363496::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://bpux46tibufpb::::res://themes/red_button_highlight.tres<>uid://mundnqmmxpjo::::res://themes/red_button.tres<>uid://cucj5cdixsehh::::res://sprites/game/rune_red.png<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
+red_theme.tres::Theme::595888871795612461::1780696276::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://bpux46tibufpb::::res://themes/red_button_highlight.tres<>uid://mundnqmmxpjo::::res://themes/red_button.tres<>uid://cucj5cdixsehh::::res://sprites/game/rune_red.png<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
 text.tres::LabelSettings/LabelSettings::3844374771706013744::1761167295::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf
 yellow_button.tres::StyleBoxTexture/StyleBoxTexture::3802059851609165970::1760652784::0::1::::<><><>0<>0<><>::uid://dieibopac0umn::::res://sprites/ui/button_yellow.png
 yellow_button_highlight.tres::StyleBoxTexture/StyleBoxTexture::4184828004412100600::1761167295::0::1::::<><><>0<>0<><>::uid://b2sy4qkvt4354::::res://sprites/ui/button_yellow_highlight.png
-yellow_theme.tres::Theme::3910902902273756875::1761363496::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://b0vfrgy2w4oma::::res://themes/yellow_button_highlight.tres<>uid://dl285vfifha53::::res://sprites/game/rune_yellow.png<>uid://buf0mubauol43::::res://themes/yellow_button.tres<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
-::res://tilesets/::1761363496
-game.tres::TileSet::427515823528782293::1761363496::0::1::::<><><>0<>0<><>::uid://cqxeshxq85gx2::::res://sprites/ui/game_area_tileset.png
-ui.tres::TileSet::3450537407499599427::1761363496::0::1::::<><><>0<>0<><>::uid://ubnqpvm6px38::::res://sprites/ui/ui_tileset.png
+yellow_theme.tres::Theme::3910902902273756875::1780696276::0::1::::<><><>0<>0<><>::uid://b1qiy8dqspxkh::::res://fonts/Runepool Pixel.ttf<>uid://b0vfrgy2w4oma::::res://themes/yellow_button_highlight.tres<>uid://dl285vfifha53::::res://sprites/game/rune_yellow.png<>uid://buf0mubauol43::::res://themes/yellow_button.tres<>uid://bmnq5uy3gaa6e::::res://sprites/game/white.png<>uid://ce76nitq6i3dw::::res://sprites/ui/hslider_tick.png<>uid://c5t22nr4om41b::::res://sprites/ui/hslider.png
+::res://tilesets/::1781305441
+game.tres::TileSet::427515823528782293::1781305441::0::1::::<><><>0<>0<><>::uid://cqxeshxq85gx2::::res://sprites/ui/game_area_tileset.png
+ui.tres::TileSet::3450537407499599427::1781305441::0::1::::<><><>0<>0<><>::uid://ubnqpvm6px38::::res://sprites/ui/ui_tileset.png

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dcx17si63n2k8"]
+
+[ext_resource type="Script" uid="uid://bhos1xnpban5x" path="res://scripts/board.gd" id="1_bw3vb"]
+[ext_resource type="Texture2D" uid="uid://cw7dx5eu5q1s0" path="res://sprites/ui/bg_board_10x13.png" id="2_nglv8"]
+[ext_resource type="Texture2D" uid="uid://b5ki7e1lxlloc" path="res://sprites/ui/bg_cluster_preview.png" id="3_fv4ni"]
+
+[node name="Board" type="Node2D" unique_id=278880117]
+script = ExtResource("1_bw3vb")
+
+[node name="BoardSprite" type="Sprite2D" parent="." unique_id=1431526404]
+position = Vector2(0, 16)
+texture = ExtResource("2_nglv8")
+centered = false
+
+[node name="PreviewSprite" type="Sprite2D" parent="." unique_id=712927361]
+position = Vector2(32, 0)
+texture = ExtResource("3_fv4ni")
+centered = false

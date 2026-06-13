@@ -1,0 +1,11 @@
+res://scenes/board.tscn
+res://tilesets/ui.tres
+res://tilesets/game.tres
+res://animations/turtle.tres
+res://animations/ghost.tres
+res://scripts/board.gd
+res://scripts/character.gd
+res://scenes/character.tscn
+res://scripts/gem_cluster.gd
+res://scripts/game_manager.gd
+res://scenes/damage_text.tscn

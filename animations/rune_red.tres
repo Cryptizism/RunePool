@@ -1,0 +1,48 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dpb1i3cxnqfm8"]
+
+[ext_resource type="Texture2D" uid="uid://cucj5cdixsehh" path="res://sprites/game/gems/rune_red.png" id="1_5ule1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xpdgy"]
+atlas = ExtResource("1_5ule1")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hccn8"]
+atlas = ExtResource("1_5ule1")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khtej"]
+atlas = ExtResource("1_5ule1")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdarg"]
+atlas = ExtResource("1_5ule1")
+region = Rect2(24, 0, 8, 8)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpdgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpdgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpdgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpdgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hccn8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_khtej")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdarg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]

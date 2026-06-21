@@ -1,0 +1,48 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dqb382gp76p8p"]
+
+[ext_resource type="Texture2D" uid="uid://cff2pxs6k3ira" path="res://sprites/game/gems/rune_green.png" id="1_bqxln"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n4iw0"]
+atlas = ExtResource("1_bqxln")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ht2ff"]
+atlas = ExtResource("1_bqxln")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k5ic5"]
+atlas = ExtResource("1_bqxln")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqsa1"]
+atlas = ExtResource("1_bqxln")
+region = Rect2(24, 0, 8, 8)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n4iw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n4iw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n4iw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n4iw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ht2ff")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k5ic5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqsa1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]

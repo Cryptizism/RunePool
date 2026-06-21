@@ -7,24 +7,30 @@ const GEM_SCENE: PackedScene = preload("res://scenes/gem.tscn")
 const RUNE_SCENE: PackedScene = preload("res://scenes/rune.tscn")
 const BRICK_SCENE: PackedScene = preload("res://scenes/brick.tscn")
 const CHARACTER_SCENE: PackedScene = preload("res://scenes/character.tscn")
+const RAINBOW_TEXT_SCENE = preload("uid://q5q1mlwi48lm")
 
 const CELL_SIZE: int = 8
-const BASE_GEM_COUNT: int = 20
+const BASE_GEM_COUNT: int = 16
 const COMPLEX_PIECE_TURN_COUNT: int = 5
-var debug_attack_enabled: bool = true
+var debug_attack_enabled: bool = false
 var width: int = 10
 var height: int = 13
-#var seed: String
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var turn_number: int = 1
 var player_id: int = 1
+var is_local_player: bool = true
 var character: Character
 var enemy: Character
-var enemy_gems_waiting: int = 0
+var incoming_gems_waiting: int = 0
+var opponent_board: Board
 var speed: float = 0.0
 var difficulty: int = 0
 var grid: Array[Array] = []
 var colors: Array[String]
 var runes_remaining: int = 0
+var ghost_gem_alpha: float = 0.15
+var time_before_first_cluster: float = 3.0
+var time_between_rune_spawn: float = 0.05
 var board_offset: Vector2 = Vector2(
 	(1 * CELL_SIZE) + (CELL_SIZE / 2),
 	(3 * CELL_SIZE) + (CELL_SIZE / 2)
@@ -37,6 +43,7 @@ var cluster_preview_offset: Vector2 = Vector2(
 	(5 * CELL_SIZE) + (CELL_SIZE / 2),
 	(1 * CELL_SIZE) + (CELL_SIZE / 2)
 )
+var ghost_layer: Node2D
 
 func _ready() -> void:
 	width = clamp(width, 2, 15)
@@ -46,6 +53,8 @@ func _ready() -> void:
 	for i in range(width):
 		grid[i] = []
 		grid[i].resize(height)
+	ghost_layer = Node2D.new()
+	add_child(ghost_layer)
 
 func _process(delta: float) -> void:
 	_try_debug_attack()
@@ -58,11 +67,18 @@ func _try_debug_attack() -> void:
 			"gems": 8,
 			"lines": 2
 		})
-		if enemy.hp <= 0:
-			enemy.hp = enemy.max_hp
 
 func _on_game_end() -> void:
-	get_tree().reload_current_scene()
+	get_tree().call_deferred("change_scene_to_file", "res://scenes/main_menu.tscn")
+
+func set_speed(_speed: int) -> void:
+	speed = _speed
+
+func set_difficulty(_difficulty: int) -> void:
+	difficulty = _difficulty
+
+func set_player_id(_player_id: int) -> void:
+	player_id = _player_id
 
 func set_character(character_id) -> void:
 	character = CHARACTER_SCENE.instantiate()
@@ -70,13 +86,31 @@ func set_character(character_id) -> void:
 	character.board = self
 	add_child(character)
 	character.set_max_hp(-1)
-	character.position = Vector2(
-		(-6 * CELL_SIZE) + (CELL_SIZE / 2),
-		(10 * CELL_SIZE) + (CELL_SIZE / 2) + 1
-	)
-	if enemy:
+	if Global.player_count == 1:
+		character.position = Vector2(
+			(-6 * CELL_SIZE) + (CELL_SIZE / 2),
+			(10 * CELL_SIZE) + (CELL_SIZE / 2) + 1
+		)
+	else:
+		if player_id == 1:
+			character.position = Vector2(
+				((width + 0.5) * CELL_SIZE) + (CELL_SIZE / 2),
+				(10 * CELL_SIZE) + (CELL_SIZE / 2) + 1
+			)
+		if player_id == 2:
+			character.position = Vector2(
+				(-5 * CELL_SIZE),
+				(2 * CELL_SIZE) + (CELL_SIZE / 2) + 1
+			)
+	#board offsets
+	if Global.player_count == 1 and !enemy:
+		position.x = 6 * CELL_SIZE
 		return
-	position = Vector2((6 * CELL_SIZE), 0)
+	if Global.player_count > 1:
+		position.x += CELL_SIZE / 2
+		if player_id == 2:
+			position.x += 6 * CELL_SIZE
+			return
 
 func set_enemy(character_id) -> void:
 	enemy = CHARACTER_SCENE.instantiate()
@@ -104,6 +138,9 @@ func _reset_board() -> void:
 				continue
 			next.destroy()
 
+func set_seed(_seed: int) -> void:
+	rng.seed = _seed
+
 func load_level(level_id: String) -> void:
 	_reset_board()
 	#init_enemy(level_id)
@@ -117,13 +154,19 @@ func load_level(level_id: String) -> void:
 				continue
 			_create_brick(Vector2i(j, i))
 	_refresh_colors()
+	var first_cluster: GemCluster = _create_cluster()
+	first_cluster.z_index += 5
+	clear_ghosts()
 	var rune_pattern: Array[Array] = _generate_rune_pattern()
-	_apply_rune_pattern(rune_pattern)
-	_create_cluster()
+	var runes: Array[Rune] = await _apply_rune_pattern(rune_pattern)
+	await get_tree().create_timer(time_before_first_cluster).timeout
+	for rune in runes:
+		rune.animated_sprite.play()
+	_begin_next_cluster()
 
 func _refresh_colors() -> void:
 	colors = Global.COLORS.duplicate(true)
-	colors.pop_at(randi_range(0, colors.size() - 1))
+	colors.pop_at(rng.randi_range(0, colors.size() - 1))
 
 func set_cell_rune_space(tiles: int) -> void:
 	cell_rune_space = clamp(tiles, 1, height - 1)
@@ -187,25 +230,28 @@ func _generate_rune_pattern() -> Array[Array]:
 	var available_cells: Array[Vector2i] = _get_available_cells()
 	for i in range(amount):
 		var size: int = available_cells.size()
-		var index: int = randi_range(0, size - 1)
+		var index: int = rng.randi_range(0, size - 1)
 		var cell: Vector2i = available_cells.get(index)
 		available_cells.pop_at(index)
 		if !cell_is_free(cell):
 			continue
-		pattern[cell.x][cell.y] = colors[randi_range(0, 2)]
+		pattern[cell.x][cell.y] = colors[rng.randi_range(0, 2)]
 	return pattern
 
-func _apply_rune_pattern(rune_pattern: Array[Array]) -> void:
+func _apply_rune_pattern(rune_pattern: Array[Array]) -> Array[Rune]:
 	if !rune_pattern:
-		return
+		return []
 	if rune_pattern.size() <= 0:
-		return
+		return []
+	var runes: Array[Rune] = []
 	for i in range(rune_pattern.size()):
 		for j in range(rune_pattern[i].size()):
 			var cell_color = rune_pattern[i][j]
 			if cell_color == null:
 				continue
-			_create_rune(Vector2i(i, j), cell_color)
+			runes.append(_create_rune(Vector2i(i, j), cell_color))
+			await get_tree().create_timer(time_between_rune_spawn).timeout
+	return runes
 
 func _get_available_cells() -> Array[Vector2i]:
 	var options: Array[Vector2i] = []
@@ -217,6 +263,50 @@ func _get_available_cells() -> Array[Vector2i]:
 			options.append(cell)
 	return options
 
+func clear_ghosts() -> void:
+	for child in ghost_layer.get_children():
+		child.queue_free()
+
+func update_ghost_cluster(cluster: GemCluster) -> void:
+	if !cluster:
+		return
+	clear_ghosts()
+	var simulated_cells = _simulate_cluster_drop(cluster)
+	for i in range(simulated_cells.size()):
+		var ghost = GEM_SCENE.instantiate()
+		ghost.color = cluster.gems[i].color
+		ghost.modulate = Color(1, 1, 1, ghost_gem_alpha)
+		ghost.set_process(false)
+		ghost.set_physics_process(false)
+		ghost_layer.add_child(ghost)
+		ghost.target_position = get_position_at_cell(simulated_cells[i])
+		ghost.position = ghost.target_position
+
+func _simulate_cluster_drop(cluster: GemCluster) -> Array[Vector2i]:
+	var base: Vector2i = cluster.pivot_cell
+	while true:
+		var next := base + Vector2i.DOWN
+		if !_cluster_can_move_to_shape(cluster, next):
+			break
+		base = next
+	var result: Array[Vector2i] = []
+	for offset in cluster.shape_cells:
+		result.append(base + offset)
+	return result
+
+func _cluster_can_move_to_shape(cluster: GemCluster, pivot: Vector2i) -> bool:
+	for offset in cluster.shape_cells:
+		var cell := pivot + offset
+		if !_cell_is_valid(cell):
+			return false
+		var cell_object = grid[cell.x][cell.y]
+		if cell_object == null:
+			continue
+		if cell_object is Gem and cell_object.cluster_id == cluster.cluster_id:
+			continue
+		return false
+	return true
+
 func _create_preview_cluster() -> GemCluster:
 	var cluster: GemCluster = CLUSTER_SCENE.instantiate()
 	cluster.board = self
@@ -225,6 +315,11 @@ func _create_preview_cluster() -> GemCluster:
 	add_child(cluster)
 	cluster.position = cluster_preview_offset
 	return cluster
+
+func _begin_next_cluster() -> void:
+	if active_cluster.begin_falling():
+		return
+	_on_game_end()
 
 func _create_cluster() -> GemCluster:
 	if active_cluster:
@@ -235,9 +330,6 @@ func _create_cluster() -> GemCluster:
 	active_cluster.pivot_cell = cluster_spawn_cell
 	next_cluster = _create_preview_cluster()
 	active_cluster.set_cluster_id(turn_number)
-	if !active_cluster.begin_falling():
-		_on_game_end()
-		return
 	return active_cluster
 
 func _create_gem(cell: Vector2i, color: String) -> CellObject:
@@ -419,31 +511,54 @@ func _separate_clusters(cluster_id: int) -> void:
 			if gem.cluster_id != cluster_id:
 				continue
 			gem.cluster_id = -1
+			gem.set_sprite("base")
 
 func _drop_enemy_gem() -> void:
-	var options: Array[Vector2i] = _get_available_cells()
+	if !enemy:
+		return
+	var options: Array[Vector2i] = []
+	for i in range(width):
+		var next_cell: Vector2i = Vector2i(i, 0)
+		if !cell_is_free(next_cell):
+			continue
+		options.append(next_cell)
 	if options.size() <= 0:
 		return
-	var cell: Vector2i = options.pick_random()
-	var color: String = colors.pick_random()
-	_create_gem(cell, color)
+	var cell: Vector2i = options[rng.randi_range(0, options.size() -1)]
+	var color: String = colors[rng.randi_range(0, colors.size() -1)]
+	var gem: Gem = _create_gem(cell, color)
+	if !gem:
+		return
+	gem.position = enemy.position
+	var tween: Tween = get_tree().create_tween()
+	tween.tween_property(gem, "position", gem.target_position, 0.75)
+	await tween.finished
+
+func receive_attack(amount: int) -> void:
+	incoming_gems_waiting += amount
+
+func show_combo_text(gem_count: int) -> void:
+	if !character:
+		return
+	var rainbow_text: RainbowText = RAINBOW_TEXT_SCENE.instantiate()
+	character.add_child(rainbow_text)
+	rainbow_text.update_combo_text(gem_count)
 
 func resolve_board() -> void:
 	var attempts: int = 100
 	var gem_count: int = 0
 	var line_count: int = 0
-	#settle board
+	#settle board loop
 	while attempts > 0:
 		attempts -= 1
 		var lines = _get_breakable_lines()
-		#if board is settled
+		#check if board is settled
 		if lines.size() <= 0:
-			if enemy_gems_waiting > 0:
-				enemy_gems_waiting -= 1
-				_drop_enemy_gem()
-				continue
-			break
-		#complete board iteration
+			if incoming_gems_waiting > 0:
+				while incoming_gems_waiting > 0:
+					incoming_gems_waiting -= 1
+					await _drop_enemy_gem()
+		#finish board iteration
 		line_count += lines.size()
 		var cells_to_destroy: Array[Vector2i] = []
 		for line in lines:
@@ -453,14 +568,20 @@ func resolve_board() -> void:
 		while _apply_gravity():
 			await get_tree().create_timer(0.2).timeout
 	#board is settled
-	if character:
-		character.check_launch_attack()
-		character.check_combo({
-			"gems": gem_count,
-			"lines": line_count,
-		})
 	turn_number += 1
+	show_combo_text(gem_count)
+	if character:
+		if enemy:
+			enemy.check_launch_attack()
+			character.check_combo({
+				"gems": gem_count,
+				"lines": line_count,
+			})
+		elif opponent_board:
+			var attack_amount: int = max(ceili(float(gem_count) / 4.0), 1)
+			opponent_board.receive_attack(attack_amount)
 	_create_cluster()
+	_begin_next_cluster()
 	if runes_remaining > 0:
 		return
 	_on_game_end()

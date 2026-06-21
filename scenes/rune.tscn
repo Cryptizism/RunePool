@@ -1,8 +1,14 @@
 [gd_scene format=3 uid="uid://bj78ebsbl110x"]
 
 [ext_resource type="Script" uid="uid://bc3v0ftnt6ubr" path="res://scripts/rune.gd" id="1_024sg"]
+[ext_resource type="SpriteFrames" uid="uid://dpb1i3cxnqfm8" path="res://animations/rune_red.tres" id="2_ou4tv"]
 
 [node name="Rune" type="Node2D" unique_id=1159909094]
 script = ExtResource("1_024sg")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=45193657]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1579375503]
+sprite_frames = ExtResource("2_ou4tv")
+autoplay = "default"
+frame_progress = 0.07682902

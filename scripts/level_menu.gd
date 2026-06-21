@@ -4,12 +4,14 @@ var level_data = preload("res://scripts/levels.gd")
 var level_names: Array = []
 var current_level: int = 0
 
+@onready var button_level_right: Button = $CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ButtonLevelRight
 @onready var label_level_name: Label = $CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2/LabelLevelName
 @onready var level_display: Control = $CenterContainer/VBoxContainer/VBoxContainer/LevelDisplay
 
 func _ready() -> void:
 	level_names = level_data.LEVEL_LAYOUTS.keys()
 	_update_level_display()
+	button_level_right.grab_focus()
 
 func _on_button_level_left_pressed() -> void:
 	current_level = (current_level - 1 + level_names.size()) % level_names.size()
@@ -20,11 +22,11 @@ func _on_button_level_right_pressed() -> void:
 	_update_level_display()
 
 func _on_button_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/main_menu.tscn")
 
 func _on_button_play_pressed() -> void:
 	Global.selected_level = level_names[current_level]
-	get_tree().change_scene_to_file("res://scenes/battle_menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menus/battle_menu.tscn")
 
 func _update_level_display() -> void:
 	var level_name = level_names[current_level]

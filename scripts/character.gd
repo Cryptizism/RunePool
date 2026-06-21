@@ -5,6 +5,7 @@ class_name Character
 @onready var background_sprite: Sprite2D = $BackgroundSprite
 @onready var health_bar: TextureProgressBar = $HealthBar
 @onready var display_label: Label = $DisplayLabel
+@onready var sprite_label: CenterContainer = $SpriteLabel
 
 const GHOST_SPRITE: SpriteFrames = preload("uid://dimkkyhw8qawr")
 const DAMAGE_TEXT_SCENE: PackedScene = preload("uid://cf0ps5pw36p24")
@@ -25,10 +26,12 @@ func _ready() -> void:
 	if !character_id:
 		return
 	load_character_data(character_id)
+	_update_attack_countdown()
 	display_label.z_index += 1
 
-func load_character_data(character_id: String) -> void:
-	var character_data: Dictionary = CharacterData.CHARACTER_DATA.get(character_id)
+func load_character_data(_character_id: String) -> void:
+	character_id = _character_id
+	var character_data: Dictionary = CharacterData.CHARACTER_DATA.get(_character_id)
 	display_name = character_data.get("name")
 	display_label.text = display_name
 	set_max_hp(character_data.get("max_hp"))
@@ -38,8 +41,11 @@ func set_max_hp(amount: int) -> void:
 	max_hp = clamp(amount, -1, 1000)
 	hp = max_hp
 	_update_health_bar()
+	_update_attack_countdown()
 
 func _update_health_bar() -> void:
+	if !health_bar:
+		return
 	health_bar.max_value = max_hp
 	health_bar.value = hp
 	health_bar.visible = max_hp >= 0
@@ -55,16 +61,31 @@ func _set_portrait(sprite_frames: SpriteFrames) -> void:
 func set_attack_frequency_in_turns(amount: int) -> void:
 	attack_frequency_in_turns = clamp(amount, 0, 10)
 
+func send_attack(amount: int) -> void:
+	if !opponent.board:
+		return
+	opponent.board.receive_attack(amount)
+
 func check_launch_attack() -> void:
 	if !opponent:
 		return
-	if opponent.max_hp >= 0:
-		return 
+	_update_attack_countdown()
+	if opponent.max_hp >= 0 or hp == 0:
+		return
 	if board.turn_number % attack_frequency_in_turns != 0:
 		return
 	if !opponent:
 		return
-	opponent.board.enemy_gems_waiting += 1
+	send_attack(1)
+
+func _update_attack_countdown() -> void:
+	if !sprite_label:
+		return
+	if max_hp <= -1 || hp == 0:
+		sprite_label.queue_free()
+		return
+	var turns_remaining: int = attack_frequency_in_turns - ((board.turn_number - 1) % attack_frequency_in_turns)
+	sprite_label.set_text(str(turns_remaining - 1))
 
 func check_combo(combo_data: Dictionary) -> void:
 	if !opponent:
@@ -75,7 +96,6 @@ func check_combo(combo_data: Dictionary) -> void:
 	var line_count: int = combo_data.get("lines")
 	if gem_count <= 4:
 		return
-	#var damage: int = 1 + ((gem_count - 4) / 2) + max(chain_count - 1, 0)
 	var damage: int = line_count - 1 + ceili(float(gem_count) / 4.0)
 	if !opponent:
 		return
@@ -83,7 +103,7 @@ func check_combo(combo_data: Dictionary) -> void:
 
 func receive_damage(amount: int) -> void:
 	if max_hp < 0:
-		board.enemy_gems_waiting += max(ceil(amount / 2), 1)
+		board.incoming_gems_waiting += max(ceil(amount / 2.0), 1)
 		return
 	take_damage(amount)
 
@@ -95,6 +115,7 @@ func take_damage(amount: int) -> void:
 	_flash_portrait()
 	_shake_portrait()
 	_show_damage_text(amount)
+	_update_attack_countdown()
 	if hp > 0:
 		return
 	die()
@@ -102,6 +123,16 @@ func take_damage(amount: int) -> void:
 func die() -> void:
 	character_sprite.sprite_frames = GHOST_SPRITE
 	display_label.visible = false
+
+func flip_portrait() -> void:
+	flipped_portrait = !flipped_portrait
+	character_sprite.flip_h = flipped_portrait
+
+func _set_shake(value: bool) -> void:
+	is_shaking = value
+
+func _set_flashing(value: bool) -> void:
+	is_flashing = value
 
 func _shake_portrait() -> void:
 	if !character_sprite or is_shaking:
@@ -114,7 +145,7 @@ func _shake_portrait() -> void:
 		var offset = Vector2(randf_range(-1, 1), randf_range(-1, 1))
 		tween.tween_property(character_sprite, "position", original_position + offset, speed)
 	tween.tween_property(character_sprite, "position", original_position, speed)
-	tween.tween_callback(func(): is_shaking = false)
+	tween.tween_callback(_set_shake.bind(false))
 
 func _flash_portrait(color: Color = Color(1, 0.2, 0.2)) -> void:
 	if !character_sprite or is_flashing:
@@ -124,7 +155,7 @@ func _flash_portrait(color: Color = Color(1, 0.2, 0.2)) -> void:
 	tween.tween_property(character_sprite, "modulate", color, 0.05)
 	tween.tween_interval(0.1)
 	tween.tween_property(character_sprite, "modulate", Color(1, 1, 1), 0.2)
-	tween.tween_callback(func(): is_flashing = false)
+	tween.tween_callback(_set_flashing.bind(false))
 
 func _show_damage_text(amount: int) -> void:
 	var label = DAMAGE_TEXT_SCENE.instantiate()

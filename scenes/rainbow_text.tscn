@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://q5q1mlwi48lm"]
+
+[ext_resource type="Script" uid="uid://bnhofc8mt467x" path="res://rainbow_text.gd" id="1_0mk1t"]
+
+[node name="RainbowText" type="Node2D" unique_id=1103384929]
+script = ExtResource("1_0mk1t")

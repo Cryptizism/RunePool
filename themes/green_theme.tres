@@ -3,8 +3,8 @@
 [ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_lbubo"]
 [ext_resource type="StyleBox" uid="uid://0gp06sqe7mvi" path="res://themes/green_button_highlight.tres" id="2_wftqk"]
 [ext_resource type="StyleBox" uid="uid://bs1vw3cji77ir" path="res://themes/green_button.tres" id="3_t6a5y"]
-[ext_resource type="Texture2D" uid="uid://cff2pxs6k3ira" path="res://sprites/game/rune_green.png" id="5_3qs58"]
-[ext_resource type="Texture2D" uid="uid://bmnq5uy3gaa6e" path="res://sprites/game/white.png" id="6_lr7iq"]
+[ext_resource type="Texture2D" uid="uid://cff2pxs6k3ira" path="res://sprites/game/gems/rune_green.png" id="5_3qs58"]
+[ext_resource type="Texture2D" uid="uid://bmnq5uy3gaa6e" path="res://sprites/game/gems/white.png" id="6_lr7iq"]
 [ext_resource type="Texture2D" uid="uid://ce76nitq6i3dw" path="res://sprites/ui/hslider_tick.png" id="7_lr7iq"]
 [ext_resource type="Texture2D" uid="uid://c5t22nr4om41b" path="res://sprites/ui/hslider.png" id="8_spilj"]
 

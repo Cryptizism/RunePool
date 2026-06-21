@@ -50,6 +50,18 @@ const SHAPES: Dictionary = {
 		[Vector2i(1, 0), Vector2i(1, -1), Vector2i(0, -1), Vector2i(0, 0)],
 	],
 }
+var small_kick_table: Array[Vector2i] = [
+	Vector2i.ZERO,
+	Vector2i.LEFT,
+	Vector2i.RIGHT,
+]
+var big_kick_table: Array[Vector2i] = [
+	Vector2i.ZERO,
+	Vector2i.LEFT,
+	Vector2i.RIGHT,
+	Vector2i.LEFT * 2,
+	Vector2i.RIGHT * 2,
+]
 
 func _ready() -> void:
 	if board == null:
@@ -66,18 +78,21 @@ func _process(delta: float) -> void:
 			_process_active(delta)
 
 func _process_active(delta: float) -> void:
-	fall_delay -= delta
+	fall_delay -= delta + (board.speed * 0.001)
 	move_delay -= delta
 	_handle_input(delta)
 	if fall_delay > 0:
 		return
 	fall_delay = base_fall_delay
+	board.update_ghost_cluster(self)
 	if shape_cells.size() > 3:
 		fall_delay += base_fall_delay_bonus
 	if !move_cluster(Vector2i.DOWN):
 		lock_cluster()
 
 func _handle_input(delta: float) -> void:
+	if !board.is_local_player:
+		return
 	if move_delay <= 0:
 		if Input.is_action_pressed("move_left"):
 			move_cluster(Vector2i.LEFT)
@@ -106,17 +121,19 @@ func begin_falling() -> bool:
 
 func _create_shape_gems() -> void:
 	var limited_color_options = board.colors.duplicate()
-	limited_color_options.remove_at(randi_range(0, limited_color_options.size() - 1))
+	limited_color_options.remove_at(board.rng.randi_range(0, limited_color_options.size() - 1))
 	for offset in shape_cells:
-		var color: String = limited_color_options.pick_random()
+		var color: String = limited_color_options[board.rng.randi_range(0, limited_color_options.size() -1)]
 		var gem: Gem = _create_gem(color)
 		gem.cluster_id = cluster_id
 		gems.append(gem)
+	_apply_pair_sprites()
 
 func _update_gem_positions() -> void:
 	target_position = board.get_position_at_cell(pivot_cell)
 	for i in range(gems.size()):
 		gems[i].target_position = shape_cells[i] * board.CELL_SIZE
+	board.update_ghost_cluster(self)
 
 func can_move(offset: Vector2i) -> bool:
 	for cell in _get_shape_cells_on_board():
@@ -133,11 +150,11 @@ func move_cluster(offset: Vector2i) -> bool:
 	move_delay = base_move_delay
 	return true
 
-func rotation_is_valid(rotated_cells: Array[Vector2i]) -> bool:
+func rotation_is_valid(rotated_cells: Array[Vector2i], test_pivot: Vector2i) -> bool:
 	if invalid_rotation_shapes.has(shape_id):
 		return false
 	for offset in rotated_cells:
-		var cell: Vector2i = pivot_cell + offset
+		var cell = test_pivot + offset
 		if !board.cell_is_free(cell):
 			return false
 	return true
@@ -146,24 +163,40 @@ func rotate_cluster(direction: int) -> void:
 	if !SHAPES.has(shape_id):
 		return
 	var rotations: Array = SHAPES[shape_id]
-	var new_rotation: int = wrapi(current_rotation + direction, 0, rotations.size())
+	var new_rotation := wrapi(
+		current_rotation + direction,
+		0,
+		rotations.size()
+	)
 	var rotated_cells: Array[Vector2i] = []
 	for cell in rotations[new_rotation]:
 		rotated_cells.append(cell)
-	if !rotation_is_valid(rotated_cells):
+	var kick_table: Array = small_kick_table if shape_id == "pair" else big_kick_table
+	for kick in kick_table:
+		var test_pivot = pivot_cell + kick
+		if !rotation_is_valid(rotated_cells, test_pivot):
+			continue
+		pivot_cell = test_pivot
+		current_rotation = new_rotation
+		shape_cells = rotated_cells
+		_update_gem_positions()
+		_apply_pair_sprites()
 		return
-	current_rotation = new_rotation
-	shape_cells = rotated_cells
-	_update_gem_positions()
 
 func lock_cluster() -> void:
-	for i in range(gems.size()):
+	var size: int = gems.size()
+	for i in range(size):
 		var gem: Gem = gems[i]
 		var cell: Vector2i = pivot_cell + shape_cells[i]
 		gem.reparent(board)
 		board.tp_object_to_cell(gem, cell)
+		if size <= 2:
+			continue
+		gem.cluster_id = -1
+		gem.set_sprite("base")
 	board.active_cluster = null
 	board.resolve_board()
+	board.clear_ghosts()
 	queue_free()
 
 func _get_shape_cells_on_board() -> Array[Vector2i]:
@@ -181,10 +214,32 @@ func _create_gem(color: String) -> CellObject:
 func _set_shape() -> void:
 	shape_id = "pair"
 	if can_spawn_complex_piece and SHAPES.size() > 0:
-		shape_id = SHAPES.keys().pick_random()
+		var keys: Array = SHAPES.keys()
+		shape_id = keys[board.rng.randi_range(0, keys.size() -1)]
 	if debug_force_shape_enabled:
 		shape_id = debug_force_shape
 	current_rotation = 0
 	shape_cells.clear()
 	for cell: Vector2i in SHAPES[shape_id][0]:
 		shape_cells.append(cell)
+
+func _apply_pair_sprites() -> void:
+	if shape_id != "pair":
+		return
+	if gems.size() != 2:
+		return
+	var delta := shape_cells[1] - shape_cells[0]
+	if delta.x != 0:
+		if delta.x > 0:
+			gems[0].set_sprite("h_left")
+			gems[1].set_sprite("h_right")
+		else:
+			gems[0].set_sprite("h_right")
+			gems[1].set_sprite("h_left")
+	else:
+		if delta.y > 0:
+			gems[0].set_sprite("v_top")
+			gems[1].set_sprite("v_bottom")
+		else:
+			gems[0].set_sprite("v_bottom")
+			gems[1].set_sprite("v_top")

@@ -58,7 +58,12 @@ func _on_button_difficulty_right_2_pressed() -> void:
 
 #menu
 func _on_button_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/menus/level_menu.tscn")
+	Transition.change_scene("res://scenes/menus/level_menu.tscn", "", "slide_up")
 
 func _on_button_play_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/multiplayer.tscn")
+	Transition.change_scene_loading(
+		"res://scenes/game_room.tscn",
+		"Good luck!",
+		"",
+		"slide_left",
+	)

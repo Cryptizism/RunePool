@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://cpribs6fdgrvq"]
+
+[ext_resource type="Texture2D" uid="uid://cqor6ohosmjjg" path="res://sprites/characters/error.png" id="1_4vdse"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_4vdse")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]

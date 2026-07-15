@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dwli7dbw3elyk" path="res://scripts/tile_layer_scroll.gd" id="4_euy4r"]
 [ext_resource type="Theme" uid="uid://ddem14d4s7d5r" path="res://themes/blue_theme.tres" id="4_flqon"]
 [ext_resource type="Theme" uid="uid://bvyp88k3cskdn" path="res://themes/yellow_theme.tres" id="6_1ajci"]
+[ext_resource type="Script" uid="uid://bqva0rge5itgb" path="res://scripts/ui_button.gd" id="6_50h1w"]
 [ext_resource type="Theme" uid="uid://iqwg5jjhcii4" path="res://themes/red_theme.tres" id="7_7b55j"]
 [ext_resource type="Theme" uid="uid://jiywn80kpn3r" path="res://themes/green_theme.tres" id="9_j7ex8"]
 
@@ -48,29 +49,36 @@ expand_mode = 3
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="ButtonStoryMode" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=458938550]
+[node name="ButtonStoryMode" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=1644880471]
 layout_mode = 2
 size_flags_stretch_ratio = 0.0
 theme = ExtResource("4_flqon")
 text = "Story Mode"
+script = ExtResource("6_50h1w")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
-[node name="ButtonBattleMode" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=703456246]
+[node name="ButtonBattleMode" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=168512270]
 layout_mode = 2
 theme = ExtResource("6_1ajci")
 text = "Battle Mode"
+script = ExtResource("6_50h1w")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
-[node name="ButtonSettings" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=777597495]
+[node name="ButtonSettings" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=1956316411]
 layout_mode = 2
 theme = ExtResource("9_j7ex8")
 text = "Settings"
+script = ExtResource("6_50h1w")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
-[node name="ButtonQuit" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=160059967]
+[node name="ButtonQuit" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=163293715]
 layout_mode = 2
 theme = ExtResource("7_7b55j")
 text = "Quit Game"
+script = ExtResource("6_50h1w")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/ButtonStoryMode" to="." method="_on_button_story_mode_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/ButtonStoryMode" to="CenterContainer/VBoxContainer/VBoxContainer/ButtonStoryMode" method="_on_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/ButtonBattleMode" to="." method="_on_button_battle_mode_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/ButtonSettings" to="." method="_on_button_settings_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/ButtonQuit" to="." method="_on_button_quit_pressed"]

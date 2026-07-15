@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://b2ywhv34ux4p"]
+
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="1_taj7a"]
+[ext_resource type="Theme" uid="uid://bvyp88k3cskdn" path="res://themes/yellow_theme.tres" id="2_qt8sj"]
+[ext_resource type="Script" uid="uid://bnx4bu1m74yek" path="res://scripts/ui_hslider.gd" id="3_qt8sj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_taj7a"]
+
+[node name="SettingSlider" type="HBoxContainer" unique_id=1212026343]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="." unique_id=1723434280]
+layout_mode = 2
+text = "SampleToggle"
+label_settings = ExtResource("1_taj7a")
+
+[node name="VSeparator" type="VSeparator" parent="." unique_id=1675557697]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_taj7a")
+
+[node name="HSlider" type="HSlider" parent="." unique_id=1810908180]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme = ExtResource("2_qt8sj")
+step = 10.0
+value = 80.0
+tick_count = 11
+ticks_on_borders = true
+ticks_position = 3
+script = ExtResource("3_qt8sj")
+metadata/_custom_type_script = "uid://bnx4bu1m74yek"

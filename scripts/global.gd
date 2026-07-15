@@ -6,6 +6,17 @@ var player_count: int = 1
 var player_characters: Array[String] = ["tippi", "tippi"]
 var player_speed: Array[float] = [0.0, 0.0]
 var player_difficulty: Array[int] = [0, 0]
+var current_floor: int = 1
+var story_mode_enemies: Array[String] = [
+	"mummy",
+	"goblin",
+	"golem",
+	"mimic",
+	"dragon",
+	"bobo",
+	"wizard",
+	"feline",
+]
 
 const COLORS: Array[String] = [
 	"red",

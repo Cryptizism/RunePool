@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c58wmwo0r3rxw"]
+
+[ext_resource type="Script" uid="uid://bnx4bu1m74yek" path="res://scripts/ui_hslider.gd" id="1_ns6km"]
+
+[node name="UIHSlider" type="HSlider" unique_id=756917636]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ns6km")

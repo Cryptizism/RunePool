@@ -1,17 +1,10 @@
 [gd_resource type="StyleBoxTexture" format=3 uid="uid://mundnqmmxpjo"]
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_erkrp"]
-load_path = "res://.godot/imported/button_red.png-9c4c58f9b0e4a8c9d31feb20c3295d71.ctex"
+[ext_resource type="Texture2D" uid="uid://cfhl66k887hpo" path="res://sprites/ui/button_red.png" id="1_lcl3e"]
 
 [resource]
-texture = SubResource("CompressedTexture2D_erkrp")
-texture_margin_left = 8.0
-texture_margin_top = 8.0
-texture_margin_right = 8.0
-texture_margin_bottom = 8.0
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
-region_rect = Rect2(0, 0, 24, 24)
+texture = ExtResource("1_lcl3e")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0

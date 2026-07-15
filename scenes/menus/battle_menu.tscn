@@ -7,6 +7,7 @@
 [ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="4_m80p5"]
 [ext_resource type="Theme" uid="uid://iqwg5jjhcii4" path="res://themes/red_theme.tres" id="5_71pn2"]
 [ext_resource type="Theme" uid="uid://bvyp88k3cskdn" path="res://themes/yellow_theme.tres" id="6_i8ht0"]
+[ext_resource type="Script" uid="uid://bqva0rge5itgb" path="res://scripts/ui_button.gd" id="6_sgvcd"]
 [ext_resource type="Theme" uid="uid://jiywn80kpn3r" path="res://themes/green_theme.tres" id="7_jusuq"]
 
 [node name="BattleMenu" type="Control" unique_id=1866565530]
@@ -56,7 +57,7 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 
-[node name="ButtonSpeedLeft1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3" unique_id=295701948]
+[node name="ButtonSpeedLeft1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3" unique_id=749275636]
 layout_mode = 2
 focus_neighbor_left = NodePath("../../../Player2Menu/HBoxContainer3/ButtonSpeedRight2")
 focus_neighbor_top = NodePath("../../../../HBoxContainer5/ButtonBack")
@@ -64,6 +65,8 @@ focus_neighbor_right = NodePath("../ButtonSpeedRight1")
 focus_neighbor_bottom = NodePath("../../HBoxContainer4/ButtonDifficultyLeft1")
 theme = ExtResource("6_i8ht0")
 text = "<"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="LabelSpeed1" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3" unique_id=1845949740]
 custom_minimum_size = Vector2(48, 0)
@@ -72,7 +75,7 @@ text = "Slow"
 label_settings = ExtResource("4_m80p5")
 horizontal_alignment = 1
 
-[node name="ButtonSpeedRight1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3" unique_id=1917526945]
+[node name="ButtonSpeedRight1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3" unique_id=210259531]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonSpeedLeft1")
 focus_neighbor_top = NodePath("../../../../HBoxContainer5/ButtonBack")
@@ -80,12 +83,14 @@ focus_neighbor_right = NodePath("../../../Player2Menu/HBoxContainer3/ButtonSpeed
 focus_neighbor_bottom = NodePath("../../HBoxContainer4/ButtonDifficultyRight1")
 theme = ExtResource("6_i8ht0")
 text = ">"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu" unique_id=1897325807]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 
-[node name="ButtonDifficultyLeft1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4" unique_id=1634280168]
+[node name="ButtonDifficultyLeft1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4" unique_id=1152363281]
 layout_mode = 2
 focus_neighbor_left = NodePath("../../../Player2Menu/HBoxContainer4/ButtonDifficultyRight2")
 focus_neighbor_top = NodePath("../../HBoxContainer3/ButtonSpeedLeft1")
@@ -93,6 +98,8 @@ focus_neighbor_right = NodePath("../ButtonDifficultyRight1")
 focus_neighbor_bottom = NodePath("../../../../HBoxContainer5/ButtonBack")
 theme = ExtResource("6_i8ht0")
 text = "<"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="LabelDifficulty1" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4" unique_id=1482468748]
 custom_minimum_size = Vector2(48, 0)
@@ -101,7 +108,7 @@ text = "Yikes"
 label_settings = ExtResource("4_m80p5")
 horizontal_alignment = 1
 
-[node name="ButtonDifficultyRight1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4" unique_id=701377180]
+[node name="ButtonDifficultyRight1" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer4" unique_id=812186178]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonDifficultyLeft1")
 focus_neighbor_top = NodePath("../../HBoxContainer3/ButtonSpeedRight1")
@@ -109,6 +116,8 @@ focus_neighbor_right = NodePath("../../../Player2Menu/HBoxContainer4/ButtonDiffi
 focus_neighbor_bottom = NodePath("../../../../HBoxContainer5/ButtonBack")
 theme = ExtResource("6_i8ht0")
 text = ">"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="Player2Menu" type="VBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1178860406]
 layout_mode = 2
@@ -124,14 +133,16 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 
-[node name="ButtonSpeedLeft2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3" unique_id=1046912828]
+[node name="ButtonSpeedLeft2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3" unique_id=990735984]
 layout_mode = 2
 focus_neighbor_left = NodePath("../../../Player1Menu/HBoxContainer3/ButtonSpeedRight1")
-focus_neighbor_top = NodePath("../../../../HBoxContainer5/ButtonBack")
+focus_neighbor_top = NodePath("../../../../HBoxContainer5/ButtonPlay")
 focus_neighbor_right = NodePath("../ButtonSpeedRight2")
 focus_neighbor_bottom = NodePath("../../HBoxContainer4/ButtonDifficultyLeft2")
 theme = ExtResource("3_8fkwu")
 text = "<"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="LabelSpeed2" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3" unique_id=326381744]
 custom_minimum_size = Vector2(48, 0)
@@ -140,20 +151,22 @@ text = "Slow"
 label_settings = ExtResource("4_m80p5")
 horizontal_alignment = 1
 
-[node name="ButtonSpeedRight2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3" unique_id=967806274]
+[node name="ButtonSpeedRight2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer3" unique_id=495997612]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonSpeedLeft2")
-focus_neighbor_top = NodePath("../../../../HBoxContainer5/ButtonBack")
+focus_neighbor_top = NodePath("../../../../HBoxContainer5/ButtonPlay")
 focus_neighbor_right = NodePath("../../../Player1Menu/HBoxContainer3/ButtonSpeedLeft1")
 focus_neighbor_bottom = NodePath("../../HBoxContainer4/ButtonDifficultyRight2")
 theme = ExtResource("3_8fkwu")
 text = ">"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu" unique_id=2001628347]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 
-[node name="ButtonDifficultyLeft2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4" unique_id=1257553303]
+[node name="ButtonDifficultyLeft2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4" unique_id=59415578]
 layout_mode = 2
 focus_neighbor_left = NodePath("../../../Player1Menu/HBoxContainer4/ButtonDifficultyRight1")
 focus_neighbor_top = NodePath("../../HBoxContainer3/ButtonSpeedLeft2")
@@ -161,6 +174,8 @@ focus_neighbor_right = NodePath("../ButtonDifficultyRight2")
 focus_neighbor_bottom = NodePath("../../../../HBoxContainer5/ButtonPlay")
 theme = ExtResource("3_8fkwu")
 text = "<"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="LabelDifficulty2" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4" unique_id=1665381359]
 custom_minimum_size = Vector2(48, 0)
@@ -169,7 +184,7 @@ text = "Yikes"
 label_settings = ExtResource("4_m80p5")
 horizontal_alignment = 1
 
-[node name="ButtonDifficultyRight2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4" unique_id=208332246]
+[node name="ButtonDifficultyRight2" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player2Menu/HBoxContainer4" unique_id=668387172]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonDifficultyLeft2")
 focus_neighbor_top = NodePath("../../HBoxContainer3/ButtonSpeedRight2")
@@ -177,29 +192,35 @@ focus_neighbor_right = NodePath("../../../Player1Menu/HBoxContainer4/ButtonDiffi
 focus_neighbor_bottom = NodePath("../../../../HBoxContainer5/ButtonPlay")
 theme = ExtResource("3_8fkwu")
 text = ">"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=1394048813]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="ButtonBack" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=780588]
+[node name="ButtonBack" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=45793685]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonPlay")
 focus_neighbor_top = NodePath("../../HBoxContainer/Player1Menu/HBoxContainer4/ButtonDifficultyRight1")
 focus_neighbor_right = NodePath("../ButtonPlay")
-focus_neighbor_bottom = NodePath("../../HBoxContainer/Player1Menu/HBoxContainer3/ButtonSpeedRight1")
+focus_neighbor_bottom = NodePath("../../HBoxContainer/Player1Menu/HBoxContainer3/ButtonSpeedLeft1")
 theme = ExtResource("5_71pn2")
 text = "BACK"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
-[node name="ButtonPlay" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=1835096745]
+[node name="ButtonPlay" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=700654546]
 layout_mode = 2
 size_flags_horizontal = 4
 focus_neighbor_left = NodePath("../ButtonBack")
 focus_neighbor_top = NodePath("../../HBoxContainer/Player2Menu/HBoxContainer4/ButtonDifficultyLeft2")
 focus_neighbor_right = NodePath("../ButtonBack")
-focus_neighbor_bottom = NodePath("../../HBoxContainer/Player2Menu/HBoxContainer3/ButtonSpeedLeft2")
+focus_neighbor_bottom = NodePath("../../HBoxContainer/Player2Menu/HBoxContainer3/ButtonSpeedRight2")
 theme = ExtResource("7_jusuq")
 text = "PLAY"
+script = ExtResource("6_sgvcd")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3/ButtonSpeedLeft1" to="." method="_on_button_speed_left_1_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer/Player1Menu/HBoxContainer3/ButtonSpeedLeft1" to="." method="_on_button_speed_left_pressed"]

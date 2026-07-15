@@ -72,6 +72,8 @@ func _ready() -> void:
 	_update_gem_positions()
 
 func _process(delta: float) -> void:
+	if board.state != board.State.ACTIVE:
+		return
 	match state:
 		State.FALLING:
 			super(delta)
@@ -91,21 +93,38 @@ func _process_active(delta: float) -> void:
 		lock_cluster()
 
 func _handle_input(delta: float) -> void:
-	if !board.is_local_player:
+	if board.state != board.State.ACTIVE:
 		return
 	if move_delay <= 0:
-		if Input.is_action_pressed("move_left"):
+		if board.input.move_left:
 			move_cluster(Vector2i.LEFT)
-		elif Input.is_action_pressed("move_right"):
+		elif board.input.move_right:
 			move_cluster(Vector2i.RIGHT)
 		else:
 			move_delay = 0
-	if Input.is_action_just_pressed("rotate_left"):
+	if board.input.rotate_left:
 		rotate_cluster(-1)
-	if Input.is_action_just_pressed("rotate_right"):
+	if board.input.rotate_right:
 		rotate_cluster(1)
-	if Input.is_action_pressed("move_down"):
+	if board.input.move_down:
 		fall_delay -= delta * drop_speed_mult
+
+#func _handle_input(delta: float) -> void:
+	#if !board.is_local_player:
+		#return
+	#if move_delay <= 0:
+		#if board.is_action_pressed("move_left"):
+			#move_cluster(Vector2i.LEFT)
+		#elif board.is_action_pressed("move_right"):
+			#move_cluster(Vector2i.RIGHT)
+		#else:
+			#move_delay = 0
+	#if board.is_action_just_pressed("rotate_left"):
+		#rotate_cluster(-1)
+	#if board.is_action_just_pressed("rotate_right"):
+		#rotate_cluster(1)
+	#if board.is_action_pressed("move_down"):
+		#fall_delay -= delta * drop_speed_mult
 
 func set_cluster_id(_cluster_id: int) -> void:
 	cluster_id = _cluster_id

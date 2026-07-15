@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://baa8drcd32m0s"]
+
+[ext_resource type="Script" uid="uid://bvws73sjah1ao" path="res://scripts/setting_keybind.gd" id="1_i5vjo"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="2_4wke2"]
+[ext_resource type="Theme" uid="uid://jiywn80kpn3r" path="res://themes/green_theme.tres" id="3_4wke2"]
+[ext_resource type="Script" uid="uid://bqva0rge5itgb" path="res://scripts/ui_button.gd" id="4_8kq14"]
+[ext_resource type="Theme" uid="uid://iqwg5jjhcii4" path="res://themes/red_theme.tres" id="4_b51l2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4wke2"]
+
+[node name="SettingKeyBind" type="HBoxContainer" unique_id=408476587]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+script = ExtResource("1_i5vjo")
+
+[node name="Label" type="Label" parent="." unique_id=1682837582]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "SampleToggle"
+label_settings = ExtResource("2_4wke2")
+
+[node name="VSeparator" type="VSeparator" parent="." unique_id=1466996751]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4wke2")
+
+[node name="Button" type="Button" parent="." unique_id=546314242]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("3_4wke2")
+toggle_mode = true
+text = "Unassigned"
+script = ExtResource("4_8kq14")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
+
+[node name="Reset" type="Button" parent="." unique_id=609820472]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("4_b51l2")
+text = "X"
+script = ExtResource("4_8kq14")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"

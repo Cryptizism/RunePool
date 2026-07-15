@@ -36,6 +36,7 @@ func load_character_data(_character_id: String) -> void:
 	display_label.text = display_name
 	set_max_hp(character_data.get("max_hp"))
 	_set_portrait(character_data.sprite_frames)
+	set_attack_frequency_in_turns(character_data.get("attack_frequency"))
 
 func set_max_hp(amount: int) -> void:
 	max_hp = clamp(amount, -1, 1000)
@@ -53,10 +54,17 @@ func _update_health_bar() -> void:
 func _set_portrait(sprite_frames: SpriteFrames) -> void:
 	if !character_sprite:
 		return
+	var flip: bool = true
+	var default: SpriteFrames = preload("res://animations/error.tres")
+	if !sprite_frames:
+		sprite_frames = default
+	if sprite_frames == default:
+		flip = false
 	character_sprite.sprite_frames = sprite_frames
 	character_sprite.frame = 1
 	character_sprite.play()
-	character_sprite.flip_h = flipped_portrait
+	if flip:
+		character_sprite.flip_h = flipped_portrait
 
 func set_attack_frequency_in_turns(amount: int) -> void:
 	attack_frequency_in_turns = clamp(amount, 0, 10)
@@ -86,6 +94,8 @@ func _update_attack_countdown() -> void:
 		return
 	var turns_remaining: int = attack_frequency_in_turns - ((board.turn_number - 1) % attack_frequency_in_turns)
 	sprite_label.set_text(str(turns_remaining - 1))
+	var color: Color = Color(1.0, 0.0, 0.0) if turns_remaining - 1 == 0 else Color(1.0, 1.0, 1.0)
+	sprite_label.set_color(color)
 
 func check_combo(combo_data: Dictionary) -> void:
 	if !opponent:
@@ -108,7 +118,7 @@ func receive_damage(amount: int) -> void:
 	take_damage(amount)
 
 func take_damage(amount: int) -> void:
-	if hp < 0:
+	if hp <= 0:
 		return
 	hp = clamp(hp - amount, 0, max_hp)
 	_update_health_bar()
@@ -135,7 +145,7 @@ func _set_flashing(value: bool) -> void:
 	is_flashing = value
 
 func _shake_portrait() -> void:
-	if !character_sprite or is_shaking:
+	if !character_sprite or is_shaking or !Settings.character_shake:
 		return
 	is_shaking = true
 	var original_position = character_sprite.position
@@ -158,6 +168,8 @@ func _flash_portrait(color: Color = Color(1, 0.2, 0.2)) -> void:
 	tween.tween_callback(_set_flashing.bind(false))
 
 func _show_damage_text(amount: int) -> void:
+	if !Settings.combo_text:
+		return
 	var label = DAMAGE_TEXT_SCENE.instantiate()
 	label.text = "-" + str(amount)
 	add_child(label)

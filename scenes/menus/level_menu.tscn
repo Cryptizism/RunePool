@@ -6,6 +6,7 @@
 [ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="4_7obll"]
 [ext_resource type="Theme" uid="uid://ddem14d4s7d5r" path="res://themes/blue_theme.tres" id="4_frxpb"]
 [ext_resource type="Script" uid="uid://o5p230ijl6l2" path="res://scripts/display_level.gd" id="5_2go0k"]
+[ext_resource type="Script" uid="uid://bqva0rge5itgb" path="res://scripts/ui_button.gd" id="7_bhe2l"]
 [ext_resource type="Theme" uid="uid://iqwg5jjhcii4" path="res://themes/red_theme.tres" id="7_tkofx"]
 [ext_resource type="Theme" uid="uid://jiywn80kpn3r" path="res://themes/green_theme.tres" id="9_ojubo"]
 
@@ -57,7 +58,7 @@ custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="ButtonLevelLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1575412254]
+[node name="ButtonLevelLeft" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1435224282]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonLevelRight")
 focus_neighbor_top = NodePath("../../HBoxContainer5/ButtonBack")
@@ -65,6 +66,8 @@ focus_neighbor_right = NodePath("../ButtonLevelRight")
 focus_neighbor_bottom = NodePath("../../HBoxContainer5/ButtonBack")
 theme = ExtResource("4_frxpb")
 text = "<"
+script = ExtResource("7_bhe2l")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="LabelLevelName" type="Label" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1010292666]
 custom_minimum_size = Vector2(48, 0)
@@ -73,7 +76,7 @@ text = "Classic"
 label_settings = ExtResource("4_7obll")
 horizontal_alignment = 1
 
-[node name="ButtonLevelRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1600252354]
+[node name="ButtonLevelRight" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1574055340]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonLevelLeft")
 focus_neighbor_top = NodePath("../../HBoxContainer5/ButtonPlay")
@@ -81,12 +84,14 @@ focus_neighbor_right = NodePath("../ButtonLevelLeft")
 focus_neighbor_bottom = NodePath("../../HBoxContainer5/ButtonPlay")
 theme = ExtResource("4_frxpb")
 text = ">"
+script = ExtResource("7_bhe2l")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="CenterContainer/VBoxContainer/VBoxContainer" unique_id=1793958875]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="ButtonBack" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=1647597016]
+[node name="ButtonBack" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=724644030]
 layout_mode = 2
 focus_neighbor_left = NodePath("../ButtonPlay")
 focus_neighbor_top = NodePath("../../HBoxContainer2/ButtonLevelLeft")
@@ -94,8 +99,10 @@ focus_neighbor_right = NodePath("../ButtonPlay")
 focus_neighbor_bottom = NodePath("../../HBoxContainer2/ButtonLevelLeft")
 theme = ExtResource("7_tkofx")
 text = "BACK"
+script = ExtResource("7_bhe2l")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
-[node name="ButtonPlay" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=1282823475]
+[node name="ButtonPlay" type="Button" parent="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer5" unique_id=1183535987]
 layout_mode = 2
 size_flags_horizontal = 4
 focus_neighbor_left = NodePath("../ButtonBack")
@@ -104,6 +111,8 @@ focus_neighbor_right = NodePath("../ButtonBack")
 focus_neighbor_bottom = NodePath("../../HBoxContainer2/ButtonLevelRight")
 theme = ExtResource("9_ojubo")
 text = "NEXT"
+script = ExtResource("7_bhe2l")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ButtonLevelLeft" to="." method="_on_button_level_left_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/VBoxContainer/HBoxContainer2/ButtonLevelRight" to="." method="_on_button_level_right_pressed"]

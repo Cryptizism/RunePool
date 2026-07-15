@@ -1,6 +1,11 @@
 extends Node2D
 class_name Board
 
+enum State { ACTIVE, PAUSED, VICTORY, LOSS }
+var state: State = State.ACTIVE
+
+signal game_ended
+
 const LEVEL_DATA: Resource = preload("res://scripts/levels.gd")
 const CLUSTER_SCENE: PackedScene = preload("res://scenes/gem_cluster.tscn")
 const GEM_SCENE: PackedScene = preload("res://scenes/gem.tscn")
@@ -18,7 +23,6 @@ var height: int = 13
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var turn_number: int = 1
 var player_id: int = 1
-var is_local_player: bool = true
 var character: Character
 var enemy: Character
 var incoming_gems_waiting: int = 0
@@ -44,6 +48,14 @@ var cluster_preview_offset: Vector2 = Vector2(
 	(1 * CELL_SIZE) + (CELL_SIZE / 2)
 )
 var ghost_layer: Node2D
+var input: PlayerInput = PlayerInput.new()
+enum InputSource {
+	LOCAL,
+	NETWORK,
+	AI,
+	REPLAY
+}
+var input_source: InputSource = InputSource.LOCAL
 
 func _ready() -> void:
 	width = clamp(width, 2, 15)
@@ -57,6 +69,12 @@ func _ready() -> void:
 	add_child(ghost_layer)
 
 func _process(delta: float) -> void:
+	if state != State.ACTIVE:
+		return
+	if input_source == InputSource.LOCAL:
+		input.update_local(player_id)
+	#else:
+		#input.update_network(packet)
 	_try_debug_attack()
 
 func _try_debug_attack() -> void:
@@ -69,7 +87,37 @@ func _try_debug_attack() -> void:
 		})
 
 func _on_game_end() -> void:
-	get_tree().call_deferred("change_scene_to_file", "res://scenes/main_menu.tscn")
+	game_ended.emit()
+	if state == State.LOSS:
+		if character:
+			character.set_max_hp(1)
+			character.take_damage(99)
+		if opponent_board:
+			opponent_board.state = State.VICTORY
+			opponent_board._on_game_end()
+	clear_ghosts()
+	if enemy:
+		enemy.queue_free()
+	if active_cluster:
+		active_cluster.queue_free()
+	if next_cluster:
+		next_cluster.queue_free()
+	_load_next_room()
+
+func _load_next_room() -> void:
+	await(get_tree().create_timer(4.0)).timeout
+	if Global.player_count > 1:
+		Transition.change_scene("res://scenes/menus/battle_menu.tscn")
+		return
+	if Global.current_floor - 1 <= Global.story_mode_enemies.size():
+		Transition.change_scene_loading(
+			"res://scenes/game_room.tscn",
+			"Descending to Floor " + str(Global.current_floor) + "/8",
+			"",
+			"slide_up",
+		)
+		return
+	Transition.change_scene("res://scenes/menus/main_menu.tscn")
 
 func set_speed(_speed: int) -> void:
 	speed = _speed
@@ -86,31 +134,22 @@ func set_character(character_id) -> void:
 	character.board = self
 	add_child(character)
 	character.set_max_hp(-1)
-	if Global.player_count == 1:
-		character.position = Vector2(
-			(-6 * CELL_SIZE) + (CELL_SIZE / 2),
-			(10 * CELL_SIZE) + (CELL_SIZE / 2) + 1
-		)
-	else:
+	character.position = Vector2(
+		(-6 * CELL_SIZE) + (CELL_SIZE / 2),
+		(10 * CELL_SIZE) + (CELL_SIZE / 2) + 1
+	)
+	position.y += 1 * CELL_SIZE
+	if Global.player_count == 2:
 		if player_id == 1:
-			character.position = Vector2(
-				((width + 0.5) * CELL_SIZE) + (CELL_SIZE / 2),
-				(10 * CELL_SIZE) + (CELL_SIZE / 2) + 1
-			)
+			position.x += 8 * CELL_SIZE
+			return
 		if player_id == 2:
-			character.position = Vector2(
-				(-5 * CELL_SIZE),
-				(2 * CELL_SIZE) + (CELL_SIZE / 2) + 1
-			)
-	#board offsets
-	if Global.player_count == 1 and !enemy:
+			character.position.x += 17 * CELL_SIZE
+			position.x += 9 * CELL_SIZE
+			return
+	if !enemy:
 		position.x = 6 * CELL_SIZE
 		return
-	if Global.player_count > 1:
-		position.x += CELL_SIZE / 2
-		if player_id == 2:
-			position.x += 6 * CELL_SIZE
-			return
 
 func set_enemy(character_id) -> void:
 	enemy = CHARACTER_SCENE.instantiate()
@@ -159,8 +198,11 @@ func load_level(level_id: String) -> void:
 	clear_ghosts()
 	var rune_pattern: Array[Array] = _generate_rune_pattern()
 	var runes: Array[Rune] = await _apply_rune_pattern(rune_pattern)
-	await get_tree().create_timer(time_before_first_cluster).timeout
+	if get_tree():
+		await get_tree().create_timer(time_before_first_cluster).timeout
 	for rune in runes:
+		if !rune or !rune.animated_sprite:
+			continue
 		rune.animated_sprite.play()
 	_begin_next_cluster()
 
@@ -226,7 +268,7 @@ func _generate_rune_pattern() -> Array[Array]:
 	if colors.size() != 3:
 		return []
 	var pattern: Array[Array] = _generate_empty_pattern()
-	var amount: int = BASE_GEM_COUNT + 2 * round(difficulty)
+	var amount: int = Global.current_floor - 1 + BASE_GEM_COUNT + 2 * round(difficulty)
 	var available_cells: Array[Vector2i] = _get_available_cells()
 	for i in range(amount):
 		var size: int = available_cells.size()
@@ -250,6 +292,8 @@ func _apply_rune_pattern(rune_pattern: Array[Array]) -> Array[Rune]:
 			if cell_color == null:
 				continue
 			runes.append(_create_rune(Vector2i(i, j), cell_color))
+			if !get_tree():
+				return runes
 			await get_tree().create_timer(time_between_rune_spawn).timeout
 	return runes
 
@@ -268,7 +312,7 @@ func clear_ghosts() -> void:
 		child.queue_free()
 
 func update_ghost_cluster(cluster: GemCluster) -> void:
-	if !cluster:
+	if !cluster or !Settings.ghost_gems_enabled:
 		return
 	clear_ghosts()
 	var simulated_cells = _simulate_cluster_drop(cluster)
@@ -319,6 +363,7 @@ func _create_preview_cluster() -> GemCluster:
 func _begin_next_cluster() -> void:
 	if active_cluster.begin_falling():
 		return
+	state = State.LOSS
 	_on_game_end()
 
 func _create_cluster() -> GemCluster:
@@ -346,6 +391,7 @@ func _create_rune(cell: Vector2i, color: String) -> CellObject:
 		return
 	var rune: Rune = RUNE_SCENE.instantiate()
 	rune.color = color
+	rune.board = self
 	add_child(rune)
 	tp_object_to_cell(rune, cell)
 	runes_remaining += 1
@@ -566,7 +612,8 @@ func resolve_board() -> void:
 			cells_to_destroy.append_array(line)
 		_destroy_lines(cells_to_destroy)
 		while _apply_gravity():
-			await get_tree().create_timer(0.2).timeout
+			if get_tree():
+				await get_tree().create_timer(0.2).timeout
 	#board is settled
 	turn_number += 1
 	show_combo_text(gem_count)
@@ -584,4 +631,5 @@ func resolve_board() -> void:
 	_begin_next_cluster()
 	if runes_remaining > 0:
 		return
+	state = State.VICTORY
 	_on_game_end()

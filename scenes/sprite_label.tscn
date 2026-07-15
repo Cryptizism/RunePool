@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bifn3kdjsf7wn"]
 
-[ext_resource type="Script" uid="uid://qv4anhjwoevx" path="res://sprite_label.gd" id="1_ggusl"]
+[ext_resource type="Script" uid="uid://qv4anhjwoevx" path="res://scripts/sprite_label.gd" id="1_ggusl"]
 [ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="2_rcoi7"]
 
 [node name="SpriteLabel" type="CenterContainer" unique_id=1289381167]

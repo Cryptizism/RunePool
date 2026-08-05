@@ -1,0 +1,14 @@
+extends RefCounted
+class_name Player
+
+var slot_number: int
+var peer_id: int
+var input: PlayerInput
+var board: Board
+
+func _init(_slot_number: int) -> void:
+	slot_number = _slot_number
+	input = PlayerInput.new()
+
+func is_local() -> bool:
+	return peer_id == NetworkManager.local_peer_id

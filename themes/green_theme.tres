@@ -18,6 +18,11 @@
 [ext_resource type="Texture2D" uid="uid://cbac56xsc7ayr" path="res://sprites/ui/button_green_highlight.png" id="10_wk35d"]
 [ext_resource type="Texture2D" uid="uid://db4oofh3lejhy" path="res://sprites/ui/scroll_bg.png" id="17_pb0xr"]
 
+[sub_resource type="FontVariation" id="FontVariation_pb0xr"]
+base_font = ExtResource("1_lbubo")
+spacing_top = 2
+spacing_bottom = -4
+
 [sub_resource type="DPITexture" id="DPITexture_p5j4p"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"7\" fill=\"#1a1a1a\" fill-opacity=\".25\"/></svg>
 "
@@ -144,7 +149,7 @@ texture_margin_bottom = 4.0
 [resource]
 Button/colors/font_color = Color(0.733333, 0.937255, 0.462745, 1)
 Button/font_sizes/font_size = 8
-Button/fonts/font = ExtResource("1_lbubo")
+Button/fonts/font = SubResource("FontVariation_pb0xr")
 Button/styles/focus = ExtResource("2_wftqk")
 Button/styles/hover = ExtResource("3_t6a5y")
 Button/styles/normal = ExtResource("3_t6a5y")

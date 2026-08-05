@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://bg2cxl2mcot3v"]
+
+[ext_resource type="Script" uid="uid://djokue5qk3ubl" path="res://lobby_entry.gd" id="1_knkw4"]
+[ext_resource type="LabelSettings" uid="uid://da0solgm3g0wg" path="res://themes/text_6.tres" id="2_rgbl1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5cj4p"]
+
+[node name="LobbyEntry" type="Control" unique_id=245426221]
+custom_minimum_size = Vector2(0, 12)
+custom_maximum_size = Vector2(-1, 12)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_knkw4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=816409165]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelMembers" type="Label" parent="HBoxContainer" unique_id=1826800965]
+layout_mode = 2
+text = "( 1 / 2 )"
+label_settings = ExtResource("2_rgbl1")
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer" unique_id=1844678436]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_5cj4p")
+
+[node name="LabelName" type="Label" parent="HBoxContainer" unique_id=689791392]
+layout_mode = 2
+text = "Name"
+label_settings = ExtResource("2_rgbl1")

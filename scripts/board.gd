@@ -49,13 +49,13 @@ var cluster_preview_offset: Vector2 = Vector2(
 )
 var ghost_layer: Node2D
 var input: PlayerInput = PlayerInput.new()
-enum InputSource {
-	LOCAL,
-	NETWORK,
-	AI,
-	REPLAY
-}
-var input_source: InputSource = InputSource.LOCAL
+#enum InputSource {
+	#LOCAL,
+	#NETWORK,
+	#AI,
+	#REPLAY
+#}
+#var input_source: InputSource = InputSource.LOCAL
 
 func _ready() -> void:
 	width = clamp(width, 2, 15)
@@ -68,14 +68,23 @@ func _ready() -> void:
 	ghost_layer = Node2D.new()
 	add_child(ghost_layer)
 
-func _process(delta: float) -> void:
+#func _process(delta: float) -> void:
+	#if state != State.ACTIVE:
+		#return
+	#if input_source == InputSource.LOCAL:
+		#input.update_local(player_id)
+	##else:
+		##input.update_network(packet)
+	#_try_debug_attack()
+
+func tick(delta: float) -> void:
 	if state != State.ACTIVE:
 		return
-	if input_source == InputSource.LOCAL:
-		input.update_local(player_id)
-	#else:
-		#input.update_network(packet)
 	_try_debug_attack()
+	if active_cluster:
+		active_cluster.handle_input(delta)
+		active_cluster.tick(delta)
+		next_cluster.tick(delta)
 
 func _try_debug_attack() -> void:
 	if !debug_attack_enabled:
@@ -183,6 +192,8 @@ func set_seed(_seed: int) -> void:
 func load_level(level_id: String) -> void:
 	_reset_board()
 	#init_enemy(level_id)
+	if level_id == "random":
+		level_id = LEVEL_DATA.get_random_level_name()
 	var layout = LEVEL_DATA.LEVEL_LAYOUTS[level_id]
 	if !layout:
 		layout = LEVEL_DATA.LEVEL_LAYOUTS["classic"]
@@ -268,7 +279,7 @@ func _generate_rune_pattern() -> Array[Array]:
 	if colors.size() != 3:
 		return []
 	var pattern: Array[Array] = _generate_empty_pattern()
-	var amount: int = Global.current_floor - 1 + BASE_GEM_COUNT + 2 * round(difficulty)
+	var amount: int = Global.current_floor - 1 + BASE_GEM_COUNT + (2 * round(difficulty))
 	var available_cells: Array[Vector2i] = _get_available_cells()
 	for i in range(amount):
 		var size: int = available_cells.size()
@@ -358,6 +369,7 @@ func _create_preview_cluster() -> GemCluster:
 	cluster.can_spawn_complex_piece = turn_number % COMPLEX_PIECE_TURN_COUNT == 0
 	add_child(cluster)
 	cluster.position = cluster_preview_offset
+	cluster.target_position = cluster.position
 	return cluster
 
 func _begin_next_cluster() -> void:

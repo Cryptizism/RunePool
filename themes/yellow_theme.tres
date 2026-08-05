@@ -9,6 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://ce76nitq6i3dw" path="res://sprites/ui/hslider_tick.png" id="6_8sh86"]
 [ext_resource type="Texture2D" uid="uid://com23aeniysud" path="res://sprites/ui/slider.png" id="8_g35my"]
 
+[sub_resource type="FontVariation" id="FontVariation_g35my"]
+base_font = ExtResource("1_0vuvd")
+spacing_top = 2
+spacing_bottom = -4
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_04qj8"]
 texture = ExtResource("8_g35my")
 
@@ -22,7 +27,7 @@ anti_aliasing = false
 [resource]
 Button/colors/font_color = Color(1, 0.866667, 0.329412, 1)
 Button/font_sizes/font_size = 8
-Button/fonts/font = ExtResource("1_0vuvd")
+Button/fonts/font = SubResource("FontVariation_g35my")
 Button/styles/focus = ExtResource("3_s2jf1")
 Button/styles/hover = ExtResource("4_dbpdx")
 Button/styles/normal = ExtResource("4_dbpdx")

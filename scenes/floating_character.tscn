@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c0jctsqh5bsga"]
 
 [ext_resource type="Script" uid="uid://cxvjdo36kpq87" path="res://scripts/floating_character.gd" id="1_8hesd"]
-[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="1_717sf"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text_8.tres" id="1_717sf"]
 
 [node name="FloatingCharacter" type="Label" unique_id=1434060053]
 label_settings = ExtResource("1_717sf")

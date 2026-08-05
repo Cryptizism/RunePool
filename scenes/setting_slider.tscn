@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b2ywhv34ux4p"]
 
-[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="1_taj7a"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text_8.tres" id="1_taj7a"]
 [ext_resource type="Theme" uid="uid://bvyp88k3cskdn" path="res://themes/yellow_theme.tres" id="2_qt8sj"]
 [ext_resource type="Script" uid="uid://bnx4bu1m74yek" path="res://scripts/ui_hslider.gd" id="3_qt8sj"]
 

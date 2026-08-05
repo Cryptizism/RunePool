@@ -17,7 +17,7 @@ func _on_button_story_mode_pressed() -> void:
 
 func _on_button_battle_mode_pressed() -> void:
 	Global.player_count = 2
-	Transition.change_scene("res://scenes/menus/level_menu.tscn", "", "slide_right")
+	Transition.change_scene("res://scenes/menus/battle_menu.tscn", "", "slide_right")
 
 func _on_button_quit_pressed() -> void:
 	get_tree().quit()

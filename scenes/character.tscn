@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bw0styvr88gwc" path="res://scripts/character.gd" id="1_rkhd4"]
 [ext_resource type="Texture2D" uid="uid://uuqso3841tuq" path="res://sprites/game/health_empty.png" id="3_my7n2"]
 [ext_resource type="Texture2D" uid="uid://bkp82r02rfi7m" path="res://sprites/game/health_full.png" id="4_dp8ca"]
-[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="5_dp8ca"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text_8.tres" id="5_dp8ca"]
 [ext_resource type="PackedScene" uid="uid://bifn3kdjsf7wn" path="res://scenes/sprite_label.tscn" id="6_2cgup"]
 [ext_resource type="Texture2D" uid="uid://b3jjumb2hd5l5" path="res://sprites/sword.png" id="7_a5ia6"]
 

@@ -73,22 +73,22 @@ func reset_all_keybinds() -> void:
 		reset_keybind(action)
 
 func save_keybinds() -> void:
-	var config = ConfigFile.new()
+	var config: ConfigFile = ConfigFile.new()
 	for action in InputMap.get_actions():
 		if action.begins_with("ui_"):
 			continue
-		var events = InputMap.action_get_events(action)
+		var events: Array[InputEvent] = InputMap.action_get_events(action)
 		config.set_value("keybinds", action, events)
 	config.save(FILE_PATH)
 
 func load_keybinds() -> void:
-	var config = ConfigFile.new()
+	var config: ConfigFile = ConfigFile.new()
 	if config.load(FILE_PATH) != OK:
 		return
 	for action in config.get_section_keys("keybinds"):
 		if !InputMap.has_action(action):
 			continue
 		InputMap.action_erase_events(action)
-		var events = config.get_value("keybinds", action)
+		var events: Array[InputEvent] = config.get_value("keybinds", action)
 		for event in events:
 			InputMap.action_add_event(action, event)

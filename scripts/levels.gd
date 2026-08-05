@@ -106,11 +106,26 @@ const LEVEL_LAYOUTS = {
 		"###....###",
 		"####..####",
 	],
+	"random": [
+		"..........",
+		"...####...",
+		"..######..",
+		"..##..##..",
+		"......##..",
+		".....##...",
+		"....##....",
+		"....##....",
+		"....##....",
+		"..........",
+		"....##....",
+		"....##....",
+		"..........",
+	],
 }
 	
 static func get_random_level_name() -> String:
 	var levels = LEVEL_LAYOUTS.keys()
-	var chosen = levels[randi() % levels.size()]
+	var chosen = levels[randi() % levels.size() - 1] #avoid "random" in last slot
 	if chosen.is_empty():
 		chosen = "classic"
 	return chosen

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ckrh6swq3omoj" path="res://scripts/loading_level.gd" id="1_1mqtu"]
 [ext_resource type="TileSet" uid="uid://gddegmnma88p" path="res://tilesets/game.tres" id="2_2gqwn"]
 [ext_resource type="Script" uid="uid://dwli7dbw3elyk" path="res://scripts/tile_layer_scroll.gd" id="3_rtaq7"]
-[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text.tres" id="4_kvf30"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text_8.tres" id="4_kvf30"]
 [ext_resource type="Texture2D" uid="uid://n6yhyslv38bn" path="res://sprites/ui/bar_under.png" id="5_2ufv1"]
 [ext_resource type="Texture2D" uid="uid://ogg6vjvyn27m" path="res://sprites/ui/bar_progress.png" id="6_we310"]
 

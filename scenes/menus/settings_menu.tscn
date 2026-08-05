@@ -203,7 +203,7 @@ size_flags_horizontal = 3
 
 [node name="MoveUp" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=1882805020 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "move_up_1"
+action = "move_up_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/MoveUp" index="0" unique_id=1682837582]
 text = "P1 Move Up"
@@ -218,6 +218,7 @@ focus_neighbor_bottom = NodePath("../../MoveLeft/Reset")
 
 [node name="MoveLeft" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=780442259 instance=ExtResource("5_da10i")]
 layout_mode = 2
+action = "move_left_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/MoveLeft" index="0" unique_id=1682837582]
 text = "P1 Move Left"
@@ -234,7 +235,7 @@ focus_neighbor_bottom = NodePath("../../MoveDown/Reset")
 
 [node name="MoveDown" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=569610418 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "move_down_1"
+action = "move_down_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/MoveDown" index="0" unique_id=1682837582]
 text = "P1 Move Down"
@@ -251,7 +252,7 @@ focus_neighbor_bottom = NodePath("../../MoveRight/Reset")
 
 [node name="MoveRight" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=652971324 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "move_right_1"
+action = "move_right_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/MoveRight" index="0" unique_id=1682837582]
 text = "P1 Move Right"
@@ -268,7 +269,7 @@ focus_neighbor_bottom = NodePath("../../RotateLeft/Reset")
 
 [node name="RotateLeft" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=2046246324 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "rotate_left_1"
+action = "rotate_left_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/RotateLeft" index="0" unique_id=1682837582]
 text = "P1 Rotate Left"
@@ -285,7 +286,7 @@ focus_neighbor_bottom = NodePath("../../RotateRight/Reset")
 
 [node name="RotateRight" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=119372500 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "rotate_right_1"
+action = "rotate_right_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/RotateRight" index="0" unique_id=1682837582]
 text = "P1 Rotate Right"
@@ -302,7 +303,7 @@ focus_neighbor_bottom = NodePath("../../Accept/Reset")
 
 [node name="Accept" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=901715306 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "accept_1"
+action = "accept_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/Accept" index="0" unique_id=1682837582]
 text = "P1 Accept"
@@ -319,7 +320,7 @@ focus_neighbor_bottom = NodePath("../../Back/Reset")
 
 [node name="Back" parent="TabContainer/TabControls/MarginContainer/VBoxContainer" unique_id=676779376 instance=ExtResource("5_da10i")]
 layout_mode = 2
-action = "back_1"
+action = "back_0"
 
 [node name="Label" parent="TabContainer/TabControls/MarginContainer/VBoxContainer/Back" index="0" unique_id=1682837582]
 text = "P1 Back"

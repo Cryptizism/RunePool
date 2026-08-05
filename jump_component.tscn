@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://4ksyipbryn6s"]
+
+[ext_resource type="Script" uid="uid://b1kycmv6if7bw" path="res://silly_lib/jump_component_2d.gd" id="1_aa85q"]
+
+[node name="Node2D" type="Node2D" unique_id=1612255199]
+script = ExtResource("1_aa85q")

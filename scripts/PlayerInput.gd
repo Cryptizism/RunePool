@@ -10,7 +10,7 @@ var accept: bool = false
 var back: bool = false
 
 func update_local(player_id: int) -> void:
-	if ![1, 2].has(player_id):
+	if ![0, 1].has(player_id):
 		return
 	move_up = Input.is_action_pressed("move_up_" + str(player_id))
 	move_down = Input.is_action_pressed("move_down_" + str(player_id))

@@ -1,0 +1,14 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://da0solgm3g0wg"]
+
+[ext_resource type="FontFile" uid="uid://b1qiy8dqspxkh" path="res://fonts/Runepool Pixel.ttf" id="1_uh3xw"]
+
+[sub_resource type="FontVariation" id="FontVariation_gldkd"]
+base_font = ExtResource("1_uh3xw")
+spacing_top = 2
+spacing_bottom = -4
+
+[resource]
+font = SubResource("FontVariation_gldkd")
+font_size = 6
+outline_size = 6
+outline_color = Color(0, 0, 0, 1)

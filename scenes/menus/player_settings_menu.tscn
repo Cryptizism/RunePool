@@ -1,0 +1,186 @@
+[gd_scene format=3 uid="uid://ba7r4pposdaos"]
+
+[ext_resource type="Script" uid="uid://tlp35xln5owl" path="res://scenes/menus/player_settings.gd" id="1_b0l7l"]
+[ext_resource type="LabelSettings" uid="uid://bu1ij5gm8t32c" path="res://themes/text_8.tres" id="2_l12ug"]
+[ext_resource type="Theme" uid="uid://bvyp88k3cskdn" path="res://themes/yellow_theme.tres" id="3_p4c0b"]
+[ext_resource type="Script" uid="uid://bnx4bu1m74yek" path="res://scripts/ui_hslider.gd" id="4_niyhg"]
+[ext_resource type="LabelSettings" uid="uid://da0solgm3g0wg" path="res://themes/text_6.tres" id="5_eisgu"]
+[ext_resource type="Script" uid="uid://bqva0rge5itgb" path="res://scripts/ui_button.gd" id="6_pypvm"]
+[ext_resource type="Texture2D" uid="uid://n82lxsh1a24w" path="res://sprites/characters/turtle_idle.png" id="7_pdnf0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lsabm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6mrwu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ofypy"]
+atlas = ExtResource("7_pdnf0")
+region = Rect2(0, 0, 32, 32)
+
+[node name="Player1Menu" type="VBoxContainer" unique_id=938849739 node_paths=PackedStringArray("player_name", "speed_slider", "speed_label", "difficulty_slider", "difficulty_label", "character_name", "character_button_left", "character_button_right", "character_image", "character_description")]
+script = ExtResource("1_b0l7l")
+player_name = NodePath("PlayerName")
+speed_slider = NodePath("SpeedBox/HBoxContainer/SpeedSlider")
+speed_label = NodePath("SpeedBox/HBoxContainer/SpeedLabel")
+difficulty_slider = NodePath("DifficultyBox/HBoxContainer/DifficultySlider")
+difficulty_label = NodePath("DifficultyBox/HBoxContainer/Difficultylabel")
+character_name = NodePath("CharacterBox/CharacterName")
+character_button_left = NodePath("CharacterBox/HBoxContainer/ButtonLeft")
+character_button_right = NodePath("CharacterBox/HBoxContainer/ButtonRight")
+character_image = NodePath("CharacterBox/HBoxContainer/CharacterImage")
+character_description = NodePath("CharacterBox/CharacterDescription")
+
+[node name="PlayerName" type="Label" parent="." unique_id=683239416]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "PLAYER 1:"
+label_settings = ExtResource("2_l12ug")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=837846097]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_lsabm")
+
+[node name="SpeedBox" type="VBoxContainer" parent="." unique_id=1192250010]
+layout_mode = 2
+
+[node name="Speed" type="Label" parent="SpeedBox" unique_id=442798386]
+custom_maximum_size = Vector2(64, -1)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "SPEED"
+label_settings = ExtResource("2_l12ug")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SpeedBox" unique_id=356283728]
+layout_mode = 2
+
+[node name="SpeedSlider" type="HSlider" parent="SpeedBox/HBoxContainer" unique_id=1794355986]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+focus_neighbor_bottom = NodePath("../../SoundSlider/HSlider")
+theme = ExtResource("3_p4c0b")
+max_value = 9.0
+value = 2.0
+rounded = true
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3
+script = ExtResource("4_niyhg")
+metadata/_custom_type_script = "uid://bnx4bu1m74yek"
+
+[node name="VSeparator" type="VSeparator" parent="SpeedBox/HBoxContainer" unique_id=1671695031]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_6mrwu")
+
+[node name="SpeedLabel" type="Label" parent="SpeedBox/HBoxContainer" unique_id=254295076]
+custom_maximum_size = Vector2(64, -1)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "1.0"
+label_settings = ExtResource("5_eisgu")
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="." unique_id=1190548682]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_lsabm")
+
+[node name="DifficultyBox" type="VBoxContainer" parent="." unique_id=523016088]
+layout_mode = 2
+
+[node name="Difficulty" type="Label" parent="DifficultyBox" unique_id=2083754407]
+custom_maximum_size = Vector2(64, -1)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "DIFFICULTY"
+label_settings = ExtResource("2_l12ug")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DifficultyBox" unique_id=1803654886]
+layout_mode = 2
+
+[node name="DifficultySlider" type="HSlider" parent="DifficultyBox/HBoxContainer" unique_id=1987157423]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+focus_neighbor_bottom = NodePath("../../SoundSlider/HSlider")
+theme = ExtResource("3_p4c0b")
+max_value = 9.0
+value = 9.0
+rounded = true
+tick_count = 10
+ticks_on_borders = true
+ticks_position = 3
+script = ExtResource("4_niyhg")
+metadata/_custom_type_script = "uid://bnx4bu1m74yek"
+
+[node name="VSeparator" type="VSeparator" parent="DifficultyBox/HBoxContainer" unique_id=1171877336]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_6mrwu")
+
+[node name="Difficultylabel" type="Label" parent="DifficultyBox/HBoxContainer" unique_id=310563898]
+custom_maximum_size = Vector2(64, -1)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "1.0"
+label_settings = ExtResource("5_eisgu")
+horizontal_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="." unique_id=438856505]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_lsabm")
+
+[node name="CharacterBox" type="VBoxContainer" parent="." unique_id=299227076]
+layout_mode = 2
+
+[node name="CharacterName" type="Label" parent="CharacterBox" unique_id=1883394599]
+custom_maximum_size = Vector2(64, -1)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "TIPPI"
+label_settings = ExtResource("2_l12ug")
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterBox" unique_id=632073247]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonLeft" type="Button" parent="CharacterBox/HBoxContainer" unique_id=402071806]
+layout_mode = 2
+size_flags_vertical = 4
+focus_neighbor_left = NodePath("../../../Player2Menu/HBoxContainer3/ButtonSpeedRight2")
+focus_neighbor_top = NodePath("../../../../LevelMenu/HBoxContainer5/ButtonBack")
+focus_neighbor_right = NodePath("../ButtonRight")
+focus_neighbor_bottom = NodePath("../../HBoxContainer4/ButtonDifficultyLeft1")
+theme = ExtResource("3_p4c0b")
+text = "<"
+script = ExtResource("6_pypvm")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
+
+[node name="CharacterImage" type="TextureRect" parent="CharacterBox/HBoxContainer" unique_id=2036213898]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("AtlasTexture_ofypy")
+stretch_mode = 5
+
+[node name="ButtonRight" type="Button" parent="CharacterBox/HBoxContainer" unique_id=1981261773]
+layout_mode = 2
+size_flags_vertical = 4
+focus_neighbor_left = NodePath("../ButtonLeft")
+focus_neighbor_top = NodePath("../../../../LevelMenu/HBoxContainer5/ButtonBack")
+focus_neighbor_right = NodePath("../../../Player2Menu/HBoxContainer3/ButtonSpeedLeft2")
+focus_neighbor_bottom = NodePath("../../HBoxContainer4/ButtonDifficultyRight1")
+theme = ExtResource("3_p4c0b")
+text = ">"
+script = ExtResource("6_pypvm")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
+
+[node name="CharacterDescription" type="Label" parent="CharacterBox" unique_id=294815794]
+custom_maximum_size = Vector2(64, -1)
+layout_mode = 2
+size_flags_horizontal = 6
+text = "No Ability"
+label_settings = ExtResource("5_eisgu")
+horizontal_alignment = 1

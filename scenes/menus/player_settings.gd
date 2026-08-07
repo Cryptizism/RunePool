@@ -42,11 +42,16 @@ func set_display_name(display_name: String) -> void:
 	player_name.text = display_name
 
 func set_enabled(value: bool) -> void:
-	speed_slider.editable = value
-	difficulty_slider.editable = value
-	character_button_left.disabled = value
-	character_button_right.disabled = value
-	ready_button.disabled = value
+	if speed_slider:
+		speed_slider.editable = value
+	if difficulty_slider:
+		difficulty_slider.editable = value
+	if character_button_left:
+		character_button_left.disabled = value
+	if character_button_right:
+		character_button_right.disabled = value
+	if ready_button:
+		ready_button.disabled = value
 
 func _set_character(character_id: String) -> void:
 	if !character_id:

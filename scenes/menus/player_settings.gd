@@ -1,5 +1,5 @@
 extends VBoxContainer
-class_name PlayerSettings
+class_name PlayerSettingsMenu
 
 const CharacterData = preload("res://scripts/character_data.gd")
 
@@ -36,7 +36,7 @@ func _ready() -> void:
 	_character_keys.erase("error")
 	if _character_keys.size() > 0:
 		_current_index = 0
-		_set_character(_character_keys[_current_index])
+		set_character(_character_keys[_current_index])
 
 func set_display_name(display_name: String) -> void:
 	player_name.text = display_name
@@ -53,7 +53,17 @@ func set_enabled(value: bool) -> void:
 	if ready_button:
 		ready_button.disabled = value
 
-func _set_character(character_id: String) -> void:
+func set_speed(value: float) -> void:
+	if !speed_slider:
+		return
+	speed_slider.value = clamp(value, speed_slider.min_value, speed_slider.max_value)
+
+func set_difficulty(value: float) -> void:
+	if !difficulty_slider:
+		return
+	difficulty_slider.value = clamp(value, difficulty_slider.min_value, difficulty_slider.max_value)
+
+func set_character(character_id: String) -> void:
 	if !character_id:
 		return
 	_character_id = character_id
@@ -83,10 +93,10 @@ func _on_character_button_left_pressed() -> void:
 	if _character_keys.size() <= 0:
 		return
 	_current_index = (_current_index - 1 + _character_keys.size()) % _character_keys.size()
-	_set_character(_character_keys[_current_index])
+	set_character(_character_keys[_current_index])
 
 func _on_character_button_right_pressed() -> void:
 	if _character_keys.size() <= 0:
 		return
 	_current_index = (_current_index + 1) % _character_keys.size()
-	_set_character(_character_keys[_current_index])
+	set_character(_character_keys[_current_index])

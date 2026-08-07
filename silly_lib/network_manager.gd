@@ -11,6 +11,25 @@ class LobbyPlayer:
 	var steam_id: int
 	var persona_name: String
 
+class PlayerSettings:
+	var speed: float = 0.0
+	var difficulty: float = 0.0
+	var character_id: String = "tippi"
+	
+	func to_dictionary() -> Dictionary:
+		return {
+			"speed": speed,
+			"difficulty": difficulty,
+			"character_id": character_id,
+		}
+	
+	static func from_dictionary(data: Dictionary) -> PlayerSettings:
+		var player_settings: PlayerSettings = PlayerSettings.new()
+		player_settings.speed = data.get("speed", 0.0)
+		player_settings.difficulty = data.get("difficulty", 0.0)
+		player_settings.character_id = data.get("character_id", "tippi")
+		return player_settings
+
 signal lobby_created()
 signal lobby_list_updated(lobbies: Array[LobbyData])
 signal lobby_members_updated(members: Array)
@@ -20,6 +39,7 @@ signal server_peer_disconnected()
 signal server_connection_successful
 signal server_connection_failed()
 signal server_disconnected()
+signal player_settings_updated(peer_id: int, player_settings: PlayerSettings)
 signal slot_assignments_received(assignments: PackedInt32Array)
 signal input_received(sender_id: int, frame: int, packet: Dictionary)
 signal seed_received(board_seed: int)
@@ -141,16 +161,7 @@ func _on_join_requested(_lobby_id: int, _steam_id: int) -> void:
 	Steam.joinLobby(_lobby_id)
 
 func _update_lobby_members() -> void:
-	var members: Array[LobbyPlayer] = []
-	var amount: int = Steam.getNumLobbyMembers(current_lobby_id)
-	if amount <= 0:
-		return
-	for i in range(amount):
-		var steam_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
-		var lobby_player: LobbyPlayer = LobbyPlayer.new()
-		lobby_player.steam_id = steam_id
-		lobby_player.persona_name = Steam.getFriendPersonaName(steam_id)
-		members.append(lobby_player)
+	var members: Array[LobbyPlayer] = get_lobby_members()
 	lobby_members_updated.emit(members)
 
 func update_peer_id() -> void:
@@ -185,6 +196,22 @@ func _set_lobby_data(_lobby_id: int) -> void:
 	Steam.setLobbyData(_lobby_id, "version", ProjectSettings.get_setting("application/config/version"))
 	Steam.setLobbyData(_lobby_id, "has_password", "0")
 
+func get_lobby_size() -> int:
+	return Steam.getNumLobbyMembers(NetworkManager.current_lobby_id)
+
+func get_lobby_members() -> Array[LobbyPlayer]:
+	var members: Array[LobbyPlayer] = []
+	var amount: int = Steam.getNumLobbyMembers(current_lobby_id)
+	if amount <= 0:
+		return []
+	for i in range(amount):
+		var steam_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
+		var lobby_player: LobbyPlayer = LobbyPlayer.new()
+		lobby_player.steam_id = steam_id
+		lobby_player.persona_name = Steam.getFriendPersonaName(steam_id)
+		members.append(lobby_player)
+	return members
+
 func send_slot_assignments(assignments: PackedInt32Array) -> void:
 	receive_slot_assignments.rpc(assignments)
 
@@ -212,3 +239,10 @@ func send_match_ready() -> void:
 @rpc("any_peer", "unreliable")
 func receive_match_ready() -> void:
 	match_begun.emit()
+
+func send_player_settings(player_settings: PlayerSettings) -> void:
+	receive_player_settings.rpc(player_settings.to_dictionary())
+
+@rpc("any_peer", "reliable")
+func receive_player_settings(data: Dictionary) -> void:
+	player_settings_updated.emit(multiplayer.get_remote_sender_id(), PlayerSettings.from_dictionary(data))

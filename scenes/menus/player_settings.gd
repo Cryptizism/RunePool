@@ -19,6 +19,7 @@ const CharacterData = preload("res://scripts/character_data.gd")
 var _character_id: String = ""
 var _character_keys: Array = []
 var _current_index: int = 0
+var _network_mode: bool = false
 
 func _ready() -> void:
 	if speed_slider:
@@ -36,7 +37,7 @@ func _ready() -> void:
 	_character_keys.erase("error")
 	if _character_keys.size() > 0:
 		_current_index = 0
-		set_character(_character_keys[_current_index])
+		_set_character(_character_keys[_current_index])
 
 func set_display_name(display_name: String) -> void:
 	player_name.text = display_name
@@ -56,14 +57,18 @@ func set_enabled(value: bool) -> void:
 func set_speed(value: float) -> void:
 	if !speed_slider:
 		return
+	_network_mode = true
 	speed_slider.value = clamp(value, speed_slider.min_value, speed_slider.max_value)
+	_network_mode = false
 
 func set_difficulty(value: float) -> void:
 	if !difficulty_slider:
 		return
+	_network_mode = true
 	difficulty_slider.value = clamp(value, difficulty_slider.min_value, difficulty_slider.max_value)
+	_network_mode = false
 
-func set_character(character_id: String) -> void:
+func _set_character(character_id: String) -> void:
 	if !character_id:
 		return
 	_character_id = character_id
@@ -80,23 +85,42 @@ func set_character(character_id: String) -> void:
 	if character_description:
 		character_description.text = character_data.get("ability")
 	Global.player_characters[player_id] = _character_id
+	_send_settings()
+
+func set_character(character_id: String) -> void:
+	_network_mode = true
+	_set_character(character_id)
+	_network_mode = false
 
 func _on_speed_changed(value: float) -> void:
 	Global.player_speed[player_id] = value
 	speed_label.text = str(int(value))
+	_send_settings()
 
 func _on_difficulty_changed(value: float) -> void:
 	Global.player_difficulty[player_id] = value
 	difficulty_label.text = str(int(value))
+	_send_settings()
 
 func _on_character_button_left_pressed() -> void:
 	if _character_keys.size() <= 0:
 		return
 	_current_index = (_current_index - 1 + _character_keys.size()) % _character_keys.size()
-	set_character(_character_keys[_current_index])
+	_set_character(_character_keys[_current_index])
 
 func _on_character_button_right_pressed() -> void:
 	if _character_keys.size() <= 0:
 		return
 	_current_index = (_current_index + 1) % _character_keys.size()
-	set_character(_character_keys[_current_index])
+	_set_character(_character_keys[_current_index])
+
+func _send_settings() -> void:
+	if !_network_mode:
+		return
+	var player_settings: NetworkManager.PlayerSettings = NetworkManager.PlayerSettings.new()
+	if speed_slider:
+		player_settings.speed = speed_slider.value
+	if difficulty_slider:
+		player_settings.difficulty = difficulty_slider.value
+	player_settings.character_id = _character_id
+	NetworkManager.send_player_settings(player_settings)

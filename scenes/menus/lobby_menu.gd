@@ -8,7 +8,7 @@ func _ready() -> void:
 	NetworkManager.lobby_created.connect(_on_lobby_created)
 	NetworkManager.lobby_list_updated.connect(_populate_lobby_list)
 	NetworkManager.refresh_lobby_list()
-	_populate_fake_lobby_list()
+	#_populate_fake_lobby_list()
 
 func _populate_lobby_list(lobbies: Array[NetworkManager.LobbyData]) -> void:
 	for child in lobby_v_box.get_children():

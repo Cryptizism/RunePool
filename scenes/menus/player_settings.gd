@@ -1,4 +1,5 @@
 extends VBoxContainer
+class_name PlayerSettings
 
 const CharacterData = preload("res://scripts/character_data.gd")
 
@@ -36,6 +37,16 @@ func _ready() -> void:
 	if _character_keys.size() > 0:
 		_current_index = 0
 		_set_character(_character_keys[_current_index])
+
+func set_display_name(display_name: String) -> void:
+	player_name.text = display_name
+
+func set_enabled(value: bool) -> void:
+	speed_slider.editable = value
+	difficulty_slider.editable = value
+	character_button_left.disabled = value
+	character_button_right.disabled = value
+	ready_button.disabled = value
 
 func _set_character(character_id: String) -> void:
 	if !character_id:

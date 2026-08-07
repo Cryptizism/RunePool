@@ -9,6 +9,7 @@ const DISABLED_COLOR: Color = Color(0.2, 0.2, 0.2, 1.0)
 var lobby_data: NetworkManager.LobbyData
 
 func _ready() -> void:
+	gui_input.connect(_on_gui_input)
 	_set_lobby_data()
 
 func _set_lobby_data() -> void:
@@ -30,3 +31,4 @@ func _on_gui_input(event: InputEvent) -> void:
 
 func _join_lobby() -> void:
 	NetworkManager.join_lobby(lobby_data.lobby_id)
+	Transition.change_scene("res://scenes/menus/lobby_room.tscn")

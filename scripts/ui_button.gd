@@ -30,7 +30,7 @@ func _on_focus_exited() -> void:
 func _on_pressed() -> void:
 	_stop_animation()
 
-func _on_toggled(toggled_on: bool) -> void:
+func _on_toggled(_toggled_on: bool) -> void:
 	_stop_animation()
 
 func _play_animation() -> void:

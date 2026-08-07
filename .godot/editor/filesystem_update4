@@ -1,5 +1,4 @@
-res://scenes/menus/lobby_menu.gd
-res://scenes/menus/lobby_menu.tscn
+res://scenes/menus/lobby_entry.tscn
 res://tilesets/ui.tres
 res://animations/rune_blue.tres
 res://animations/rune_red.tres
@@ -14,4 +13,12 @@ res://themes/yellow_theme.tres
 res://themes/red_theme.tres
 res://themes/green_theme.tres
 res://themes/text_6.tres
+res://lobby_entry.gd
+res://scripts/ui_button.gd
+res://scenes/menus/lobby_menu.tscn
+res://scenes/menus/lobby_menu.gd
 res://scenes/menus/lobby_room.tscn
+res://scenes/menus/lobby_room.gd
+res://scenes/menus/player_settings.gd
+res://scenes/menus/player_settings_menu.tscn
+res://silly_lib/network_manager.gd

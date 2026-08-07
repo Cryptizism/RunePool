@@ -7,8 +7,13 @@ class LobbyData:
 	var members: int
 	var max_members: int
 
+class LobbyPlayer:
+	var steam_id: int
+	var persona_name: String
+
 signal lobby_created()
 signal lobby_list_updated(lobbies: Array[LobbyData])
+signal lobby_members_updated(members: Array)
 signal lobby_left()
 signal server_peer_connected()
 signal server_peer_disconnected()
@@ -36,8 +41,8 @@ func _ready() -> void:
 	Steam.join_requested.connect(_on_join_requested)
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	multiplayer.connected_to_server.connect(_on_connected)
-	multiplayer.connection_failed.connect(_on_connection_failed)
+	multiplayer.connected_to_server.connect(_on_server_connected)
+	multiplayer.connection_failed.connect(_on_server_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 func _process(_delta: float) -> void:
@@ -97,6 +102,7 @@ func _on_lobby_created(_result: int, _lobby_id: int) -> void:
 	multiplayer.multiplayer_peer = peer
 	update_peer_id()
 	lobby_created.emit()
+	_update_lobby_members()
 
 func _on_lobby_match_list(_lobbies: Array) -> void:
 	var results: Array[LobbyData] = []
@@ -129,9 +135,23 @@ func _on_lobby_joined(_lobby_id: int, _permissions: int, _locked: bool, _respons
 	current_lobby_id = _lobby_id
 	multiplayer.multiplayer_peer = peer
 	update_peer_id()
+	_update_lobby_members()
 
 func _on_join_requested(_lobby_id: int, _steam_id: int) -> void:
 	Steam.joinLobby(_lobby_id)
+
+func _update_lobby_members() -> void:
+	var members: Array[LobbyPlayer] = []
+	var amount: int = Steam.getNumLobbyMembers(current_lobby_id)
+	if amount <= 0:
+		return
+	for i in range(amount):
+		var steam_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
+		var lobby_player: LobbyPlayer = LobbyPlayer.new()
+		lobby_player.steam_id = steam_id
+		lobby_player.persona_name = Steam.getFriendPersonaName(steam_id)
+		members.append(lobby_player)
+	lobby_members_updated.emit(members)
 
 func update_peer_id() -> void:
 	if multiplayer and multiplayer.has_multiplayer_peer():
@@ -140,16 +160,18 @@ func update_peer_id() -> void:
 func _on_peer_connected(id: int) -> void:
 	print("Peer %d connected." % id)
 	server_peer_connected.emit()
+	_update_lobby_members()
 
 func _on_peer_disconnected(id: int) -> void:
 	print("Peer %d disconnected." % id)
 	server_peer_disconnected.emit()
+	_update_lobby_members()
 
-func _on_connected() -> void:
+func _on_server_connected() -> void:
 	print("Connection successful.")
 	server_connection_successful.emit()
 
-func _on_connection_failed() -> void:
+func _on_server_connection_failed() -> void:
 	print("Connection failed.")
 	server_connection_failed.emit()
 

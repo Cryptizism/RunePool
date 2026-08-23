@@ -48,11 +48,11 @@ func set_enabled(value: bool) -> void:
 	if difficulty_slider:
 		difficulty_slider.editable = value
 	if character_button_left:
-		character_button_left.disabled = value
+		character_button_left.disabled = !value
 	if character_button_right:
-		character_button_right.disabled = value
+		character_button_right.disabled = !value
 	if ready_button:
-		ready_button.disabled = value
+		ready_button.disabled = !value
 
 func set_speed(value: float) -> void:
 	if !speed_slider:

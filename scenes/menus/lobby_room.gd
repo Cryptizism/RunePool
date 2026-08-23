@@ -2,6 +2,8 @@ extends Control
 
 @onready var player_1_menu: VBoxContainer = $CenterContainer/HBoxContainer/Player1Menu
 @onready var player_2_menu: VBoxContainer = $CenterContainer/HBoxContainer/Player2Menu
+@onready var button_level_left: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer2/ButtonLevelLeft
+@onready var button_level_right: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer2/ButtonLevelRight
 
 func _ready() -> void:
 	NetworkManager.lobby_members_updated.connect(_update_members)
@@ -9,6 +11,7 @@ func _ready() -> void:
 
 func _update_members(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	_update_names(members)
+	_update_ui_access(members)
 
 func _get_menus() -> Array[PlayerSettingsMenu]:
 	return [player_1_menu, player_2_menu]
@@ -16,13 +19,24 @@ func _get_menus() -> Array[PlayerSettingsMenu]:
 func _update_names(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	for i in range(menus.size()):
-		menus[i].set_enabled(false)
 		if i >= members.size():
 			menus[i].set_display_name("Waiting...")
 			continue
 		menus[i].set_display_name(members[i].persona_name)
+
+func _update_ui_access(members: Array[NetworkManager.LobbyPlayer]) -> void:
+	var menus: Array[PlayerSettingsMenu] = _get_menus()
+	for i in range(menus.size()):
 		if members[i].steam_id == Steam.getSteamID():
 			menus[i].set_enabled(true)
+		else:
+			menus[i].set_enabled(false)
+	if NetworkManager.is_host():
+		button_level_left.disabled = false
+		button_level_right.disabled = false
+	else:
+		button_level_left.disabled = true
+		button_level_right.disabled = true
 
 func _player_settings_updated(peer_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
 	var menus: Array[PlayerSettingsMenu] = _get_menus()

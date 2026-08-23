@@ -17,10 +17,14 @@ func _on_pressed() -> void:
 	_stop_animation()
 
 func _on_mouse_entered() -> void:
+	if !editable:
+		return
 	call_deferred("grab_focus")
 	_play_animation()
 
 func _on_focus_entered() -> void:
+	if !editable:
+		return
 	_play_animation()
 
 func _on_focus_exited() -> void:

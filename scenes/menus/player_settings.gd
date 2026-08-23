@@ -59,6 +59,7 @@ func set_speed(value: float) -> void:
 		return
 	_network_mode = true
 	speed_slider.value = clamp(value, speed_slider.min_value, speed_slider.max_value)
+	_on_speed_changed(value)
 	_network_mode = false
 
 func set_difficulty(value: float) -> void:
@@ -66,6 +67,7 @@ func set_difficulty(value: float) -> void:
 		return
 	_network_mode = true
 	difficulty_slider.value = clamp(value, difficulty_slider.min_value, difficulty_slider.max_value)
+	_on_difficulty_changed(value)
 	_network_mode = false
 
 func _set_character(character_id: String) -> void:
@@ -93,11 +95,15 @@ func set_character(character_id: String) -> void:
 	_network_mode = false
 
 func _on_speed_changed(value: float) -> void:
+	if _network_mode:
+		return
 	Global.player_speed[player_id] = value
 	speed_label.text = str(int(value))
 	_send_settings()
 
 func _on_difficulty_changed(value: float) -> void:
+	if _network_mode:
+		return
 	Global.player_difficulty[player_id] = value
 	difficulty_label.text = str(int(value))
 	_send_settings()
@@ -115,7 +121,7 @@ func _on_character_button_right_pressed() -> void:
 	_set_character(_character_keys[_current_index])
 
 func _send_settings() -> void:
-	if !_network_mode:
+	if _network_mode:
 		return
 	var player_settings: NetworkManager.PlayerSettings = NetworkManager.PlayerSettings.new()
 	if speed_slider:

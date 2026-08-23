@@ -27,7 +27,7 @@ func _update_names(members: Array[NetworkManager.LobbyPlayer]) -> void:
 func _update_ui_access(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	for i in range(menus.size()):
-		if members[i].steam_id == Steam.getSteamID():
+		if members[i].peer_id == Steam.getSteamID():
 			menus[i].set_enabled(true)
 		else:
 			menus[i].set_enabled(false)

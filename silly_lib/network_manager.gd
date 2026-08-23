@@ -8,7 +8,7 @@ class LobbyData:
 	var max_members: int
 
 class LobbyPlayer:
-	var steam_id: int
+	var peer_id: int
 	var persona_name: String
 
 class PlayerSettings:
@@ -157,7 +157,7 @@ func _on_lobby_joined(_lobby_id: int, _permissions: int, _locked: bool, _respons
 	update_peer_id()
 	_update_lobby_members()
 
-func _on_join_requested(_lobby_id: int, _steam_id: int) -> void:
+func _on_join_requested(_lobby_id: int, _peer_id: int) -> void:
 	Steam.joinLobby(_lobby_id)
 
 func _update_lobby_members() -> void:
@@ -205,10 +205,10 @@ func get_lobby_members() -> Array[LobbyPlayer]:
 	if amount <= 0:
 		return []
 	for i in range(amount):
-		var steam_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
+		var peer_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
 		var lobby_player: LobbyPlayer = LobbyPlayer.new()
-		lobby_player.steam_id = steam_id
-		lobby_player.persona_name = Steam.getFriendPersonaName(steam_id)
+		lobby_player.peer_id = peer_id
+		lobby_player.persona_name = Steam.getFriendPersonaName(peer_id)
 		members.append(lobby_player)
 	return members
 

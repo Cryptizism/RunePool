@@ -18,3 +18,4 @@ res://scenes/menus/player_settings_menu.tscn
 res://scenes/menus/lobby_room.gd
 res://scenes/menus/lobby_room.tscn
 res://scenes/menus/player_settings.gd
+res://silly_lib/network_manager.gd

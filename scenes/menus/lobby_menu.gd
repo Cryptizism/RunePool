@@ -13,7 +13,6 @@ func _ready() -> void:
 func _populate_lobby_list(lobbies: Array[NetworkManager.LobbyData]) -> void:
 	for child in lobby_v_box.get_children():
 		child.queue_free()
-	#await get_tree().process_frame
 	for lobby_data in lobbies:
 		var entry: LobbyEntry = LOBBY_ENTRY_SCENE.instantiate() as LobbyEntry
 		entry.lobby_data = lobby_data

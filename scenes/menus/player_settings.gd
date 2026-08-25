@@ -65,7 +65,7 @@ func set_difficulty(value: float) -> void:
 		return
 	value = clamp(value, difficulty_slider.min_value, difficulty_slider.max_value)
 	difficulty_slider.value = value
-	difficulty_slider.text = str(int(value))
+	difficulty_label.text = str(int(value))
 
 func _set_character(character_id: String, send_network: bool) -> void:
 	if !character_id:

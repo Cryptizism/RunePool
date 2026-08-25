@@ -244,13 +244,8 @@ func receive_match_ready() -> void:
 	match_begun.emit()
 
 func send_player_settings(player_settings: PlayerSettings) -> void:
-	receive_player_settings.rpc(player_settings.to_dictionary())
+	receive_player_settings.rpc_id(0, player_settings.to_dictionary()) #0 = all except self
 
 @rpc("any_peer", "reliable")
 func receive_player_settings(data: Dictionary) -> void:
-	var peer_id := multiplayer.get_remote_sender_id()
-	print("=== PLAYER SETTINGS ===")
-	print("Peer ID: ", peer_id)
-	print("Steam ID: ", get_steam_id_from_peer_id(peer_id))
-	print("Data: ", data)
 	player_settings_updated.emit(multiplayer.get_remote_sender_id(), PlayerSettings.from_dictionary(data))

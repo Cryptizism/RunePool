@@ -13,6 +13,5 @@ res://themes/yellow_theme.tres
 res://themes/red_theme.tres
 res://themes/green_theme.tres
 res://themes/text_6.tres
-res://scenes/menus/player_settings.gd
-res://scenes/menus/lobby_room.gd
+res://scenes/menus/lobby_menu.gd
 res://silly_lib/network_manager.gd

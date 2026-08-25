@@ -57,14 +57,14 @@ func set_speed(value: float) -> void:
 	if !speed_slider:
 		return
 	value = clamp(value, speed_slider.min_value, speed_slider.max_value)
-	speed_slider.value = value
+	speed_slider.set_value_no_signal(value)
 	speed_label.text = str(int(value))
 
 func set_difficulty(value: float) -> void:
 	if !difficulty_slider:
 		return
 	value = clamp(value, difficulty_slider.min_value, difficulty_slider.max_value)
-	difficulty_slider.value = value
+	difficulty_slider.set_value_no_signal(value)
 	difficulty_label.text = str(int(value))
 
 func _set_character(character_id: String, send_network: bool) -> void:
@@ -88,7 +88,7 @@ func _set_character(character_id: String, send_network: bool) -> void:
 		_send_settings()
 
 func set_character(character_id: String) -> void:
-	_set_character(character_id, true)
+	_set_character(character_id, false)
 
 func _on_speed_changed(value: float) -> void:
 	Global.player_speed[player_id] = value

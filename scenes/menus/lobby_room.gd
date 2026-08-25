@@ -12,6 +12,7 @@ func _ready() -> void:
 func _update_members(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	_update_names(members)
 	_update_ui_access(members)
+	#TODO: members/menus array not clearing lost players
 
 func _get_menus() -> Array[PlayerSettingsMenu]:
 	return [player_1_menu, player_2_menu]
@@ -39,9 +40,22 @@ func _update_ui_access(members: Array[NetworkManager.LobbyPlayer]) -> void:
 		button_level_right.disabled = true
 
 func _player_settings_updated(peer_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
+	#var slot: int = NetworkManager.get_slot_from_peer(peer_id) #function doesnt exist
+	#if slot == -1:
+		#return
+	#var menus: Array[PlayerSettingsMenu] = _get_menus()
+	#if slot >= menus.size():
+		#return
+	#menus[slot].set_speed(player_settings.speed)
+	#menus[slot].set_difficulty(player_settings.difficulty)
+	#menus[slot].set_character_id(player_settings.character_id)
 	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	var members: Array[NetworkManager.LobbyPlayer] = NetworkManager.get_lobby_members()
 	for i in range(NetworkManager.get_lobby_size()):
+		if i < 0 or i > members.size():
+			continue
+		if i < 0 or i > menus.size():
+			continue
 		var member = members[i]
 		if member.peer_id != peer_id:
 			continue

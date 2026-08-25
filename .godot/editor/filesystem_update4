@@ -1,4 +1,4 @@
-res://scenes/ui_hslider.tscn
+res://scenes/menus/lobby_room.tscn
 res://tilesets/ui.tres
 res://animations/rune_blue.tres
 res://animations/rune_red.tres
@@ -13,9 +13,6 @@ res://themes/yellow_theme.tres
 res://themes/red_theme.tres
 res://themes/green_theme.tres
 res://themes/text_6.tres
-res://scripts/ui_hslider.gd
-res://scenes/menus/player_settings_menu.tscn
-res://scenes/menus/lobby_room.gd
-res://scenes/menus/lobby_room.tscn
 res://scenes/menus/player_settings.gd
+res://scenes/menus/lobby_room.gd
 res://silly_lib/network_manager.gd

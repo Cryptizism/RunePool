@@ -245,4 +245,7 @@ func send_player_settings(player_settings: PlayerSettings) -> void:
 
 @rpc("any_peer", "reliable")
 func receive_player_settings(data: Dictionary) -> void:
+	print("RECEIVED PLAYER SETTINGS")
+	print("Sender: ", multiplayer.get_remote_sender_id())
+	print("Data: ", data)
 	player_settings_updated.emit(multiplayer.get_remote_sender_id(), PlayerSettings.from_dictionary(data))

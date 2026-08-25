@@ -28,38 +28,47 @@ func _update_names(members: Array[NetworkManager.LobbyPlayer]) -> void:
 func _update_ui_access(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	for i in range(menus.size()):
-		if members[i].peer_id == Steam.getSteamID():
-			menus[i].set_enabled(true)
-		else:
+		if i >= members.size():
 			menus[i].set_enabled(false)
-	if NetworkManager.is_host():
-		button_level_left.disabled = false
-		button_level_right.disabled = false
-	else:
-		button_level_left.disabled = true
-		button_level_right.disabled = true
+			continue
+		menus[i].set_enabled(members[i].steam_id == Steam.getSteamID())
+	button_level_left.disabled = !NetworkManager.is_host()
+	button_level_right.disabled = !NetworkManager.is_host()
 
-func _player_settings_updated(peer_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
-	#var slot: int = NetworkManager.get_slot_from_peer(peer_id) #function doesnt exist
-	#if slot == -1:
-		#return
-	#var menus: Array[PlayerSettingsMenu] = _get_menus()
-	#if slot >= menus.size():
-		#return
-	#menus[slot].set_speed(player_settings.speed)
-	#menus[slot].set_difficulty(player_settings.difficulty)
-	#menus[slot].set_character_id(player_settings.character_id)
+func _player_settings_updated(steam_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
 	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	var members: Array[NetworkManager.LobbyPlayer] = NetworkManager.get_lobby_members()
-	for i in range(NetworkManager.get_lobby_size()):
-		if i < 0 or i > members.size():
+	for i in range(min(members.size(), menus.size())):
+		if !members[i]:
 			continue
-		if i < 0 or i > menus.size():
-			continue
-		var member = members[i]
-		if member.peer_id != peer_id:
+		if members[i].steam_id != steam_id:
 			continue
 		menus[i].set_speed(player_settings.speed)
 		menus[i].set_difficulty(player_settings.difficulty)
-		menus[i].set_character_id(player_settings.character_id)
+		menus[i].set_character(player_settings.character_id)
 		return
+
+#func _player_settings_updated(peer_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
+	##var slot: int = NetworkManager.get_slot_from_peer(peer_id) #function doesnt exist
+	##if slot == -1:
+		##return
+	##var menus: Array[PlayerSettingsMenu] = _get_menus()
+	##if slot >= menus.size():
+		##return
+	##menus[slot].set_speed(player_settings.speed)
+	##menus[slot].set_difficulty(player_settings.difficulty)
+	##menus[slot].set_character_id(player_settings.character_id)
+	#var menus: Array[PlayerSettingsMenu] = _get_menus()
+	#var members: Array[NetworkManager.LobbyPlayer] = NetworkManager.get_lobby_members()
+	#for i in range(NetworkManager.get_lobby_size()):
+		#if i < 0 or i >= members.size():
+			#continue
+		#if i < 0 or i >= menus.size():
+			#continue
+		#var member = members[i]
+		#if member.peer_id != peer_id:
+			#continue #failing here
+		#menus[i].set_speed(player_settings.speed)
+		#menus[i].set_difficulty(player_settings.difficulty)
+		#menus[i].set_character_id(player_settings.character_id)
+		#return

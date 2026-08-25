@@ -8,7 +8,7 @@ class LobbyData:
 	var max_members: int
 
 class LobbyPlayer:
-	var peer_id: int
+	var steam_id: int
 	var persona_name: String
 
 class PlayerSettings:
@@ -123,6 +123,9 @@ func _on_lobby_created(_result: int, _lobby_id: int) -> void:
 	update_peer_id()
 	lobby_created.emit()
 	_update_lobby_members()
+	
+	print("Steam ID: ", Steam.getSteamID())
+	print("Network ID: ", multiplayer.get_unique_id())
 
 func _on_lobby_match_list(_lobbies: Array) -> void:
 	var results: Array[LobbyData] = []
@@ -156,6 +159,9 @@ func _on_lobby_joined(_lobby_id: int, _permissions: int, _locked: bool, _respons
 	multiplayer.multiplayer_peer = peer
 	update_peer_id()
 	_update_lobby_members()
+	
+	print("Steam ID: ", Steam.getSteamID())
+	print("Network ID: ", multiplayer.get_unique_id())
 
 func _on_join_requested(_lobby_id: int, _peer_id: int) -> void:
 	Steam.joinLobby(_lobby_id)
@@ -205,10 +211,10 @@ func get_lobby_members() -> Array[LobbyPlayer]:
 	if amount <= 0:
 		return []
 	for i in range(amount):
-		var peer_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
+		var steam_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
 		var lobby_player: LobbyPlayer = LobbyPlayer.new()
-		lobby_player.peer_id = peer_id
-		lobby_player.persona_name = Steam.getFriendPersonaName(peer_id)
+		lobby_player.steam_id = steam_id
+		lobby_player.persona_name = Steam.getFriendPersonaName(steam_id)
 		members.append(lobby_player)
 	return members
 
@@ -245,7 +251,4 @@ func send_player_settings(player_settings: PlayerSettings) -> void:
 
 @rpc("any_peer", "reliable")
 func receive_player_settings(data: Dictionary) -> void:
-	print("RECEIVED PLAYER SETTINGS")
-	print("Sender: ", multiplayer.get_remote_sender_id())
-	print("Data: ", data)
 	player_settings_updated.emit(multiplayer.get_remote_sender_id(), PlayerSettings.from_dictionary(data))

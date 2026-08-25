@@ -123,9 +123,6 @@ func _on_lobby_created(_result: int, _lobby_id: int) -> void:
 	update_peer_id()
 	lobby_created.emit()
 	_update_lobby_members()
-	
-	print("Steam ID: ", Steam.getSteamID())
-	print("Network ID: ", multiplayer.get_unique_id())
 
 func _on_lobby_match_list(_lobbies: Array) -> void:
 	var results: Array[LobbyData] = []
@@ -159,9 +156,6 @@ func _on_lobby_joined(_lobby_id: int, _permissions: int, _locked: bool, _respons
 	multiplayer.multiplayer_peer = peer
 	update_peer_id()
 	_update_lobby_members()
-	
-	print("Steam ID: ", Steam.getSteamID())
-	print("Network ID: ", multiplayer.get_unique_id())
 
 func _on_join_requested(_lobby_id: int, _peer_id: int) -> void:
 	Steam.joinLobby(_lobby_id)
@@ -207,16 +201,19 @@ func get_lobby_size() -> int:
 
 func get_lobby_members() -> Array[LobbyPlayer]:
 	var members: Array[LobbyPlayer] = []
-	var amount: int = Steam.getNumLobbyMembers(current_lobby_id)
-	if amount <= 0:
-		return []
-	for i in range(amount):
+	for i in range(Steam.getNumLobbyMembers(current_lobby_id)):
 		var steam_id: int = Steam.getLobbyMemberByIndex(current_lobby_id, i)
-		var lobby_player: LobbyPlayer = LobbyPlayer.new()
-		lobby_player.steam_id = steam_id
-		lobby_player.persona_name = Steam.getFriendPersonaName(steam_id)
-		members.append(lobby_player)
+		var player := LobbyPlayer.new()
+		player.steam_id = steam_id
+		player.persona_name = Steam.getFriendPersonaName(steam_id)
+		members.append(player)
 	return members
+
+func get_steam_id_from_peer_id(peer_id: int) -> int:
+	var steam_peer: SteamMultiplayerPeer = multiplayer.multiplayer_peer as SteamMultiplayerPeer
+	if !steam_peer:
+		return -1
+	return steam_peer.get_steam_id_for_peer_id(peer_id)
 
 func send_slot_assignments(assignments: PackedInt32Array) -> void:
 	receive_slot_assignments.rpc(assignments)
@@ -251,4 +248,9 @@ func send_player_settings(player_settings: PlayerSettings) -> void:
 
 @rpc("any_peer", "reliable")
 func receive_player_settings(data: Dictionary) -> void:
+	var peer_id := multiplayer.get_remote_sender_id()
+	print("=== PLAYER SETTINGS ===")
+	print("Peer ID: ", peer_id)
+	print("Steam ID: ", get_steam_id_from_peer_id(peer_id))
+	print("Data: ", data)
 	player_settings_updated.emit(multiplayer.get_remote_sender_id(), PlayerSettings.from_dictionary(data))

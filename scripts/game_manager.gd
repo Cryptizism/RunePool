@@ -172,13 +172,6 @@ func _get_peer_slot_number(peer_id: int) -> int:
 		return i
 	return -1
 
-#func _get_non_host_players() -> PackedInt32Array:
-	#if _is_local_game():
-		#return []
-	#var peers: PackedInt32Array = multiplayer.get_peers()
-	#peers.erase(1) #host peer id is always 1
-	#return peers
-
 func _on_slot_assignments_received(assignments: PackedInt32Array) -> void:
 	slot_assignments = assignments
 	_apply_slot_assignments()

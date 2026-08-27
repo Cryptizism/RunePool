@@ -1,4 +1,5 @@
 extends Control
+class_name LevelDisplay
 
 @export var level_label: Label
 @export var button_left: Button
@@ -44,9 +45,16 @@ func _update_size() -> void:
 	if layout.is_empty():
 		custom_minimum_size = Vector2.ZERO
 		return
-	var w = layout[0].length() * cell_size
-	var h = layout.size() * cell_size
-	custom_minimum_size = Vector2(w, h)
+	var width = layout[0].length() * cell_size
+	var height = layout.size() * cell_size
+	custom_minimum_size = Vector2(width, height)
+
+func set_level_id(level_id: String) -> void:
+	var index: int = level_names.find(level_id)
+	if index == -1:
+		return
+	current_level = index
+	_set_level_layout(level_data.LEVEL_LAYOUTS[level_id])
 
 func _on_button_level_left_pressed() -> void:
 	current_level = (current_level - 1 + level_names.size()) % level_names.size()

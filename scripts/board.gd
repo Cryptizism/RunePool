@@ -191,7 +191,6 @@ func set_seed(_seed: int) -> void:
 
 func load_level(level_id: String) -> void:
 	_reset_board()
-	#init_enemy(level_id)
 	if level_id == "random":
 		level_id = LEVEL_DATA.get_random_level_name()
 	var layout = LEVEL_DATA.LEVEL_LAYOUTS[level_id]

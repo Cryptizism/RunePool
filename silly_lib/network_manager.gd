@@ -43,6 +43,7 @@ signal player_settings_updated(peer_id: int, player_settings: PlayerSettings)
 signal slot_assignments_received(assignments: PackedInt32Array)
 signal input_received(sender_id: int, frame: int, packet: Dictionary)
 signal seed_received(board_seed: int)
+signal level_updated(level_id: String)
 signal match_begun()
 
 const LOBBY_TYPE: Steam.LobbyType = Steam.LobbyType.LOBBY_TYPE_PUBLIC
@@ -249,3 +250,10 @@ func send_player_settings(player_settings: PlayerSettings) -> void:
 @rpc("any_peer", "reliable")
 func receive_player_settings(data: Dictionary) -> void:
 	player_settings_updated.emit(multiplayer.get_remote_sender_id(), PlayerSettings.from_dictionary(data))
+
+func send_level_id(level_id: String) -> void:
+	receive_level_id.rpc_id(0, level_id)
+
+@rpc("any_peer", "reliable")
+func receive_level_id(level_id: String) -> void:
+	level_updated.emit(level_id)

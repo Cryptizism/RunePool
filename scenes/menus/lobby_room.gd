@@ -4,10 +4,12 @@ extends Control
 @onready var player_2_menu: VBoxContainer = $CenterContainer/HBoxContainer/Player2Menu
 @onready var button_level_left: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer2/ButtonLevelLeft
 @onready var button_level_right: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer2/ButtonLevelRight
+@onready var level_display: Control = $CenterContainer/HBoxContainer/LevelMenu/LevelDisplay
 
 func _ready() -> void:
 	NetworkManager.lobby_members_updated.connect(_update_members)
 	NetworkManager.player_settings_updated.connect(_player_settings_updated)
+	NetworkManager.level_updated.connect(_level_updated)
 
 func _update_members(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	_update_names(members)
@@ -47,3 +49,6 @@ func _player_settings_updated(peer_id: int, player_settings: NetworkManager.Play
 			menus[i].set_difficulty(player_settings.difficulty)
 			menus[i].set_character(player_settings.character_id)
 			return
+
+func _level_updated(level_id: String) -> void:
+	level_display.set_level_id(level_id)

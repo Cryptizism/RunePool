@@ -59,10 +59,12 @@ func set_level_id(level_id: String) -> void:
 func _on_button_level_left_pressed() -> void:
 	current_level = (current_level - 1 + level_names.size()) % level_names.size()
 	_update_level_display()
+	NetworkManager.send_level_id(level_names[current_level])
 
 func _on_button_level_right_pressed() -> void:
 	current_level = (current_level + 1) % level_names.size()
 	_update_level_display()
+	NetworkManager.send_level_id(level_names[current_level])
 
 func _update_level_display() -> void:
 	var level_name = level_names[current_level]

@@ -31,7 +31,9 @@ func set_ready(_is_ready: bool) -> void:
 func _update_theme() -> void:
 	if disabled:
 		if is_ready:
-			add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+			add_theme_color_override("font_disabled_color", Color(1.0, 1.0, 1.0, 1.0))
+		else:
+			remove_theme_color_override("font_disabled_color")
 	else:
 		if is_ready:
 			theme = READY_THEME

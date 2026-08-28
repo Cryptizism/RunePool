@@ -5,11 +5,15 @@ extends Control
 @onready var button_level_left: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer2/ButtonLevelLeft
 @onready var button_level_right: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer2/ButtonLevelRight
 @onready var level_display: Control = $CenterContainer/HBoxContainer/LevelMenu/LevelDisplay
+@onready var button_ready_1: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer/ButtonReady1
+@onready var button_ready_2: UIButton = $CenterContainer/HBoxContainer/LevelMenu/HBoxContainer/ButtonReady2
 
 func _ready() -> void:
 	NetworkManager.lobby_members_updated.connect(_update_members)
 	NetworkManager.player_settings_updated.connect(_player_settings_updated)
 	NetworkManager.level_updated.connect(_level_updated)
+	button_ready_1.pressed.connect(_on_ready_button_pressed)
+	button_ready_2.pressed.connect(_on_ready_button_pressed)
 
 func _update_members(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	_update_names(members)
@@ -52,3 +56,10 @@ func _player_settings_updated(peer_id: int, player_settings: NetworkManager.Play
 
 func _level_updated(level_id: String) -> void:
 	level_display.set_level_id(level_id)
+
+func _on_ready_button_pressed() -> void:
+	if !button_ready_1.is_ready:
+		return
+	if !button_ready_2.is_ready:
+		return
+	Transition.change_scene("res://scenes/game_room.tscn")

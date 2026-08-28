@@ -1,4 +1,3 @@
-res://scripts/ui_button.gd
 res://scenes/menus/lobby_room.tscn
 res://tilesets/ui.tres
 res://animations/rune_blue.tres
@@ -14,8 +13,5 @@ res://themes/yellow_theme.tres
 res://themes/red_theme.tres
 res://themes/green_theme.tres
 res://themes/text_6.tres
+res://scripts/button_ready.gd
 res://scenes/menus/lobby_room.gd
-res://silly_lib/network_manager.gd
-res://scripts/display_level.gd
-res://scripts/board.gd
-res://scripts/game_manager.gd

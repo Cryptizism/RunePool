@@ -7,7 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://ba7r4pposdaos" path="res://scenes/menus/player_settings_menu.tscn" id="3_o63xf"]
 [ext_resource type="Script" uid="uid://bqva0rge5itgb" path="res://scripts/ui_button.gd" id="5_8nesj"]
 [ext_resource type="Script" uid="uid://o5p230ijl6l2" path="res://scripts/display_level.gd" id="9_3qk7h"]
+[ext_resource type="Theme" uid="uid://iqwg5jjhcii4" path="res://themes/red_theme.tres" id="9_kghyl"]
 [ext_resource type="Theme" uid="uid://ddem14d4s7d5r" path="res://themes/blue_theme.tres" id="10_kghyl"]
+[ext_resource type="Script" uid="uid://ossfyhqdmguo" path="res://scripts/button_ready.gd" id="10_ooc0t"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6mrwu"]
 
@@ -96,6 +98,31 @@ focus_neighbor_bottom = NodePath("../../HBoxContainer5/ButtonPlay")
 theme = ExtResource("10_kghyl")
 text = ">"
 script = ExtResource("5_8nesj")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/HBoxContainer/LevelMenu" unique_id=1747925493]
+layout_mode = 2
+
+[node name="ButtonReady1" type="Button" parent="CenterContainer/HBoxContainer/LevelMenu/HBoxContainer" unique_id=1006487885]
+layout_mode = 2
+focus_neighbor_left = NodePath("../ButtonLevelRight")
+focus_neighbor_top = NodePath("../../HBoxContainer5/ButtonBack")
+focus_neighbor_right = NodePath("../ButtonLevelRight")
+focus_neighbor_bottom = NodePath("../../HBoxContainer5/ButtonBack")
+theme = ExtResource("9_kghyl")
+text = "Ready"
+script = ExtResource("10_ooc0t")
+metadata/_custom_type_script = "uid://bqva0rge5itgb"
+
+[node name="ButtonReady2" type="Button" parent="CenterContainer/HBoxContainer/LevelMenu/HBoxContainer" unique_id=701974679]
+layout_mode = 2
+focus_neighbor_left = NodePath("../ButtonLevelRight")
+focus_neighbor_top = NodePath("../../HBoxContainer5/ButtonBack")
+focus_neighbor_right = NodePath("../ButtonLevelRight")
+focus_neighbor_bottom = NodePath("../../HBoxContainer5/ButtonBack")
+theme = ExtResource("9_kghyl")
+text = "Ready"
+script = ExtResource("10_ooc0t")
 metadata/_custom_type_script = "uid://bqva0rge5itgb"
 
 [node name="VSeparator2" type="VSeparator" parent="CenterContainer/HBoxContainer" unique_id=528923233]

@@ -1,6 +1,6 @@
+HBoxContainer
 MeshInstance3D
 VSeparator
-HBoxContainer
 VBoxContainer
 TextureRect
 HSeparator
@@ -12,4 +12,3 @@ MarginContainer
 UIButton
 Label
 ScrollContainer
-TextEdit

@@ -11,14 +11,16 @@ extends Control
 func _ready() -> void:
 	NetworkManager.lobby_members_updated.connect(_update_members)
 	NetworkManager.player_settings_updated.connect(_player_settings_updated)
-	NetworkManager.level_updated.connect(_level_updated)
 	NetworkManager.is_opponent_ready.connect(_opponent_ready_pressed)
+	NetworkManager.level_updated.connect(_level_updated)
+	level_display.level_changed.connect(_level_changed)
 	button_ready_1.pressed.connect(_on_ready_button_pressed)
 	button_ready_2.pressed.connect(_on_ready_button_pressed)
 
 func _update_members(members: Array[NetworkManager.LobbyPlayer]) -> void:
 	_update_names(members)
 	_update_ui_access(members)
+	_reset_ready_buttons()
 	#TODO: members/menus array not clearing lost players
 
 func _get_menus() -> Array[PlayerSettingsMenu]:
@@ -51,6 +53,7 @@ func _player_settings_updated(peer_id: int, player_settings: NetworkManager.Play
 	var steam_id: int = NetworkManager.get_steam_id_from_peer_id(peer_id)
 	if steam_id == -1:
 		return
+	_reset_ready_buttons()
 	var members: Array[NetworkManager.LobbyPlayer] = NetworkManager.get_lobby_members()
 	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	for i in range(min(members.size(), menus.size())):
@@ -62,6 +65,10 @@ func _player_settings_updated(peer_id: int, player_settings: NetworkManager.Play
 
 func _level_updated(level_id: String) -> void:
 	level_display.set_level_id(level_id)
+	_reset_ready_buttons()
+
+func _level_changed(level_id: String) -> void:
+	_reset_ready_buttons()
 
 func _on_ready_button_pressed() -> void:
 	if !button_ready_1.is_ready:
@@ -74,3 +81,8 @@ func _opponent_ready_pressed(is_ready: bool) -> void:
 	var opponent_button: UIButton = button_ready_2 if NetworkManager.is_host() else button_ready_1
 	opponent_button.set_ready(is_ready)
 	_on_ready_button_pressed()
+
+func _reset_ready_buttons() -> void:
+	button_ready_1.set_ready(false)
+	button_ready_2.set_ready(false)
+	NetworkManager.send_opponent_ready_button(false)

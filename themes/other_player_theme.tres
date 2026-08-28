@@ -17,6 +17,7 @@ spacing_bottom = -4
 
 [resource]
 Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.8745098, 0.8745098, 0.8745098, 0.3019608)
 Button/font_sizes/font_size = 8
 Button/fonts/font = SubResource("FontVariation_pb0xr")
 Button/styles/focus = SubResource("StyleBoxEmpty_y7jyi")

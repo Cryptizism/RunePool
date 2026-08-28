@@ -44,6 +44,7 @@ signal slot_assignments_received(assignments: PackedInt32Array)
 signal input_received(sender_id: int, frame: int, packet: Dictionary)
 signal seed_received(board_seed: int)
 signal level_updated(level_id: String)
+signal is_opponent_ready(is_ready: bool)
 signal match_begun()
 
 const LOBBY_TYPE: Steam.LobbyType = Steam.LobbyType.LOBBY_TYPE_PUBLIC
@@ -257,3 +258,10 @@ func send_level_id(level_id: String) -> void:
 @rpc("any_peer", "reliable")
 func receive_level_id(level_id: String) -> void:
 	level_updated.emit(level_id)
+
+func send_opponent_ready_button(is_ready: bool) -> void:
+	receive_opponent_ready_button.rpc_id(0, is_ready)
+
+@rpc("any_peer", "reliable")
+func receive_opponent_ready_button(is_ready: bool) -> void:
+	is_opponent_ready.emit(is_ready)

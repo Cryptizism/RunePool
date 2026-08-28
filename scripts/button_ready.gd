@@ -10,8 +10,14 @@ func _ready() -> void:
 	theme = NOT_READY_THEME
 
 func _on_pressed() -> void:
-	is_ready =  !is_ready
-	if is_ready:
+	if disabled:
+		return
+	set_ready(!is_ready)
+	NetworkManager.send_opponent_ready_button(is_ready)
+
+func set_ready(_is_ready: bool) -> void:
+	is_ready = _is_ready
+	if _is_ready:
 		theme = READY_THEME
 	else:
 		theme = NOT_READY_THEME

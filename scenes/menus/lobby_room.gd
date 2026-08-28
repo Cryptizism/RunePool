@@ -12,6 +12,7 @@ func _ready() -> void:
 	NetworkManager.lobby_members_updated.connect(_update_members)
 	NetworkManager.player_settings_updated.connect(_player_settings_updated)
 	NetworkManager.level_updated.connect(_level_updated)
+	NetworkManager.is_opponent_ready.connect(_opponent_ready_pressed)
 	button_ready_1.pressed.connect(_on_ready_button_pressed)
 	button_ready_2.pressed.connect(_on_ready_button_pressed)
 
@@ -40,13 +41,15 @@ func _update_ui_access(members: Array[NetworkManager.LobbyPlayer]) -> void:
 		menus[i].set_enabled(members[i].steam_id == Steam.getSteamID())
 	button_level_left.disabled = !NetworkManager.is_host()
 	button_level_right.disabled = !NetworkManager.is_host()
+	button_ready_1.disabled = !NetworkManager.is_host()
+	button_ready_2.disabled = NetworkManager.is_host()
 
 func _player_settings_updated(peer_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
 	var steam_id: int = NetworkManager.get_steam_id_from_peer_id(peer_id)
 	if steam_id == -1:
 		return
-	var members := NetworkManager.get_lobby_members()
-	var menus := _get_menus()
+	var members: Array[NetworkManager.LobbyPlayer] = NetworkManager.get_lobby_members()
+	var menus: Array[PlayerSettingsMenu] = _get_menus()
 	for i in range(min(members.size(), menus.size())):
 		if members[i].steam_id == steam_id:
 			menus[i].set_speed(player_settings.speed)
@@ -63,3 +66,7 @@ func _on_ready_button_pressed() -> void:
 	if !button_ready_2.is_ready:
 		return
 	Transition.change_scene("res://scenes/game_room.tscn")
+
+func _opponent_ready_pressed(is_ready: bool) -> void:
+	var opponent_button: UIButton = button_ready_2 if NetworkManager.is_host() else button_ready_1
+	opponent_button.set_ready(is_ready)

@@ -4,8 +4,6 @@ const READY_THEME = preload("res://themes/green_theme.tres")
 const NOT_READY_THEME = preload("res://themes/red_theme.tres")
 const OTHER_PLAYER_THEME = preload("res://themes/other_player_theme.tres")
 
-var active_theme = READY_THEME
-var inactive_theme = NOT_READY_THEME
 var is_ready: bool = false
 
 func _ready() -> void:
@@ -20,18 +18,22 @@ func _on_pressed() -> void:
 
 func set_other_player_mode(value: bool) -> void:
 	if value:
-		active_theme = OTHER_PLAYER_THEME
-		inactive_theme = OTHER_PLAYER_THEME
+		theme = OTHER_PLAYER_THEME
 		disabled = true
 	else:
-		active_theme = READY_THEME
-		inactive_theme = NOT_READY_THEME
 		disabled = false
-	set_ready(is_ready)
+	_update_theme()
 
 func set_ready(_is_ready: bool) -> void:
 	is_ready = _is_ready
-	if _is_ready:
-		theme = active_theme
+	_update_theme()
+
+func _update_theme() -> void:
+	if disabled:
+		if is_ready:
+			add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
 	else:
-		theme = inactive_theme
+		if is_ready:
+			theme = READY_THEME
+		else:
+			theme = NOT_READY_THEME

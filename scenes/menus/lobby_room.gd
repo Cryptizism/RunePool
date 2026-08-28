@@ -39,10 +39,13 @@ func _update_ui_access(members: Array[NetworkManager.LobbyPlayer]) -> void:
 			menus[i].set_enabled(false)
 			continue
 		menus[i].set_enabled(members[i].steam_id == Steam.getSteamID())
-	button_level_left.disabled = !NetworkManager.is_host()
-	button_level_right.disabled = !NetworkManager.is_host()
-	button_ready_1.disabled = !NetworkManager.is_host()
-	button_ready_2.disabled = NetworkManager.is_host()
+	var is_host: bool = NetworkManager.is_host()
+	button_level_left.disabled = !is_host
+	button_level_right.disabled = !is_host
+	if is_host:
+		button_ready_2.set_other_player_mode(true)
+	else:
+		button_ready_1.set_other_player_mode(true)
 
 func _player_settings_updated(peer_id: int, player_settings: NetworkManager.PlayerSettings) -> void:
 	var steam_id: int = NetworkManager.get_steam_id_from_peer_id(peer_id)
@@ -70,3 +73,4 @@ func _on_ready_button_pressed() -> void:
 func _opponent_ready_pressed(is_ready: bool) -> void:
 	var opponent_button: UIButton = button_ready_2 if NetworkManager.is_host() else button_ready_1
 	opponent_button.set_ready(is_ready)
+	_on_ready_button_pressed()

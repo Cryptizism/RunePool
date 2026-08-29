@@ -125,12 +125,12 @@ func _set_slot_assignments() -> void:
 	if !NetworkManager.is_host():
 		await NetworkManager.slot_assignments_received
 		return
-	slot_assignments.append(0) #Host
+	slot_assignments.append(multiplayer.get_unique_id()) #Host
 	if _is_local_multiplayer():
 		slot_assignments.append(1)
 	elif _is_online_multiplayer():
-		for peer in multiplayer.get_peers():
-			slot_assignments.append(peer)
+		for peer_id in multiplayer.get_peers():
+			slot_assignments.append(peer_id)
 		NetworkManager.send_slot_assignments(slot_assignments)
 	_apply_slot_assignments()
 

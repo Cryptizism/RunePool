@@ -11,4 +11,6 @@ func _init(_slot_number: int) -> void:
 	input = PlayerInput.new()
 
 func is_local() -> bool:
+	if NetworkManager.current_lobby_id == 0:
+		return true
 	return peer_id == NetworkManager.local_peer_id

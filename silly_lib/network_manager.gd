@@ -40,7 +40,7 @@ signal server_connection_successful
 signal server_connection_failed()
 signal server_disconnected()
 signal player_settings_updated(peer_id: int, player_settings: PlayerSettings)
-signal slot_assignments_received(assignments: PackedInt32Array)
+signal slot_assignments_received(assignments: PackedInt64Array)
 signal input_received(sender_id: int, frame: int, packet: Dictionary)
 signal seed_received(board_seed: int)
 signal level_updated(level_id: String)
@@ -217,11 +217,11 @@ func get_steam_id_from_peer_id(peer_id: int) -> int:
 		return -1
 	return steam_peer.get_steam_id_for_peer_id(peer_id)
 
-func send_slot_assignments(assignments: PackedInt32Array) -> void:
+func send_slot_assignments(assignments: PackedInt64Array) -> void:
 	receive_slot_assignments.rpc(assignments)
 
 @rpc("any_peer", "unreliable")
-func receive_slot_assignments(assignments: PackedInt32Array) -> void:
+func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 	slot_assignments_received.emit(assignments)
 
 func send_input(frame: int, packet: Dictionary) -> void:

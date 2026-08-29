@@ -9,7 +9,7 @@ const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 2.0
 
 var generated_seed: int = 0
-var slot_assignments: PackedInt32Array
+var slot_assignments: PackedInt64Array
 var players: Array[Player] = []
 var current_frame: int = 0
 var frame_inputs: Dictionary = {}
@@ -172,7 +172,7 @@ func _get_peer_slot_number(peer_id: int) -> int:
 		return i
 	return -1
 
-func _on_slot_assignments_received(assignments: PackedInt32Array) -> void:
+func _on_slot_assignments_received(assignments: PackedInt64Array) -> void:
 	slot_assignments = assignments
 	_apply_slot_assignments()
 

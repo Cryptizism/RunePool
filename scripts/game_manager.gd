@@ -114,7 +114,7 @@ func _set_lobby_seed() -> void:
 	if _is_local_game():
 		generated_seed = _generated_seed
 		return
-	if !_is_host():
+	if !NetworkManager.is_host():
 		await NetworkManager.seed_received
 		return
 	generated_seed = _generated_seed
@@ -122,7 +122,7 @@ func _set_lobby_seed() -> void:
 
 func _set_slot_assignments() -> void:
 	slot_assignments.clear()
-	if !_is_host():
+	if !NetworkManager.is_host():
 		await NetworkManager.slot_assignments_received
 		return
 	slot_assignments.append(0) #Host
@@ -201,7 +201,7 @@ func _is_online_multiplayer() -> bool:
 func _is_right_side_player(slot_number: int) -> bool:
 	return slot_number == 1 and Global.player_count > 1
 
-func _is_host() -> bool:
-	if NetworkManager.current_lobby_id == 0:
-		return true
-	return Steam.getLobbyOwner(NetworkManager.current_lobby_id) == NetworkManager.local_peer_id
+#func _is_host() -> bool:
+	#if NetworkManager.current_lobby_id == 0:
+		#return true
+	#return Steam.getLobbyOwner(NetworkManager.current_lobby_id) == NetworkManager.local_peer_id

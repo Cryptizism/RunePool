@@ -18,3 +18,5 @@ res://scenes/menus/lobby_room.gd
 res://silly_lib/network_manager.gd
 res://themes/other_player_theme.tres
 res://scripts/display_level.gd
+res://scenes/game_room.tscn
+res://scripts/game_manager.gd

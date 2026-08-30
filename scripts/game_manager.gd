@@ -7,12 +7,15 @@ var state: State = State.PAUSED
 
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 2.0
+const INPUT_BUFFER_SIZE: int = 3
 
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
 var players: Array[Player] = []
 var current_frame: int = 0
+var input_frame: int = 0
 var frame_inputs: Dictionary = {}
+var previous_inputs: Array[Dictionary] = []
 var timeout_timer: float = 0.0
 
 func _ready() -> void:
@@ -43,9 +46,11 @@ func _reset() -> void:
 			player.board.queue_free()
 	players.clear()
 	frame_inputs.clear()
+	previous_inputs.clear()
 	slot_assignments.clear()
 	generated_seed = 0
 	current_frame = 0
+	input_frame = 0
 	timeout_timer = 0.0
 
 func _create_board(level_id: String, slot_number: int) -> void:
@@ -70,26 +75,35 @@ func _physics_process(delta: float) -> void:
 	#if state == State.PAUSED:
 		#return
 	timeout_timer += delta
-	if !frame_inputs.has(current_frame):
-		frame_inputs[current_frame] = {}
+	#if !frame_inputs.has(current_frame):
+		#frame_inputs[current_frame] = {}
 	for player in players:
 		if !player.is_local():
 			continue
 		player.input.update_local(player.slot_number + 1)
 		var packet: Dictionary = player.input.to_packet()
+		if previous_inputs.size() <= player.slot_number:
+			previous_inputs.resize(player.slot_number + 1)
+		if !frame_inputs.has(current_frame):
+			frame_inputs[current_frame] = {}
 		frame_inputs[current_frame][player.slot_number] = packet
-		NetworkManager.send_input(
-			current_frame,
-			packet
-		)
+		
+		#if packet != previous_inputs[player.slot_number]:
+			#previous_inputs[player.slot_number] = packet.duplicate()
+		NetworkManager.send_input(current_frame, packet)
+	if input_frame - current_frame < INPUT_BUFFER_SIZE:
+		input_frame += 1
+		return
 	if _has_inputs_for_frame(current_frame):
-		_simulate_frame(delta)
+		_simulate_frame()
 		timeout_timer = 0.0
 		return
 	if timeout_timer >= TIMEOUT_TIME:
 		_timeout()
 
-func _simulate_frame(delta: float) -> void:
+#func _simulate_frame(delta: float) -> void:
+func _simulate_frame() -> void:
+	var delta: float = 1.0 / 60.0
 	for player in players:
 		if !player.is_local():
 			player.input.update_network(
@@ -154,8 +168,6 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
 		return
-	#if packet.get("rotate_left", false) or packet.get("rotate_right", false):
-		#print("RECEIVED ROTATION: ", packet)
 	var player: Player = players[slot_number]
 	if player.is_local():
 		return
@@ -187,6 +199,7 @@ func _apply_slot_assignments() -> void:
 
 func _timeout() -> void:
 	print("Connection timeout.")
+	Transition.change_scene("res://scenes/menus/battle_menu.tscn")
 
 func _is_local_game() -> bool:
 	return NetworkManager.current_lobby_id == 0

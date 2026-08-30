@@ -227,7 +227,7 @@ func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 func send_input(frame: int, packet: Dictionary) -> void:
 	receive_input.rpc(frame, packet)
 
-@rpc("any_peer", "reliable")
+@rpc("any_peer", "unreliable_ordered")
 func receive_input(frame: int, packet: Dictionary) -> void:
 	input_received.emit(multiplayer.get_remote_sender_id(), frame, packet)
 

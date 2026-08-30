@@ -98,9 +98,18 @@ func _physics_process(delta: float) -> void:
 	input_frame += 1
 	if current_frame >= input_frame - INPUT_BUFFER_SIZE:
 		return
-	if _has_inputs_for_frame(current_frame):
+	var simulated_frames: int = 0
+	var max_catchup_frames: int = 4
+	while simulated_frames < max_catchup_frames:
+		if !_has_inputs_for_frame(current_frame):
+			break
 		_simulate_frame()
+		simulated_frames += 1
+	if simulated_frames > 0:
 		timeout_timer = 0.0
+	#if _has_inputs_for_frame(current_frame):
+		#_simulate_frame()
+		#timeout_timer = 0.0
 	if timeout_timer >= TIMEOUT_TIME:
 		_timeout()
 

@@ -29,7 +29,8 @@ func _new_game(level_id: String) -> void:
 	await _set_lobby_seed()
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
-	await _set_slot_assignments()
+	_set_slot_assignments()
+	#await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
 		return
@@ -89,7 +90,7 @@ func _physics_process(delta: float) -> void:
 			#previous_inputs[player.slot_number] = packet.duplicate()
 		NetworkManager.send_input(input_frame, packet)
 	input_frame += 1
-	if input_frame - current_frame < INPUT_BUFFER_SIZE:
+	if current_frame >= input_frame - INPUT_BUFFER_SIZE:
 		return
 	if _has_inputs_for_frame(current_frame):
 		_simulate_frame()
@@ -112,12 +113,10 @@ func _simulate_frame() -> void:
 
 func _has_inputs_for_frame(frame: int) -> bool:
 	if !frame_inputs.has(frame):
-		print("Missing entire frame: ", frame)
 		return false
 	var inputs = frame_inputs[frame]
 	for player in players:
 		if !inputs.has(player.slot_number):
-			print("Frame ", frame, " missing player ", player.slot_number, ". Received slots: ", inputs.keys())
 			return false
 	return true
 

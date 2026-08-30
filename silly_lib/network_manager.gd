@@ -220,7 +220,7 @@ func get_steam_id_from_peer_id(peer_id: int) -> int:
 func send_slot_assignments(assignments: PackedInt64Array) -> void:
 	receive_slot_assignments.rpc(assignments)
 
-@rpc("any_peer", "unreliable")
+@rpc("any_peer", "reliable")
 func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 	slot_assignments_received.emit(assignments)
 

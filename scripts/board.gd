@@ -49,13 +49,6 @@ var cluster_preview_offset: Vector2 = Vector2(
 )
 var ghost_layer: Node2D
 var input: PlayerInput = PlayerInput.new()
-#enum InputSource {
-	#LOCAL,
-	#NETWORK,
-	#AI,
-	#REPLAY
-#}
-#var input_source: InputSource = InputSource.LOCAL
 
 func _ready() -> void:
 	width = clamp(width, 2, 15)
@@ -67,15 +60,6 @@ func _ready() -> void:
 		grid[i].resize(height)
 	ghost_layer = Node2D.new()
 	add_child(ghost_layer)
-
-#func _process(delta: float) -> void:
-	#if state != State.ACTIVE:
-		#return
-	#if input_source == InputSource.LOCAL:
-		#input.update_local(player_id)
-	##else:
-		##input.update_network(packet)
-	#_try_debug_attack()
 
 func tick(delta: float) -> void:
 	if state != State.ACTIVE:

@@ -227,21 +227,21 @@ func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 func send_input(frame: int, packet: Dictionary) -> void:
 	receive_input.rpc(frame, packet)
 
-@rpc("any_peer", "unreliable_ordered")
+@rpc("any_peer", "reliable")
 func receive_input(frame: int, packet: Dictionary) -> void:
 	input_received.emit(multiplayer.get_remote_sender_id(), frame, packet)
 
 func send_seed(generated_seed: int) -> void:
 	receive_seed.rpc(generated_seed)
 
-@rpc("any_peer", "unreliable")
+@rpc("any_peer", "reliable")
 func receive_seed(generated_seed: int) -> void:
 	seed_received.emit(generated_seed)
 
 func send_match_ready() -> void:
 	receive_match_ready.rpc()
 
-@rpc("any_peer", "unreliable")
+@rpc("any_peer", "reliable")
 func receive_match_ready() -> void:
 	match_begun.emit()
 

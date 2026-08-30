@@ -198,6 +198,8 @@ func load_level(level_id: String) -> void:
 		if !rune or !rune.animated_sprite:
 			continue
 		rune.animated_sprite.play()
+	if !NetworkManager.is_host():
+		NetworkManager.send_match_ready()
 	_begin_next_cluster()
 
 func _refresh_colors() -> void:
@@ -628,3 +630,13 @@ func resolve_board() -> void:
 		return
 	state = State.VICTORY
 	_on_game_end()
+
+
+func get_hash() -> int:
+	var hash := 0
+	hash = hash * 31 + runes_remaining
+	hash = hash * 31 + active_cluster.position.x
+	hash = hash * 31 + active_cluster.position.y
+	for cell in grid:
+		hash = hash * 31 + cell[0] + (cell[0] * 100)
+	return hash

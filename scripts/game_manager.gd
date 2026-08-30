@@ -8,7 +8,6 @@ var state: State = State.PAUSED
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 2.0
 const INPUT_BUFFER_SIZE: int = 8
-const REDUNDANCY_DEPTH: int = 6
 
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
@@ -16,8 +15,6 @@ var players: Array[Player] = []
 var current_frame: int = 0
 var input_frame: int = 0
 var frame_inputs: Dictionary = {}
-var local_input_history: Array[Dictionary] = []
-#var previous_inputs: Array[Dictionary] = []
 var timeout_timer: float = 0.0
 var match_in_progress: bool = false
 
@@ -32,15 +29,14 @@ func _new_game(level_id: String) -> void:
 	await _set_lobby_seed()
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
-	_set_slot_assignments()
-	#await _set_slot_assignments()
+	await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
 		match_in_progress = true
 		return
 	players[0].board.opponent_board = players[1].board
 	players[1].board.opponent_board = players[0].board
-	#await NetworkManager.match_begun
+	await NetworkManager.match_begun
 	match_in_progress = true
 
 func _reset() -> void:
@@ -83,29 +79,7 @@ func _physics_process(delta: float) -> void:
 		return
 	#if state == State.PAUSED:
 		#return
-	timeout_timer += delta
-	for player in players:
-		if !player.is_local():
-			continue
-		player.input.update_local(player.slot_number + 1)
-		var packet: Dictionary = player.input.to_packet()
-		#if previous_inputs.size() <= player.slot_number:
-			#previous_inputs.resize(player.slot_number + 1)
-		if !frame_inputs.has(input_frame):
-			frame_inputs[input_frame] = {}
-		frame_inputs[input_frame][player.slot_number] = packet
-		#if packet != previous_inputs[player.slot_number]:
-			#previous_inputs[player.slot_number] = packet.duplicate()
-		local_input_history.append({"frame": input_frame, "payload": packet})
-		if local_input_history.size() > REDUNDANCY_DEPTH:
-			local_input_history.pop_front()
-		var network_packet: Dictionary = {
-			"history": local_input_history
-		}
-		NetworkManager.send_input(input_frame, network_packet)
-	input_frame += 1
-	if current_frame >= input_frame - INPUT_BUFFER_SIZE:
-		return
+	_collect_local_input()
 	var simulated_frames: int = 0
 	var max_catchup_frames: int = 4
 	while simulated_frames < max_catchup_frames:
@@ -113,13 +87,58 @@ func _physics_process(delta: float) -> void:
 			break
 		_simulate_frame()
 		simulated_frames += 1
-	if simulated_frames > 0:
+	if simulated_frames == 0:
+		timeout_timer += delta
+	else:
 		timeout_timer = 0.0
-	#if _has_inputs_for_frame(current_frame):
-		#_simulate_frame()
-		#timeout_timer = 0.0
 	if timeout_timer >= TIMEOUT_TIME:
 		_timeout()
+
+func _collect_local_input() -> void:
+	for player in players:
+		if !player.is_local():
+			continue
+		player.input.update_local(player.slot_number + 1)
+		var packet: Dictionary = player.input.to_packet()
+		if !frame_inputs.has(input_frame):
+			frame_inputs[input_frame] = {}
+		frame_inputs[input_frame][player.slot_number] = packet
+		NetworkManager.send_input(input_frame, packet)
+	input_frame += 1
+
+#func _physics_process(delta: float) -> void:
+	#if !match_in_progress:
+		#return
+	##if state == State.PAUSED:
+		##return
+	#_collect_local_input()
+	#timeout_timer += delta
+	#for player in players:
+		#if !player.is_local():
+			#continue
+		#player.input.update_local(player.slot_number + 1)
+		#var packet: Dictionary = player.input.to_packet()
+		#if !frame_inputs.has(input_frame):
+			#frame_inputs[input_frame] = {}
+		#frame_inputs[input_frame][player.slot_number] = packet
+		#NetworkManager.send_input(input_frame, packet)
+	#input_frame += 1
+	#if current_frame >= input_frame - INPUT_BUFFER_SIZE:
+		#return
+	#var simulated_frames: int = 0
+	#var max_catchup_frames: int = 4
+	#while simulated_frames < max_catchup_frames:
+		#if !_has_inputs_for_frame(current_frame):
+			#break
+		#_simulate_frame()
+		#simulated_frames += 1
+	#if simulated_frames > 0:
+		#timeout_timer = 0.0
+	##if _has_inputs_for_frame(current_frame):
+		##_simulate_frame()
+		##timeout_timer = 0.0
+	#if timeout_timer >= TIMEOUT_TIME:
+		#_timeout()
 
 #func _simulate_frame(delta: float) -> void:
 func _simulate_frame() -> void:
@@ -191,17 +210,9 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var player: Player = players[slot_number]
 	if player.is_local():
 		return
-	if packet.has("history"):
-		for history in packet["history"]:
-			var _frame: int = history["frame"]
-			var _payload: Dictionary = history["payload"]
-			if !frame_inputs.has(_frame):
-				frame_inputs[_frame] = {}
-			if !frame_inputs[_frame].has(slot_number):
-				frame_inputs[_frame][slot_number] = _payload
-		#if !frame_inputs.has(frame):
-			#frame_inputs[frame] = {}
-		#frame_inputs[frame][slot_number] = packet
+	if !frame_inputs.has(frame):
+		frame_inputs[frame] = {}
+	frame_inputs[frame][slot_number] = packet
 	timeout_timer = 0.0
 
 func _on_seed_received(_generated_seed: int) -> void:

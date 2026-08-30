@@ -38,7 +38,7 @@ func _new_game(level_id: String) -> void:
 		return
 	players[0].board.opponent_board = players[1].board
 	players[1].board.opponent_board = players[0].board
-	await NetworkManager.match_begun
+	#await NetworkManager.match_begun
 	match_in_progress = true
 
 func _reset() -> void:

@@ -13,7 +13,6 @@ var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
 var players: Array[Player] = []
 var current_frame: int = 0
-var input_frame: int = 0
 var frame_inputs: Dictionary = {}
 #var previous_inputs: Array[Dictionary] = []
 var timeout_timer: float = 0.0
@@ -50,7 +49,6 @@ func _reset() -> void:
 	slot_assignments.clear()
 	generated_seed = 0
 	current_frame = 0
-	input_frame = 0
 	timeout_timer = 0.0
 
 func _create_board(level_id: String, slot_number: int) -> void:
@@ -82,15 +80,15 @@ func _physics_process(delta: float) -> void:
 		var packet: Dictionary = player.input.to_packet()
 		#if previous_inputs.size() <= player.slot_number:
 			#previous_inputs.resize(player.slot_number + 1)
-		if !frame_inputs.has(input_frame):
-			frame_inputs[input_frame] = {}
-		frame_inputs[input_frame][player.slot_number] = packet
+		if !frame_inputs.has(current_frame):
+			frame_inputs[current_frame] = {}
+		frame_inputs[current_frame][player.slot_number] = packet
 		
 		#if packet != previous_inputs[player.slot_number]:
 			#previous_inputs[player.slot_number] = packet.duplicate()
-		NetworkManager.send_input(input_frame, packet)
-	if input_frame - current_frame < INPUT_BUFFER_SIZE:
-		input_frame += 1
+		NetworkManager.send_input(current_frame, packet)
+	if current_frame < INPUT_BUFFER_SIZE:
+		current_frame += 1
 		return
 	if _has_inputs_for_frame(current_frame):
 		_simulate_frame()

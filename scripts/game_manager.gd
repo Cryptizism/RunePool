@@ -29,7 +29,7 @@ func _new_game(level_id: String) -> void:
 	await _set_lobby_seed()
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
-	_set_slot_assignments()
+	await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
 		return
@@ -163,12 +163,15 @@ func _on_game_ended() -> void:
 		layer_bg.queue_free()
 
 func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
+	print("Received input: sender=", sender_id, " frame=", frame)
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
+		print ("Unknown peer")
 		return
 	var player: Player = players[slot_number]
 	if player.is_local():
 		return
+	print("Mapped to slot ", slot_number)
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet

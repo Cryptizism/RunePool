@@ -17,3 +17,4 @@ res://themes/other_player_theme.tres
 res://scripts/board.gd
 res://scripts/game_manager.gd
 res://scripts/PlayerInput.gd
+res://silly_lib/network_manager.gd

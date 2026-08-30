@@ -22,7 +22,7 @@ func update_local(player_id: int) -> void:
 	back = Input.is_action_just_pressed("back_" + str(player_id))
 
 func update_network(packet: Dictionary) -> void:
-	clear()
+	#clear()
 	if !packet:
 		return
 	move_up = packet.get("move_up", false)

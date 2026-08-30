@@ -154,10 +154,8 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
 		return
-	
-	if packet.get("rotate_left", false) or packet.get("rotate_right", false):
-		print("RECEIVED ROTATION: ", packet)
-	
+	#if packet.get("rotate_left", false) or packet.get("rotate_right", false):
+		#print("RECEIVED ROTATION: ", packet)
 	var player: Player = players[slot_number]
 	if player.is_local():
 		return

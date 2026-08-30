@@ -8,6 +8,7 @@ var state: State = State.PAUSED
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 2.0
 const INPUT_BUFFER_SIZE: int = 8
+const REDUNDANCY_DEPTH: int = 6
 
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
@@ -15,6 +16,7 @@ var players: Array[Player] = []
 var current_frame: int = 0
 var input_frame: int = 0
 var frame_inputs: Dictionary = {}
+var local_input_history: Array[Dictionary] = []
 #var previous_inputs: Array[Dictionary] = []
 var timeout_timer: float = 0.0
 var match_in_progress: bool = false
@@ -94,7 +96,13 @@ func _physics_process(delta: float) -> void:
 		frame_inputs[input_frame][player.slot_number] = packet
 		#if packet != previous_inputs[player.slot_number]:
 			#previous_inputs[player.slot_number] = packet.duplicate()
-		NetworkManager.send_input(input_frame, packet)
+		local_input_history.append({"frame": input_frame, "payload": packet})
+		if local_input_history.size() > REDUNDANCY_DEPTH:
+			local_input_history.pop_front()
+		var network_packet: Dictionary = {
+			"history": local_input_history
+		}
+		NetworkManager.send_input(input_frame, network_packet)
 	input_frame += 1
 	if current_frame >= input_frame - INPUT_BUFFER_SIZE:
 		return
@@ -177,18 +185,23 @@ func _on_game_ended() -> void:
 		layer_bg.queue_free()
 
 func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
-	print("Received input: sender=", sender_id, " frame=", frame)
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
-		print ("Unknown peer")
 		return
 	var player: Player = players[slot_number]
 	if player.is_local():
 		return
-	print("Mapped to slot ", slot_number)
-	if !frame_inputs.has(frame):
-		frame_inputs[frame] = {}
-	frame_inputs[frame][slot_number] = packet
+	if packet.has("history"):
+		for history in packet["history"]:
+			var _frame: int = history["frame"]
+			var _payload: Dictionary = history["payload"]
+			if !frame_inputs.has(_frame):
+				frame_inputs[_frame] = {}
+			if !frame_inputs[_frame].has(slot_number):
+				frame_inputs[_frame][slot_number] = _payload
+		#if !frame_inputs.has(frame):
+			#frame_inputs[frame] = {}
+		#frame_inputs[frame][slot_number] = packet
 	timeout_timer = 0.0
 
 func _on_seed_received(_generated_seed: int) -> void:

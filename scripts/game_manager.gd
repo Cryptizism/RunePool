@@ -17,6 +17,7 @@ var input_frame: int = 0
 var frame_inputs: Dictionary = {}
 #var previous_inputs: Array[Dictionary] = []
 var timeout_timer: float = 0.0
+var match_in_progress: bool = false
 
 func _ready() -> void:
 	NetworkManager.slot_assignments_received.connect(_on_slot_assignments_received)
@@ -33,10 +34,12 @@ func _new_game(level_id: String) -> void:
 	#await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
+		match_in_progress = true
 		return
 	players[0].board.opponent_board = players[1].board
 	players[1].board.opponent_board = players[0].board
 	await NetworkManager.match_begun
+	match_in_progress = true
 
 func _reset() -> void:
 	if !is_inside_tree():
@@ -53,6 +56,7 @@ func _reset() -> void:
 	current_frame = 0
 	input_frame = 0
 	timeout_timer = 0.0
+	match_in_progress = false
 
 func _create_board(level_id: String, slot_number: int) -> void:
 	var player: Player = Player.new(slot_number)
@@ -73,6 +77,8 @@ func _create_board(level_id: String, slot_number: int) -> void:
 	board.global_position.x += board_width * slot_number
 
 func _physics_process(delta: float) -> void:
+	if !match_in_progress:
+		return
 	#if state == State.PAUSED:
 		#return
 	timeout_timer += delta

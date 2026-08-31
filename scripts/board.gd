@@ -631,7 +631,6 @@ func resolve_board() -> void:
 	state = State.VICTORY
 	_on_game_end()
 
-
 func get_hash() -> int:
 	var hash := 0
 	hash = hash * 31 + runes_remaining

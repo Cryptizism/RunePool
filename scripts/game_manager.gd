@@ -7,13 +7,13 @@ var state: State = State.PAUSED
 
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 2.0
-const INPUT_BUFFER_SIZE: int = 8
+const INPUT_DELAY_FRAMES: int = 2
+const LOCKSTEP_DELAY: float = 1.0 / 60.0
 
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
 var players: Array[Player] = []
 var current_frame: int = 0
-var input_frame: int = 0
 var frame_inputs: Dictionary = {}
 var timeout_timer: float = 0.0
 var match_in_progress: bool = false
@@ -48,11 +48,9 @@ func _reset() -> void:
 			player.board.queue_free()
 	players.clear()
 	frame_inputs.clear()
-	#previous_inputs.clear()
 	slot_assignments.clear()
 	generated_seed = 0
 	current_frame = 0
-	input_frame = 0
 	timeout_timer = 0.0
 	match_in_progress = false
 
@@ -79,7 +77,7 @@ func _physics_process(delta: float) -> void:
 		return
 	#if state == State.PAUSED:
 		#return
-	_collect_local_input()
+	_send_local_input()
 	var simulated_frames: int = 0
 	var max_catchup_frames: int = 4
 	while simulated_frames < max_catchup_frames:
@@ -87,73 +85,43 @@ func _physics_process(delta: float) -> void:
 			break
 		_simulate_frame()
 		simulated_frames += 1
-	if simulated_frames == 0:
+	if simulated_frames == 0 and _is_online_multiplayer():
 		timeout_timer += delta
+		if timeout_timer >= TIMEOUT_TIME:
+			_timeout()
 	else:
 		timeout_timer = 0.0
-	if timeout_timer >= TIMEOUT_TIME:
-		_timeout()
 
-func _collect_local_input() -> void:
+func _send_local_input() -> void:
+	var target_frame: int = current_frame + INPUT_DELAY_FRAMES
 	for player in players:
 		if !player.is_local():
 			continue
 		player.input.update_local(player.slot_number + 1)
 		var packet: Dictionary = player.input.to_packet()
-		if !frame_inputs.has(input_frame):
-			frame_inputs[input_frame] = {}
-		frame_inputs[input_frame][player.slot_number] = packet
-		NetworkManager.send_input(input_frame, packet)
-	input_frame += 1
+		if !frame_inputs.has(target_frame):
+			frame_inputs[target_frame] = {}
+		frame_inputs[target_frame][player.slot_number] = packet
+		if _is_online_multiplayer():
+			NetworkManager.send_input(target_frame, packet)
 
-#func _physics_process(delta: float) -> void:
-	#if !match_in_progress:
-		#return
-	##if state == State.PAUSED:
-		##return
-	#_collect_local_input()
-	#timeout_timer += delta
-	#for player in players:
-		#if !player.is_local():
-			#continue
-		#player.input.update_local(player.slot_number + 1)
-		#var packet: Dictionary = player.input.to_packet()
-		#if !frame_inputs.has(input_frame):
-			#frame_inputs[input_frame] = {}
-		#frame_inputs[input_frame][player.slot_number] = packet
-		#NetworkManager.send_input(input_frame, packet)
-	#input_frame += 1
-	#if current_frame >= input_frame - INPUT_BUFFER_SIZE:
-		#return
-	#var simulated_frames: int = 0
-	#var max_catchup_frames: int = 4
-	#while simulated_frames < max_catchup_frames:
-		#if !_has_inputs_for_frame(current_frame):
-			#break
-		#_simulate_frame()
-		#simulated_frames += 1
-	#if simulated_frames > 0:
-		#timeout_timer = 0.0
-	##if _has_inputs_for_frame(current_frame):
-		##_simulate_frame()
-		##timeout_timer = 0.0
-	#if timeout_timer >= TIMEOUT_TIME:
-		#_timeout()
-
-#func _simulate_frame(delta: float) -> void:
 func _simulate_frame() -> void:
-	var delta: float = 1.0 / 60.0
-	for player in players:
-		if !player.is_local():
-			player.input.update_network(
-				frame_inputs[current_frame][player.slot_number]
-			)
+	if _is_singleplayer():
+		var player = players[0]
 		player.board.input = player.input
-		player.board.tick(delta)
+		player.board.tick(LOCKSTEP_DELAY)
+	else:
+		for player in players:
+			if !player.is_local():
+				player.input.update_network(frame_inputs[current_frame][player.slot_number])
+			player.board.input = player.input
+			player.board.tick(LOCKSTEP_DELAY)
 	frame_inputs.erase(current_frame)
 	current_frame += 1
 
 func _has_inputs_for_frame(frame: int) -> bool:
+	if _is_singleplayer():
+		return frame_inputs.has(frame)
 	if !frame_inputs.has(frame):
 		return false
 	var inputs = frame_inputs[frame]
@@ -161,6 +129,18 @@ func _has_inputs_for_frame(frame: int) -> bool:
 		if !inputs.has(player.slot_number):
 			return false
 	return true
+
+func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
+	var slot_number: int = _get_peer_slot_number(sender_id)
+	if slot_number == -1:
+		return
+	var player: Player = players[slot_number]
+	if player.is_local():
+		return
+	if !frame_inputs.has(frame):
+		frame_inputs[frame] = {}
+	frame_inputs[frame][slot_number] = packet
+	timeout_timer = 0.0
 
 func _set_lobby_seed() -> void:
 	var _generated_seed: int = int(Time.get_unix_time_from_system())
@@ -202,18 +182,6 @@ func _get_floor_enemy(floor_number: int) -> String:
 func _on_game_ended() -> void:
 	if layer_bg:
 		layer_bg.queue_free()
-
-func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
-	var slot_number: int = _get_peer_slot_number(sender_id)
-	if slot_number == -1:
-		return
-	var player: Player = players[slot_number]
-	if player.is_local():
-		return
-	if !frame_inputs.has(frame):
-		frame_inputs[frame] = {}
-	frame_inputs[frame][slot_number] = packet
-	timeout_timer = 0.0
 
 func _on_seed_received(_generated_seed: int) -> void:
 	generated_seed = _generated_seed

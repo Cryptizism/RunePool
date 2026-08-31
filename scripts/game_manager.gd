@@ -1,5 +1,7 @@
 extends Node2D
 
+signal players_are_ready()
+
 enum State { PAUSED, PLAYING, CHECKING, ATTACKED }
 var state: State = State.PAUSED
 
@@ -13,6 +15,7 @@ const LOCKSTEP_DELAY: float = 1.0 / 60.0
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
 var players: Array[Player] = []
+var players_ready: Array[bool] = []
 var current_frame: int = 0
 var frame_inputs: Dictionary = {}
 var timeout_timer: float = 0.0
@@ -22,6 +25,7 @@ func _ready() -> void:
 	NetworkManager.slot_assignments_received.connect(_on_slot_assignments_received)
 	NetworkManager.input_received.connect(_on_network_input)
 	NetworkManager.seed_received.connect(_on_seed_received)
+	NetworkManager.player_ready.connect(_on_player_ready)
 	await _new_game(Global.selected_level)
 
 func _new_game(level_id: String) -> void:
@@ -38,7 +42,7 @@ func _new_game(level_id: String) -> void:
 		return
 	players[0].board.opponent_board = players[1].board
 	players[1].board.opponent_board = players[0].board
-	await NetworkManager.match_begun
+	await players_are_ready
 	match_in_progress = true
 
 func _reset() -> void:
@@ -48,6 +52,9 @@ func _reset() -> void:
 	for player in players:
 		if player and is_instance_valid(player.board):
 			player.board.queue_free()
+	players_ready.clear()
+	players_ready.resize(Global.player_count)
+	players_ready.fill(false)
 	players.clear()
 	frame_inputs.clear()
 	slot_assignments.clear()
@@ -60,7 +67,7 @@ func _create_board(level_id: String, slot_number: int) -> void:
 	var player: Player = Player.new(slot_number)
 	var board: Board = BOARD_SCENE.instantiate()
 	var board_width: int = 8 * 11
-	board.board_ready.connect(_board_is_ready)
+	board.board_ready.connect(_board_is_ready.bind(slot_number))
 	board.set_player_id(slot_number + 1)
 	add_child(board)
 	player.board = board
@@ -75,11 +82,9 @@ func _create_board(level_id: String, slot_number: int) -> void:
 		board.character.flip_portrait()
 	board.global_position.x += board_width * slot_number
 
-func _board_is_ready() -> void:
-	if NetworkManager.is_host():
-		return
+func _board_is_ready(slot_number: int) -> void:
 	await NetworkManager.wait_for_server_connection()
-	NetworkManager.send_match_ready()
+	NetworkManager.send_player_ready(slot_number)
 
 func _physics_process(delta: float) -> void:
 	if !match_in_progress:
@@ -219,6 +224,7 @@ func _apply_slot_assignments() -> void:
 func _timeout() -> void:
 	print("Connection timeout.")
 	Transition.change_scene("res://scenes/menus/battle_menu.tscn")
+	NetworkManager.leave_lobby()
 
 func _is_local_game() -> bool:
 	return NetworkManager.current_lobby_id == 0
@@ -234,3 +240,11 @@ func _is_online_multiplayer() -> bool:
 
 func _is_right_side_player(slot_number: int) -> bool:
 	return slot_number == 1 and Global.player_count > 1
+
+func _on_player_ready(slot_number) -> void:
+	players_ready.resize(Global.player_count)
+	players_ready[slot_number] = true
+	for player in players_ready:
+		if player == false:
+			return
+	players_are_ready.emit()

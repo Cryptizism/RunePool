@@ -251,12 +251,12 @@ func receive_seed(generated_seed: int) -> void:
 	lobby_seed = generated_seed
 	seed_received.emit(generated_seed)
 
-func send_player_ready(slot_number: int) -> void:
-	receive_player_ready.rpc(slot_number)
+func send_opponent_ready() -> void:
+	receive_opponent_ready.rpc()
 
 @rpc("any_peer", "reliable")
-func receive_player_ready(slot_number: int) -> void:
-	player_ready.emit(slot_number)
+func receive_opponent_ready() -> void:
+	player_ready.emit()
 
 func send_player_settings(player_settings: PlayerSettings) -> void:
 	receive_player_settings.rpc_id(0, player_settings.to_dictionary()) #0 = all except self

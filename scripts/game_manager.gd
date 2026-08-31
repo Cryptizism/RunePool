@@ -194,6 +194,12 @@ func _get_floor_enemy(floor_number: int) -> String:
 		return "error"
 	return enemy_array[array_shifted_floor_number]
 
+func _prep_input_buffer() -> void:
+	for frame in range(INPUT_DELAY_FRAMES):
+		frame_inputs[frame] = {}
+		for player in players:
+			frame_inputs[frame][player.slot_number] = players[0].input.get_neutral_input()
+
 func _on_game_ended() -> void:
 	if layer_bg:
 		layer_bg.queue_free()
@@ -245,4 +251,5 @@ func _on_opponent_ready() -> void:
 func _try_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:
 		return
+	_prep_input_buffer()
 	match_in_progress = true

@@ -31,6 +31,18 @@ func update_network(packet: Dictionary) -> void:
 	accept = packet.get("accept", false)
 	back = packet.get("back", false)
 
+func get_neutral_input() -> Dictionary:
+	return {
+		"move_up": false,
+		"move_down": false,
+		"move_left": false,
+		"move_right": false,
+		"rotate_left": false,
+		"rotate_right": false,
+		"accept": false,
+		"back": false,
+	}
+
 func clear() -> void:
 	move_up = false
 	move_down = false

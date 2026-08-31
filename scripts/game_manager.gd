@@ -6,8 +6,8 @@ var state: State = State.PAUSED
 @onready var layer_bg: TileMapLayer = $"../LayerBG"
 
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
-const TIMEOUT_TIME: float = 2.0
-const INPUT_DELAY_FRAMES: int = 2
+const TIMEOUT_TIME: float = 5.0
+const INPUT_DELAY_FRAMES: int = 3
 const LOCKSTEP_DELAY: float = 1.0 / 60.0
 
 var generated_seed: int = 0

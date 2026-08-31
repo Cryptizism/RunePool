@@ -13,8 +13,9 @@ func _ready() -> void:
 func _on_pressed() -> void:
 	if disabled:
 		return
+	if !NetworkManager.is_connected_to_server:
+		return
 	set_ready(!is_ready)
-	await NetworkManager.wait_for_server_connection()
 	NetworkManager.send_opponent_ready_button(is_ready)
 
 func set_other_player_mode(value: bool) -> void:

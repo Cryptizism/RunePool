@@ -58,6 +58,7 @@ func _create_board(level_id: String, slot_number: int) -> void:
 	var player: Player = Player.new(slot_number)
 	var board: Board = BOARD_SCENE.instantiate()
 	var board_width: int = 8 * 11
+	board.board_ready.connect(_board_is_ready)
 	board.set_player_id(slot_number + 1)
 	add_child(board)
 	player.board = board
@@ -71,6 +72,12 @@ func _create_board(level_id: String, slot_number: int) -> void:
 	if _is_right_side_player(slot_number):
 		board.character.flip_portrait()
 	board.global_position.x += board_width * slot_number
+
+func _board_is_ready() -> void:
+	if NetworkManager.is_host():
+		return
+	await NetworkManager.wait_for_server_connection()
+	NetworkManager.send_match_ready()
 
 func _physics_process(delta: float) -> void:
 	if !match_in_progress:

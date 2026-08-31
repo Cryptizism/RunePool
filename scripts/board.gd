@@ -4,6 +4,7 @@ class_name Board
 enum State { ACTIVE, PAUSED, VICTORY, LOSS }
 var state: State = State.ACTIVE
 
+signal board_ready
 signal game_ended
 
 const LEVEL_DATA: Resource = preload("res://scripts/levels.gd")
@@ -198,9 +199,7 @@ func load_level(level_id: String) -> void:
 		if !rune or !rune.animated_sprite:
 			continue
 		rune.animated_sprite.play()
-	if !NetworkManager.is_host():
-		await NetworkManager.wait_for_server_connection()
-		NetworkManager.send_match_ready()
+	board_ready.emit()
 	_begin_next_cluster()
 
 func _refresh_colors() -> void:

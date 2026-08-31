@@ -1,7 +1,5 @@
 extends Node2D
 
-signal players_are_ready()
-
 enum State { PAUSED, PLAYING, CHECKING, ATTACKED }
 var state: State = State.PAUSED
 
@@ -42,8 +40,6 @@ func _new_game(level_id: String) -> void:
 		return
 	players[0].board.opponent_board = players[1].board
 	players[1].board.opponent_board = players[0].board
-	await players_are_ready
-	match_in_progress = true
 
 func _reset() -> void:
 	if !is_inside_tree():
@@ -83,6 +79,8 @@ func _create_board(level_id: String, slot_number: int) -> void:
 	board.global_position.x += board_width * slot_number
 
 func _board_is_ready(slot_number: int) -> void:
+	if slot_number < Global.player_count - 1:
+		return
 	await NetworkManager.wait_for_server_connection()
 	NetworkManager.send_player_ready(slot_number)
 
@@ -247,4 +245,4 @@ func _on_player_ready(slot_number) -> void:
 	for player in players_ready:
 		if player == false:
 			return
-	players_are_ready.emit()
+	match_in_progress = true

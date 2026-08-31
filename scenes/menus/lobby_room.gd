@@ -67,7 +67,7 @@ func _level_updated(level_id: String) -> void:
 	level_display.set_level_id(level_id)
 	_reset_ready_buttons()
 
-func _level_changed(level_id: String) -> void:
+func _level_changed(_level_id: String) -> void:
 	_reset_ready_buttons()
 
 func _on_ready_button_pressed() -> void:

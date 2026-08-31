@@ -18,3 +18,5 @@ res://scripts/board.gd
 res://scripts/game_manager.gd
 res://scripts/PlayerInput.gd
 res://silly_lib/network_manager.gd
+res://scenes/menus/lobby_room.gd
+res://scripts/particle.gd

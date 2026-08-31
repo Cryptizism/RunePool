@@ -632,10 +632,10 @@ func resolve_board() -> void:
 	_on_game_end()
 
 func get_hash() -> int:
-	var hash := 0
-	hash = hash * 31 + runes_remaining
-	hash = hash * 31 + active_cluster.position.x
-	hash = hash * 31 + active_cluster.position.y
+	var _hash := 0
+	_hash = _hash * 31 + runes_remaining
+	_hash = _hash * 31 + active_cluster.position.x
+	_hash = _hash * 31 + active_cluster.position.y
 	for cell in grid:
-		hash = hash * 31 + cell[0] + (cell[0] * 100)
-	return hash
+		_hash = _hash * 31 + cell[0] + (cell[0] * 100)
+	return _hash

@@ -24,9 +24,6 @@ func _ready() -> void:
 	set_color(color)
 	_animate()
 
-func _process(delta: float) -> void:
-	pass
-
 func _animate() -> void:
 	if !sprite:
 		return

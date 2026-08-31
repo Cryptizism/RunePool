@@ -140,14 +140,13 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet
-	timeout_timer = 0.0
 
 func _set_lobby_seed() -> void:
 	var _generated_seed: int = int(Time.get_unix_time_from_system())
 	if _is_local_game():
 		generated_seed = _generated_seed
 		return
-	if !NetworkManager.is_host():
+	if !NetworkManager.is_host() and generated_seed == 0:
 		await NetworkManager.seed_received
 		return
 	generated_seed = _generated_seed

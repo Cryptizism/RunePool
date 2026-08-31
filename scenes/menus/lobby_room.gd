@@ -11,7 +11,7 @@ extends Control
 func _ready() -> void:
 	NetworkManager.lobby_members_updated.connect(_update_members)
 	NetworkManager.player_settings_updated.connect(_player_settings_updated)
-	NetworkManager.is_opponent_ready.connect(_opponent_ready_pressed)
+	NetworkManager.is_opponent_button_ready.connect(_opponent_ready_pressed)
 	NetworkManager.level_updated.connect(_level_updated)
 	level_display.level_changed.connect(_level_changed)
 	button_ready_1.pressed.connect(_on_ready_button_pressed)

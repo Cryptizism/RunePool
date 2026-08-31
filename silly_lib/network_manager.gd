@@ -44,8 +44,9 @@ signal slot_assignments_received(assignments: PackedInt64Array)
 signal input_received(sender_id: int, frame: int, packet: Dictionary)
 signal seed_received(board_seed: int)
 signal level_updated(level_id: String)
-signal is_opponent_ready(is_ready: bool)
+signal is_opponent_button_ready(is_ready: bool)
 signal opponent_ready()
+signal start_match()
 
 const LOBBY_TYPE: Steam.LobbyType = Steam.LobbyType.LOBBY_TYPE_PUBLIC
 const MAX_MEMBERS: int = 4
@@ -258,6 +259,13 @@ func send_opponent_ready() -> void:
 func receive_opponent_ready() -> void:
 	opponent_ready.emit()
 
+func send_start_match() -> void:
+	receive_start_match.rpc()
+
+@rpc("any_peer", "reliable")
+func receive_start_match() -> void:
+	start_match.emit()
+
 func send_player_settings(player_settings: PlayerSettings) -> void:
 	receive_player_settings.rpc_id(0, player_settings.to_dictionary()) #0 = all except self
 
@@ -277,4 +285,4 @@ func send_opponent_ready_button(is_ready: bool) -> void:
 
 @rpc("any_peer", "reliable")
 func receive_opponent_ready_button(is_ready: bool) -> void:
-	is_opponent_ready.emit(is_ready)
+	is_opponent_button_ready.emit(is_ready)

@@ -13,6 +13,7 @@ const LOCKSTEP_DELAY: float = 1.0 / 60.0
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
 var players: Array[Player] = []
+var _boards_ready: int = 0
 var _local_ready: bool = false
 var _opponent_ready: bool = false
 var current_frame: int = 0
@@ -25,6 +26,7 @@ func _ready() -> void:
 	NetworkManager.input_received.connect(_on_network_input)
 	NetworkManager.seed_received.connect(_on_seed_received)
 	NetworkManager.opponent_ready.connect(_on_opponent_ready)
+	NetworkManager.start_match.connect(_start_match)
 	await _new_game(Global.selected_level)
 
 func _new_game(level_id: String) -> void:
@@ -52,6 +54,7 @@ func _reset() -> void:
 	players.clear()
 	frame_inputs.clear()
 	slot_assignments.clear()
+	_boards_ready = 0
 	generated_seed = 0
 	current_frame = 0
 	timeout_timer = 0.0
@@ -61,7 +64,7 @@ func _create_board(level_id: String, slot_number: int) -> void:
 	var player: Player = Player.new(slot_number)
 	var board: Board = BOARD_SCENE.instantiate()
 	var board_width: int = 8 * 11
-	board.board_ready.connect(_board_is_ready.bind(slot_number))
+	board.board_ready.connect(_board_is_ready)
 	board.set_player_id(slot_number + 1)
 	add_child(board)
 	player.board = board
@@ -76,8 +79,9 @@ func _create_board(level_id: String, slot_number: int) -> void:
 		board.character.flip_portrait()
 	board.global_position.x += board_width * slot_number
 
-func _board_is_ready(slot_number: int) -> void:
-	if slot_number < Global.player_count - 1:
+func _board_is_ready() -> void:
+	_boards_ready += 1
+	if _boards_ready < Global.player_count:
 		return
 	_local_ready = true
 	await NetworkManager.wait_for_server_connection()
@@ -198,7 +202,7 @@ func _prep_input_buffer() -> void:
 	for frame in range(INPUT_DELAY_FRAMES):
 		frame_inputs[frame] = {}
 		for player in players:
-			frame_inputs[frame][player.slot_number] = players[0].input.get_neutral_input()
+			frame_inputs[frame][player.slot_number] = player.input.get_neutral_input()
 
 func _on_game_ended() -> void:
 	if layer_bg:
@@ -248,8 +252,13 @@ func _is_right_side_player(slot_number: int) -> bool:
 func _on_opponent_ready() -> void:
 	_opponent_ready = true
 
+func _start_match() -> void:
+	_prep_input_buffer()
+	match_in_progress = true
+
 func _try_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:
 		return
-	_prep_input_buffer()
-	match_in_progress = true
+	if !NetworkManager.is_host():
+		return
+	NetworkManager.send_start_match()

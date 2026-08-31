@@ -54,6 +54,7 @@ const GAME_CODE: String = "sk_runepool"
 var local_peer_id: int = 1
 var peer: SteamMultiplayerPeer
 var current_lobby_id: int = 0
+var is_connected_to_server: bool = false
 
 func _ready() -> void:
 	Steam.initRelayNetworkAccess()
@@ -182,15 +183,23 @@ func _on_peer_disconnected(id: int) -> void:
 
 func _on_server_connected() -> void:
 	print("Connection successful.")
+	is_connected_to_server = true
 	server_connection_successful.emit()
 
 func _on_server_connection_failed() -> void:
 	print("Connection failed.")
+	is_connected_to_server = false
 	server_connection_failed.emit()
 
 func _on_server_disconnected() -> void:
 	print("Server disconnected.")
+	is_connected_to_server = false
 	server_disconnected.emit()
+
+func wait_for_server_connection() -> void:
+	if is_connected_to_server:
+		return
+	await server_connection_successful
 
 func _set_lobby_data(_lobby_id: int) -> void:
 	Steam.setLobbyData(_lobby_id, "name", "%s" % Steam.getPersonaName())

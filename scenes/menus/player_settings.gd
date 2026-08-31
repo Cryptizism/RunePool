@@ -119,4 +119,7 @@ func _send_settings() -> void:
 	if difficulty_slider:
 		player_settings.difficulty = difficulty_slider.value
 	player_settings.character_id = _character_id
+	#if !NetworkManager.is_connected_to_server:
+		#await NetworkManager.server_connection_successful
+	await NetworkManager.wait_for_server_connection()
 	NetworkManager.send_player_settings(player_settings)

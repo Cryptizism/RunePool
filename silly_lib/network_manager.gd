@@ -122,6 +122,7 @@ func _on_lobby_created(_result: int, _lobby_id: int) -> void:
 		push_warning("Failed to create Steam host.")
 		return
 	Steam.setLobbyJoinable(_lobby_id, true)
+	is_connected_to_server = true
 	multiplayer.multiplayer_peer = peer
 	update_peer_id()
 	lobby_created.emit()

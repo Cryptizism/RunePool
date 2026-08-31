@@ -199,6 +199,7 @@ func load_level(level_id: String) -> void:
 			continue
 		rune.animated_sprite.play()
 	if !NetworkManager.is_host():
+		await NetworkManager.wait_for_server_connection()
 		NetworkManager.send_match_ready()
 	_begin_next_cluster()
 

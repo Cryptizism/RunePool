@@ -45,7 +45,7 @@ signal input_received(sender_id: int, frame: int, packet: Dictionary)
 signal seed_received(board_seed: int)
 signal level_updated(level_id: String)
 signal is_opponent_ready(is_ready: bool)
-signal player_ready()
+signal opponent_ready()
 
 const LOBBY_TYPE: Steam.LobbyType = Steam.LobbyType.LOBBY_TYPE_PUBLIC
 const MAX_MEMBERS: int = 4
@@ -256,7 +256,7 @@ func send_opponent_ready() -> void:
 
 @rpc("any_peer", "reliable")
 func receive_opponent_ready() -> void:
-	player_ready.emit()
+	opponent_ready.emit()
 
 func send_player_settings(player_settings: PlayerSettings) -> void:
 	receive_player_settings.rpc_id(0, player_settings.to_dictionary()) #0 = all except self

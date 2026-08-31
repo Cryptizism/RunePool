@@ -24,7 +24,7 @@ func _ready() -> void:
 	NetworkManager.slot_assignments_received.connect(_on_slot_assignments_received)
 	NetworkManager.input_received.connect(_on_network_input)
 	NetworkManager.seed_received.connect(_on_seed_received)
-	NetworkManager._opponent_ready.connect(_on_opponent_ready)
+	NetworkManager.opponent_ready.connect(_on_opponent_ready)
 	await _new_game(Global.selected_level)
 
 func _new_game(level_id: String) -> void:

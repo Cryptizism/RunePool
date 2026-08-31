@@ -85,4 +85,5 @@ func _opponent_ready_pressed(is_ready: bool) -> void:
 func _reset_ready_buttons() -> void:
 	button_ready_1.set_ready(false)
 	button_ready_2.set_ready(false)
+	await NetworkManager.wait_for_server_connection()
 	NetworkManager.send_opponent_ready_button(false)

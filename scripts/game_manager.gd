@@ -29,6 +29,8 @@ func _new_game(level_id: String) -> void:
 	await _set_lobby_seed()
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
+	if NetworkManager.is_host():
+		NetworkManager.send_seed(generated_seed) #reinforce seed if missed
 	await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
@@ -153,12 +155,15 @@ func _set_lobby_seed() -> void:
 	if _is_local_game():
 		generated_seed = _time_seed
 		return
-	if !NetworkManager.is_host():
-		if generated_seed == 0:
-			await NetworkManager.seed_received
+	if NetworkManager.is_host():
+		generated_seed = _time_seed
+		NetworkManager.send_seed(generated_seed)
 		return
-	generated_seed = _time_seed
-	NetworkManager.send_seed(generated_seed)
+	if NetworkManager.lobby_seed != 0:
+		generated_seed = NetworkManager.lobby_seed
+		return
+	await NetworkManager.seed_received
+	generated_seed = NetworkManager.lobby_seed
 
 func _set_slot_assignments() -> void:
 	slot_assignments.clear()

@@ -54,6 +54,7 @@ const GAME_CODE: String = "sk_runepool"
 var local_peer_id: int = 1
 var peer: SteamMultiplayerPeer
 var current_lobby_id: int = 0
+var lobby_seed: int = 0
 var is_connected_to_server: bool = false
 
 func _ready() -> void:
@@ -242,10 +243,12 @@ func receive_input(frame: int, packet: Dictionary) -> void:
 	input_received.emit(multiplayer.get_remote_sender_id(), frame, packet)
 
 func send_seed(generated_seed: int) -> void:
+	lobby_seed = generated_seed
 	receive_seed.rpc(generated_seed)
 
 @rpc("any_peer", "reliable")
 func receive_seed(generated_seed: int) -> void:
+	lobby_seed = generated_seed
 	seed_received.emit(generated_seed)
 
 func send_match_ready() -> void:

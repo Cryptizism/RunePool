@@ -241,7 +241,10 @@ func send_input(frame: int, packet: Dictionary) -> void:
 
 @rpc("any_peer", "reliable")
 func receive_input(frame: int, packet: Dictionary) -> void:
-	input_received.emit(multiplayer.get_remote_sender_id(), frame, packet)
+	var sender_id: int = multiplayer.get_remote_sender_id()
+	if multiplayer.get_unique_id() == sender_id:
+		return
+	input_received.emit(sender_id, frame, packet)
 
 func send_seed(generated_seed: int) -> void:
 	lobby_seed = generated_seed

@@ -6,7 +6,7 @@ var state: State = State.PAUSED
 @onready var layer_bg: TileMapLayer = $"../LayerBG"
 
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
-const TIMEOUT_TIME: float = 5.0
+const TIMEOUT_TIME: float = 3.0
 const INPUT_DELAY_FRAMES: int = 3
 const LOCKSTEP_DELAY: float = 1.0 / 60.0
 
@@ -156,6 +156,7 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet
+	print("packet received at frame " + str(frame) + ":\n" + str(packet))
 
 func _set_lobby_seed() -> void:
 	var _time_seed: int = int(Time.get_unix_time_from_system())
@@ -253,6 +254,8 @@ func _on_opponent_ready() -> void:
 	_opponent_ready = true
 
 func _start_match() -> void:
+	if match_in_progress:
+		return
 	_prep_input_buffer()
 	match_in_progress = true
 

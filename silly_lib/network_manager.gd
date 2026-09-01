@@ -237,7 +237,7 @@ func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 	slot_assignments_received.emit(assignments)
 
 func send_input(frame: int, packet: Dictionary) -> void:
-	receive_input.rpc(frame, packet)
+	receive_input.rpc_id(0, frame, packet)
 
 @rpc("any_peer", "reliable")
 func receive_input(frame: int, packet: Dictionary) -> void:

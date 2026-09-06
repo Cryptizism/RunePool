@@ -8,7 +8,7 @@ var state: State = State.PAUSED
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 3.0
 const INPUT_DELAY_FRAMES: int = 3
-const LOCKSTEP_DELAY: float = 1.0 / 60.0
+const LOCKSTEP_DELTA: float = 1.0 / 60.0
 
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
@@ -103,7 +103,6 @@ func _physics_process(delta: float) -> void:
 	
 	_send_local_input()
 	if !_has_inputs_for_frame(current_frame):
-		print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
 		if _is_online_multiplayer():
 			timeout_timer += delta
 			if timeout_timer >= TIMEOUT_TIME:
@@ -129,22 +128,8 @@ func _physics_process(delta: float) -> void:
 		#timeout_timer = 0.0
 
 func _send_local_input() -> void:
-	print(
-		"_send_local_input | peer=",
-		multiplayer.get_unique_id(),
-		" current_frame=",
-		current_frame
-	)
 	var target_frame: int = current_frame + INPUT_DELAY_FRAMES
 	for player in players:
-		print(
-			"  player slot=",
-			player.slot_number,
-			" peer_id=",
-			player.peer_id,
-			" is_local=",
-			player.is_local()
-		)
 		if !player.is_local():
 			continue
 		player.input.update_local(player.slot_number + 1)
@@ -162,13 +147,13 @@ func _simulate_frame() -> void:
 	if _is_singleplayer():
 		var player = players[0]
 		player.board.input = player.input
-		player.board.tick(LOCKSTEP_DELAY)
+		player.board.tick(LOCKSTEP_DELTA)
 	else:
 		for player in players:
 			if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
 				player.input.update_network(frame_inputs[current_frame][player.slot_number])
 			player.board.input = player.input
-			player.board.tick(LOCKSTEP_DELAY)
+			player.board.tick(LOCKSTEP_DELTA)
 	frame_inputs.erase(current_frame)
 	current_frame += 1
 
@@ -186,7 +171,6 @@ func _has_inputs_for_frame(frame: int) -> bool:
 func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
-		push_error("Invalid slot, skipping packet.")
 		return
 	
 	var player: Player = players[slot_number]
@@ -196,7 +180,6 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet
-	print("RECEIVED | peer=", multiplayer.get_unique_id(), " sender=", sender_id, " slot=", slot_number, " frame=", frame)
 
 func _set_lobby_seed() -> void:
 	var _time_seed: int = int(Time.get_unix_time_from_system())
@@ -257,7 +240,6 @@ func _get_peer_slot_number(peer_id: int) -> int:
 		if players[i].peer_id != peer_id:
 			continue
 		return i
-	push_error("Invalid peer id")
 	return -1
 
 func _on_slot_assignments_received(assignments: PackedInt64Array) -> void:
@@ -299,16 +281,6 @@ func _start_match() -> void:
 		return
 	_prep_input_buffer()
 	match_in_progress = true
-	print("START MATCH | peer=", multiplayer.get_unique_id())
-	for player in players:
-		print(
-			"PLAYER | slot=",
-			player.slot_number,
-			" peer_id=",
-			player.peer_id,
-			" local=",
-			player.is_local()
-		)
 
 func _try_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:

@@ -32,11 +32,11 @@ func _ready() -> void:
 func _new_game(level_id: String) -> void:
 	_reset()
 	await _set_lobby_seed()
-	await _set_slot_assignments()
-	for i in range(Global.player_count):
-		_create_board(level_id, i)
 	if NetworkManager.is_host():
 		NetworkManager.send_seed(generated_seed) #reinforce seed if missed
+	for i in range(Global.player_count):
+		_create_board(level_id, i)
+	await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
 		match_in_progress = true

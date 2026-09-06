@@ -105,6 +105,7 @@ func _physics_process(delta: float) -> void:
 	var max_catchup_frames: int = 4
 	while simulated_frames < max_catchup_frames:
 		if !_has_inputs_for_frame(current_frame):
+			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
 			break
 		_simulate_frame()
 		simulated_frames += 1
@@ -166,7 +167,7 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet
-	print("packet received at frame " + str(frame) + ":\n" + str(packet))
+	print("RECEIVED | peer=", multiplayer.get_unique_id(), " sender=", sender_id, " slot=", slot_number, " frame=", frame)
 
 func _set_lobby_seed() -> void:
 	var _time_seed: int = int(Time.get_unix_time_from_system())
@@ -186,8 +187,7 @@ func _set_lobby_seed() -> void:
 func _set_slot_assignments() -> void:
 	slot_assignments.clear()
 	if !NetworkManager.is_host():
-		if slot_assignments.is_empty():
-			await NetworkManager.slot_assignments_received
+		await NetworkManager.slot_assignments_received
 		return
 	slot_assignments.append(multiplayer.get_unique_id()) #Host
 	if _is_local_multiplayer():
@@ -196,7 +196,7 @@ func _set_slot_assignments() -> void:
 		for peer_id in multiplayer.get_peers():
 			slot_assignments.append(peer_id)
 		NetworkManager.send_slot_assignments(slot_assignments)
-	#_apply_slot_assignments()
+	_apply_slot_assignments()
 
 func _load_singleplayer_level() -> void:
 	var enemy_id: String = _get_floor_enemy(Global.current_floor)

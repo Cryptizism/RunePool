@@ -158,9 +158,11 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	if slot_number == -1:
 		push_error("Invalid slot, skipping packet.")
 		return
-	#var player: Player = players[slot_number]
-	#if player.is_local():
-		#return
+	
+	var player: Player = players[slot_number]
+	if player.is_local():
+		return
+	
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet
@@ -194,7 +196,7 @@ func _set_slot_assignments() -> void:
 		for peer_id in multiplayer.get_peers():
 			slot_assignments.append(peer_id)
 		NetworkManager.send_slot_assignments(slot_assignments)
-	_apply_slot_assignments()
+	#_apply_slot_assignments()
 
 func _load_singleplayer_level() -> void:
 	var enemy_id: String = _get_floor_enemy(Global.current_floor)

@@ -32,8 +32,8 @@ func _ready() -> void:
 func _new_game(level_id: String) -> void:
 	_reset()
 	await _set_lobby_seed()
-	if NetworkManager.is_host():
-		NetworkManager.send_seed(generated_seed) #reinforce seed if missed
+	#if NetworkManager.is_host():
+		#NetworkManager.send_seed(generated_seed) #reinforce seed if missed
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
 	await _set_slot_assignments()
@@ -62,6 +62,10 @@ func _reset() -> void:
 
 func _create_board(level_id: String, slot_number: int) -> void:
 	var player: Player = Player.new(slot_number)
+	if slot_number < slot_assignments.size():
+		player.peer_id = slot_assignments[slot_number]
+	else:
+		player.peer_id = multiplayer.get_unique_id() if slot_number == 0 else 1
 	var board: Board = BOARD_SCENE.instantiate()
 	var board_width: int = 8 * 11
 	board.board_ready.connect(_board_is_ready)
@@ -87,6 +91,8 @@ func _board_is_ready() -> void:
 	if _is_online_multiplayer():
 		await NetworkManager.wait_for_server_connection()
 		NetworkManager.send_opponent_ready()
+	else:
+		_opponent_ready = true
 
 func _physics_process(delta: float) -> void:
 	if !match_in_progress:
@@ -129,7 +135,7 @@ func _simulate_frame() -> void:
 		player.board.tick(LOCKSTEP_DELAY)
 	else:
 		for player in players:
-			if !player.is_local():
+			if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
 				player.input.update_network(frame_inputs[current_frame][player.slot_number])
 			player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELAY)
@@ -150,10 +156,11 @@ func _has_inputs_for_frame(frame: int) -> bool:
 func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
+		push_error("Invalid slot, skipping packet.")
 		return
-	var player: Player = players[slot_number]
-	if player.is_local():
-		return
+	#var player: Player = players[slot_number]
+	#if player.is_local():
+		#return
 	if !frame_inputs.has(frame):
 		frame_inputs[frame] = {}
 	frame_inputs[frame][slot_number] = packet
@@ -177,7 +184,8 @@ func _set_lobby_seed() -> void:
 func _set_slot_assignments() -> void:
 	slot_assignments.clear()
 	if !NetworkManager.is_host():
-		await NetworkManager.slot_assignments_received
+		if slot_assignments.is_empty():
+			await NetworkManager.slot_assignments_received
 		return
 	slot_assignments.append(multiplayer.get_unique_id()) #Host
 	if _is_local_multiplayer():
@@ -218,6 +226,7 @@ func _get_peer_slot_number(peer_id: int) -> int:
 		if players[i].peer_id != peer_id:
 			continue
 		return i
+	push_error("Invalid peer id")
 	return -1
 
 func _on_slot_assignments_received(assignments: PackedInt64Array) -> void:

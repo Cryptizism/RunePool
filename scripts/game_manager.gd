@@ -94,6 +94,12 @@ func _board_is_ready() -> void:
 	else:
 		_opponent_ready = true
 
+func _process(delta: float) -> void:
+	if !match_in_progress:
+		_try_match_begin()
+		return
+	_send_local_input()
+
 func _physics_process(delta: float) -> void:
 	if !match_in_progress:
 		_try_match_begin()
@@ -111,10 +117,11 @@ func _physics_process(delta: float) -> void:
 		#_simulate_frame()
 		#timeout_timer = 0.0
 	
-	_send_local_input()
+	#_send_local_input()
 	var simulated_frames: int = 0
 	var max_catchup_frames: int = 4
 	while simulated_frames < max_catchup_frames:
+		#_fill_missing_inputs(current_frame)
 		if !_has_inputs_for_frame(current_frame):
 			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
 			break
@@ -150,10 +157,6 @@ func _send_local_input() -> void:
 					if opponent.is_local():
 						continue
 					NetworkManager.send_input(opponent.peer_id, frame, packet)
-	for player in players:
-		if player.is_local():
-			continue
-		player.input.clear_one_shot_inputs()
 	#var target_frame: int = current_frame + INPUT_DELAY_FRAMES
 	#for player in players:
 		#if !player.is_local():
@@ -182,6 +185,13 @@ func _simulate_frame() -> void:
 			player.board.tick(LOCKSTEP_DELTA)
 	frame_inputs.erase(current_frame)
 	current_frame += 1
+
+#func _fill_missing_inputs(frame: int) -> void:
+	#if !frame_inputs.has(frame):
+		#frame_inputs[frame] = {}
+	#for player in players:
+		#if !frame_inputs[frame].has(player.slot_number):
+			#frame_inputs[frame][player.slot_number] = player.input.get_neutral_input()
 
 func _has_inputs_for_frame(frame: int) -> bool:
 	if _is_singleplayer():

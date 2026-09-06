@@ -236,14 +236,14 @@ func send_slot_assignments(assignments: PackedInt64Array) -> void:
 func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 	slot_assignments_received.emit(assignments)
 
-func send_input(frame: int, packet: Dictionary) -> void:
+func send_input(peer_id: int, frame: int, packet: Dictionary) -> void:
 	print(
 		"SEND INPUT | peer=",
 		multiplayer.get_unique_id(),
 		" frame=",
 		frame
 	)
-	receive_input.rpc_id(0, frame, packet)
+	receive_input.rpc_id(peer_id, frame, packet)
 
 @rpc("any_peer", "reliable")
 func receive_input(frame: int, packet: Dictionary) -> void:

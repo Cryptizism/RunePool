@@ -117,8 +117,22 @@ func _physics_process(delta: float) -> void:
 		timeout_timer = 0.0
 
 func _send_local_input() -> void:
+	print(
+		"_send_local_input | peer=",
+		multiplayer.get_unique_id(),
+		" current_frame=",
+		current_frame
+	)
 	var target_frame: int = current_frame + INPUT_DELAY_FRAMES
 	for player in players:
+		print(
+			"  player slot=",
+			player.slot_number,
+			" peer_id=",
+			player.peer_id,
+			" is_local=",
+			player.is_local()
+		)
 		if !player.is_local():
 			continue
 		player.input.update_local(player.slot_number + 1)
@@ -127,7 +141,10 @@ func _send_local_input() -> void:
 			frame_inputs[target_frame] = {}
 		frame_inputs[target_frame][player.slot_number] = packet
 		if _is_online_multiplayer():
-			NetworkManager.send_input(target_frame, packet)
+			for opponent in players:
+				if opponent.is_local():
+					continue
+				NetworkManager.send_input(opponent.peer_id, target_frame, packet)
 
 func _simulate_frame() -> void:
 	if _is_singleplayer():

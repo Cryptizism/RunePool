@@ -129,19 +129,38 @@ func _physics_process(delta: float) -> void:
 
 func _send_local_input() -> void:
 	var target_frame: int = current_frame + INPUT_DELAY_FRAMES
-	for player in players:
-		if !player.is_local():
-			continue
-		player.input.update_local(player.slot_number + 1)
-		var packet: Dictionary = player.input.to_packet()
-		if !frame_inputs.has(target_frame):
-			frame_inputs[target_frame] = {}
-		frame_inputs[target_frame][player.slot_number] = packet
-		if _is_online_multiplayer():
-			for opponent in players:
-				if opponent.is_local():
+	for frame in range(current_frame, target_frame + 1):
+		if frame_inputs.has(frame):
+			for player in players:
+				if player.is_local() and frame_inputs[frame].has(player.slot_number):
 					continue
-				NetworkManager.send_input(opponent.peer_id, target_frame, packet)
+		for player in players:
+			if !player.is_local():
+				continue
+			player.input.update_local(player.slot_number + 1)
+			var packet: Dictionary = player.input.to_packet()
+			if !frame_inputs.has(target_frame):
+				frame_inputs[target_frame] = {}
+			frame_inputs[target_frame][player.slot_number] = packet
+			if _is_online_multiplayer():
+				for opponent in players:
+					if opponent.is_local():
+						continue
+					NetworkManager.send_input(opponent.peer_id, target_frame, packet)
+	#var target_frame: int = current_frame + INPUT_DELAY_FRAMES
+	#for player in players:
+		#if !player.is_local():
+			#continue
+		#player.input.update_local(player.slot_number + 1)
+		#var packet: Dictionary = player.input.to_packet()
+		#if !frame_inputs.has(target_frame):
+			#frame_inputs[target_frame] = {}
+		#frame_inputs[target_frame][player.slot_number] = packet
+		#if _is_online_multiplayer():
+			#for opponent in players:
+				#if opponent.is_local():
+					#continue
+				#NetworkManager.send_input(opponent.peer_id, target_frame, packet)
 
 func _simulate_frame() -> void:
 	if _is_singleplayer():

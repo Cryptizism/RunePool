@@ -100,21 +100,33 @@ func _physics_process(delta: float) -> void:
 		return
 	#if state == State.PAUSED:
 		#return
+	
 	_send_local_input()
-	var simulated_frames: int = 0
-	var max_catchup_frames: int = 4
-	while simulated_frames < max_catchup_frames:
-		if !_has_inputs_for_frame(current_frame):
-			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
-			break
-		_simulate_frame()
-		simulated_frames += 1
-	if simulated_frames == 0 and _is_online_multiplayer():
-		timeout_timer += delta
-		if timeout_timer >= TIMEOUT_TIME:
-			_timeout()
+	if !_has_inputs_for_frame(current_frame):
+		print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
+		if _is_online_multiplayer():
+			timeout_timer += delta
+			if timeout_timer >= TIMEOUT_TIME:
+				_timeout()
 	else:
+		_simulate_frame()
 		timeout_timer = 0.0
+	
+	#_send_local_input()
+	#var simulated_frames: int = 0
+	#var max_catchup_frames: int = 4
+	#while simulated_frames < max_catchup_frames:
+		#if !_has_inputs_for_frame(current_frame):
+			#print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
+			#break
+		#_simulate_frame()
+		#simulated_frames += 1
+	#if simulated_frames == 0 and _is_online_multiplayer():
+		#timeout_timer += delta
+		#if timeout_timer >= TIMEOUT_TIME:
+			#_timeout()
+	#else:
+		#timeout_timer = 0.0
 
 func _send_local_input() -> void:
 	print(

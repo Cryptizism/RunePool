@@ -302,4 +302,5 @@ func _try_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:
 		return
 	if NetworkManager.is_host():
+		_start_match()
 		NetworkManager.send_start_match()

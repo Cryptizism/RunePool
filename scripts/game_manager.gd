@@ -7,7 +7,7 @@ var state: State = State.PAUSED
 
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 3.0
-const INPUT_DELAY_FRAMES: int = 3
+const INPUT_DELAY_FRAMES: int = 10
 const LOCKSTEP_DELTA: float = 1.0 / 60.0
 
 var generated_seed: int = 0
@@ -150,6 +150,10 @@ func _send_local_input() -> void:
 					if opponent.is_local():
 						continue
 					NetworkManager.send_input(opponent.peer_id, frame, packet)
+	for player in players:
+		if player.is_local():
+			continue
+		player.input.clear_one_shot_inputs()
 	#var target_frame: int = current_frame + INPUT_DELAY_FRAMES
 	#for player in players:
 		#if !player.is_local():

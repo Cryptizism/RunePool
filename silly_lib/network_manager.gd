@@ -237,11 +237,25 @@ func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 	slot_assignments_received.emit(assignments)
 
 func send_input(frame: int, packet: Dictionary) -> void:
+	print(
+		"SEND INPUT | peer=",
+		multiplayer.get_unique_id(),
+		" frame=",
+		frame
+	)
 	receive_input.rpc_id(0, frame, packet)
 
 @rpc("any_peer", "reliable")
 func receive_input(frame: int, packet: Dictionary) -> void:
 	var sender_id: int = multiplayer.get_remote_sender_id()
+	print(
+		"RPC RECEIVED | peer=",
+		multiplayer.get_unique_id(),
+		" sender=",
+		sender_id,
+		" frame=",
+		frame
+	)
 	if multiplayer.get_unique_id() == sender_id:
 		return
 	input_received.emit(sender_id, frame, packet)

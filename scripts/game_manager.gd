@@ -270,6 +270,16 @@ func _start_match() -> void:
 		return
 	_prep_input_buffer()
 	match_in_progress = true
+	print("START MATCH | peer=", multiplayer.get_unique_id())
+	for player in players:
+		print(
+			"PLAYER | slot=",
+			player.slot_number,
+			" peer_id=",
+			player.peer_id,
+			" local=",
+			player.is_local()
+		)
 
 func _try_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:

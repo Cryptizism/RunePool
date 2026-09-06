@@ -32,11 +32,11 @@ func _ready() -> void:
 func _new_game(level_id: String) -> void:
 	_reset()
 	await _set_lobby_seed()
+	await _set_slot_assignments()
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
 	if NetworkManager.is_host():
 		NetworkManager.send_seed(generated_seed) #reinforce seed if missed
-	await _set_slot_assignments()
 	if _is_singleplayer():
 		_load_singleplayer_level()
 		match_in_progress = true
@@ -84,8 +84,9 @@ func _board_is_ready() -> void:
 	if _boards_ready < Global.player_count:
 		return
 	_local_ready = true
-	await NetworkManager.wait_for_server_connection()
-	NetworkManager.send_opponent_ready()
+	if _is_online_multiplayer():
+		await NetworkManager.wait_for_server_connection()
+		NetworkManager.send_opponent_ready()
 
 func _physics_process(delta: float) -> void:
 	if !match_in_progress:
@@ -262,6 +263,5 @@ func _start_match() -> void:
 func _try_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:
 		return
-	if !NetworkManager.is_host():
-		return
-	NetworkManager.send_start_match()
+	if NetworkManager.is_host():
+		NetworkManager.send_start_match()

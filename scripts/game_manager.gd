@@ -141,6 +141,15 @@ func _send_local_input() -> void:
 		if !player.is_local():
 			continue
 		player.input.update_local(player.slot_number + 1)
+		if player.input.rotate_left or player.input.rotate_right:
+			print(
+				"INPUT | player=",
+				player.slot_number + 1,
+				" left=",
+				player.input.rotate_left,
+				" right=",
+				player.input.rotate_right
+			)
 		local_packets[player.slot_number] = player.input.to_packet()
 	for frame in range(current_frame, target_frame + 1):
 		if !frame_inputs.has(frame):

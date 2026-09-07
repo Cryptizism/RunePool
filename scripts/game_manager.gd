@@ -142,10 +142,6 @@ func _send_local_input() -> void:
 					if opponent.is_local():
 						continue
 					NetworkManager.send_input(opponent.peer_id, frame, packet)
-			player.input.rotate_left = false
-			player.input.rotate_right = false
-			player.input.accept = false
-			player.input.back = false
 
 func _simulate_frame() -> void:
 	if _is_singleplayer():
@@ -154,26 +150,14 @@ func _simulate_frame() -> void:
 		player.board.tick(LOCKSTEP_DELTA)
 	else:
 		for player in players:
-			var packet: Dictionary = frame_inputs[current_frame][player.slot_number]
-			player.input.update_network(packet)
+			if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
+				player.input.update_network(frame_inputs[current_frame][player.slot_number])
 			player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELTA)
+			if player.is_local():
+				player.input.clear_one_shots()
 	frame_inputs.erase(current_frame)
 	current_frame += 1
-
-#func _simulate_frame() -> void:
-	#if _is_singleplayer():
-		#var player = players[0]
-		#player.board.input = player.input
-		#player.board.tick(LOCKSTEP_DELTA)
-	#else:
-		#for player in players:
-			#if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
-				#player.input.update_network(frame_inputs[current_frame][player.slot_number])
-			#player.board.input = player.input
-			#player.board.tick(LOCKSTEP_DELTA)
-	#frame_inputs.erase(current_frame)
-	#current_frame += 1
 
 func _has_inputs_for_frame(frame: int) -> bool:
 	if _is_singleplayer():

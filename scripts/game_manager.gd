@@ -147,39 +147,6 @@ func _send_local_input() -> void:
 			player.input.accept = false
 			player.input.back = false
 
-#func _send_local_input() -> void:
-	#var target_frame: int = current_frame + INPUT_DELAY_FRAMES
-	#var local_packets: Dictionary = {}
-	#for player in players:
-		#if !player.is_local():
-			#continue
-		#player.input.update_local(player.slot_number + 1)
-		#if player.input.rotate_left or player.input.rotate_right:
-			#print(
-				#"INPUT | player=",
-				#player.slot_number + 1,
-				#" left=",
-				#player.input.rotate_left,
-				#" right=",
-				#player.input.rotate_right
-			#)
-		#local_packets[player.slot_number] = player.input.to_packet()
-	#for frame in range(current_frame, target_frame + 1):
-		#if !frame_inputs.has(frame):
-			#frame_inputs[frame] = {}
-		#for player in players:
-			#if !player.is_local():
-				#continue
-			#if frame_inputs[frame].has(player.slot_number):
-				#continue
-			#var packet: Dictionary = local_packets[player.slot_number]
-			#frame_inputs[frame][player.slot_number] = packet
-			#if _is_online_multiplayer():
-				#for opponent in players:
-					#if opponent.is_local():
-						#continue
-					#NetworkManager.send_input(opponent.peer_id, frame, packet)
-
 func _simulate_frame() -> void:
 	if _is_singleplayer():
 		var player = players[0]
@@ -187,19 +154,26 @@ func _simulate_frame() -> void:
 		player.board.tick(LOCKSTEP_DELTA)
 	else:
 		for player in players:
-			if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
-				player.input.update_network(frame_inputs[current_frame][player.slot_number])
+			var packet: Dictionary = frame_inputs[current_frame][player.slot_number]
+			player.input.update_network(packet)
 			player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELTA)
 	frame_inputs.erase(current_frame)
 	current_frame += 1
 
-#func _fill_missing_inputs(frame: int) -> void:
-	#if !frame_inputs.has(frame):
-		#frame_inputs[frame] = {}
-	#for player in players:
-		#if !frame_inputs[frame].has(player.slot_number):
-			#frame_inputs[frame][player.slot_number] = player.input.get_neutral_input()
+#func _simulate_frame() -> void:
+	#if _is_singleplayer():
+		#var player = players[0]
+		#player.board.input = player.input
+		#player.board.tick(LOCKSTEP_DELTA)
+	#else:
+		#for player in players:
+			#if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
+				#player.input.update_network(frame_inputs[current_frame][player.slot_number])
+			#player.board.input = player.input
+			#player.board.tick(LOCKSTEP_DELTA)
+	#frame_inputs.erase(current_frame)
+	#current_frame += 1
 
 func _has_inputs_for_frame(frame: int) -> bool:
 	if _is_singleplayer():

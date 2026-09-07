@@ -16,10 +16,10 @@ func update_local(player_id: int) -> void:
 	move_down = Input.is_action_pressed("move_down_" + str(player_id))
 	move_left = Input.is_action_pressed("move_left_" + str(player_id))
 	move_right = Input.is_action_pressed("move_right_" + str(player_id))
-	rotate_left = Input.is_action_just_pressed("rotate_left_" + str(player_id))
-	rotate_right = Input.is_action_just_pressed("rotate_right_" + str(player_id))
-	accept = Input.is_action_just_pressed("accept_" + str(player_id))
-	back = Input.is_action_just_pressed("back_" + str(player_id))
+	rotate_left = rotate_left or Input.is_action_just_pressed("rotate_left_" + str(player_id))
+	rotate_right = rotate_right or Input.is_action_just_pressed("rotate_right_" + str(player_id))
+	accept = accept or Input.is_action_just_pressed("accept_" + str(player_id))
+	back = back or Input.is_action_just_pressed("back_" + str(player_id))
 
 func update_network(packet: Dictionary) -> void:
 	move_up = packet.get("move_up", false)

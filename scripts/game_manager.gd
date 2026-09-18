@@ -131,11 +131,15 @@ func _send_local_input() -> void:
 			continue
 		player.input.update_local(player.slot_number + 1)
 		for frame in range(current_frame, target_frame + 1):
-			if !frame_inputs.has(frame):
-				frame_inputs[frame] = {}
-			if frame_inputs[frame].has(player.slot_number):
+			if frame_inputs.has(frame):
 				continue
+			frame_inputs[frame] = {}
 			var packet: Dictionary = player.input.to_packet()
+			if frame != target_frame:
+				packet["rotate_left"] = false
+				packet["rotate_right"] = false
+				packet["accept"] = false
+				packet["back"] = false
 			frame_inputs[frame][player.slot_number] = packet
 			if _is_online_multiplayer():
 				for opponent in players:

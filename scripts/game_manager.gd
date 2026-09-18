@@ -32,8 +32,6 @@ func _ready() -> void:
 func _new_game(level_id: String) -> void:
 	_reset()
 	await _set_lobby_seed()
-	#if NetworkManager.is_host():
-		#NetworkManager.send_seed(generated_seed) #reinforce seed if missed
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
 	await _set_slot_assignments()
@@ -106,12 +104,9 @@ func _physics_process(delta: float) -> void:
 		return
 	#if state == State.PAUSED:
 		#return
-	
-	#_send_local_input()
 	var simulated_frames: int = 0
 	var max_catchup_frames: int = 4
 	while simulated_frames < max_catchup_frames:
-		#_fill_missing_inputs(current_frame)
 		if !_has_inputs_for_frame(current_frame):
 			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
 			break

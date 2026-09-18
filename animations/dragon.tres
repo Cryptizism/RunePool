@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bdxvbattvku3i"]
+
+[ext_resource type="Texture2D" uid="uid://cly0uopxv7d4h" path="res://sprites/characters/dragon.png" id="1_47qh7"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_47qh7")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

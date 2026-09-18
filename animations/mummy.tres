@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://ibdyckxnd8l"]
+
+[ext_resource type="Texture2D" uid="uid://cjpdyrdwl5q7y" path="res://sprites/characters/mummy.png" id="1_2c0o2"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_2c0o2")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bj63oe616crmy"]
+
+[ext_resource type="Texture2D" uid="uid://i8lsy0rkusb6" path="res://sprites/characters/feline.png" id="1_le5n6"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_le5n6")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

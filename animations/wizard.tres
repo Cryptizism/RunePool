@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://sij1qv86a4mb"]
+
+[ext_resource type="Texture2D" uid="uid://mtucqekphqrf" path="res://sprites/characters/wizard.png" id="1_pl60i"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_pl60i")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://c36j8g17axvqh"]
+
+[ext_resource type="Texture2D" uid="uid://dx2fx8sigj705" path="res://sprites/characters/goblin.png" id="1_uaich"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_uaich")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

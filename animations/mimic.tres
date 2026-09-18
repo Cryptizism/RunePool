@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bge6efeaw8foo"]
+
+[ext_resource type="Texture2D" uid="uid://b1fei760pvirr" path="res://sprites/characters/mimic.png" id="1_dc1pe"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_dc1pe")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

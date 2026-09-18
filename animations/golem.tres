@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://devsqk6yyb0mu"]
+
+[ext_resource type="Texture2D" uid="uid://b5ff1is0bc3fe" path="res://sprites/characters/golem.png" id="1_ffxan"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ffxan")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]

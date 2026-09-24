@@ -137,6 +137,8 @@ func _send_local_input() -> void:
 					if opponent.is_local():
 						continue
 					NetworkManager.send_input(opponent.peer_id, frame, packet)
+					if packet.rotate_left or packet.rotate_right:
+						print("rotation packet sent: " + str(frame))
 
 func _simulate_frame() -> void:
 	if _is_singleplayer():
@@ -169,6 +171,9 @@ func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
 		return
+	
+	if packet.rotate_left or packet.rotate_right:
+		print("rotation packet received: " + str(frame))
 	
 	var player: Player = players[slot_number]
 	if player.is_local():

@@ -120,7 +120,7 @@ func _simulate_until_caught_up_to_current_frame(max_catchup_frames: int, delta: 
 	var simulated_frames: int = 0
 	while simulated_frames < max_catchup_frames:
 		if !_frame_has_packet_ready(current_frame):
-			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", player_input_packets_by_frame.get(current_frame, {}))
+			#print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", player_input_packets_by_frame.get(current_frame, {}))
 			break
 		_simulate_frame()
 		simulated_frames += 1

@@ -9,6 +9,12 @@ var rotate_right: bool = false
 var accept: bool = false
 var back: bool = false
 
+func clear_one_shots() -> void:
+	rotate_left = false
+	rotate_right = false
+	accept = false
+	back = false
+
 func update_local(player_id: int) -> void:
 	if ![0, 1].has(player_id):
 		return

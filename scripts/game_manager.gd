@@ -17,7 +17,7 @@ var _boards_ready: int = 0
 var _local_ready: bool = false
 var _opponent_ready: bool = false
 var current_frame: int = 0
-var frame_inputs: Dictionary = {}
+var player_input_packets_by_frame: Dictionary = {} #player_input_packets_by_frame[frame #][player slot #] = PlayerInput packet
 var timeout_timer: float = 0.0
 var match_in_progress: bool = false
 
@@ -50,7 +50,7 @@ func _reset() -> void:
 		if player and is_instance_valid(player.board):
 			player.board.queue_free()
 	players.clear()
-	frame_inputs.clear()
+	player_input_packets_by_frame.clear()
 	slot_assignments.clear()
 	_boards_ready = 0
 	generated_seed = 0
@@ -94,51 +94,37 @@ func _board_is_ready() -> void:
 
 func _process(_delta: float) -> void:
 	if !match_in_progress:
-		_try_match_begin()
+		_attempt_match_begin()
 		return
-	_send_local_input()
+	_update_local_input()
 
 func _physics_process(delta: float) -> void:
 	if !match_in_progress:
-		_try_match_begin()
+		_attempt_match_begin()
 		return
+	#TODO: Game pause functionality
 	#if state == State.PAUSED:
 		#return
+	var simulated_frames: int = _simulate_until_caught_up_to_current_frame(4, delta)
+	_attempt_timeout(simulated_frames, delta)
+
+func _attempt_timeout(simulated_frames: int, delta: float) -> void:
+	if simulated_frames != 0 or !_is_online_multiplayer():
+		timeout_timer = 0.0
+		return
+	timeout_timer += delta
+	if timeout_timer >= TIMEOUT_TIME:
+		_timeout()
+
+func _simulate_until_caught_up_to_current_frame(max_catchup_frames: int, delta: float) -> int:
 	var simulated_frames: int = 0
-	var max_catchup_frames: int = 4
 	while simulated_frames < max_catchup_frames:
-		if !_has_inputs_for_frame(current_frame):
-			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", frame_inputs.get(current_frame, {}))
+		if !_frame_has_packet_ready(current_frame):
+			print("WAITING | peer=", multiplayer.get_unique_id(), " frame=", current_frame, " inputs=", player_input_packets_by_frame.get(current_frame, {}))
 			break
 		_simulate_frame()
 		simulated_frames += 1
-	if simulated_frames == 0 and _is_online_multiplayer():
-		timeout_timer += delta
-		if timeout_timer >= TIMEOUT_TIME:
-			_timeout()
-	else:
-		timeout_timer = 0.0
-
-func _send_local_input() -> void:
-	var target_frame: int = current_frame + INPUT_DELAY_FRAMES
-	for player in players:
-		if !player.is_local():
-			continue
-		player.input.update_local(player.slot_number + 1)
-		for frame in range(current_frame, target_frame + 1):
-			if !frame_inputs.has(frame):
-				frame_inputs[frame] = {}
-			if frame_inputs[frame].has(player.slot_number):
-				continue
-			var packet: Dictionary = player.input.to_packet()
-			frame_inputs[frame][player.slot_number] = packet
-			if _is_online_multiplayer():
-				for opponent in players:
-					if opponent.is_local():
-						continue
-					NetworkManager.send_input(opponent.peer_id, frame, packet)
-					if packet.rotate_left or packet.rotate_right:
-						print("rotation packet sent: " + str(frame))
+	return simulated_frames
 
 func _simulate_frame() -> void:
 	if _is_singleplayer():
@@ -147,41 +133,65 @@ func _simulate_frame() -> void:
 		player.board.tick(LOCKSTEP_DELTA)
 	else:
 		for player in players:
-			if !player.is_local() and frame_inputs.has(current_frame) and frame_inputs[current_frame].has(player.slot_number):
-				player.input.update_network(frame_inputs[current_frame][player.slot_number])
+			if !player.is_local() and player_input_packets_by_frame.has(current_frame) and player_input_packets_by_frame[current_frame].has(player.slot_number):
+				player.input.update_network(player_input_packets_by_frame[current_frame][player.slot_number])
 			player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELTA)
 			if player.is_local():
 				player.input.clear_one_shots()
-	frame_inputs.erase(current_frame)
+	player_input_packets_by_frame.erase(current_frame)
 	current_frame += 1
 
-func _has_inputs_for_frame(frame: int) -> bool:
-	if _is_singleplayer():
-		return frame_inputs.has(frame)
-	if !frame_inputs.has(frame):
-		return false
-	var inputs = frame_inputs[frame]
+func _update_local_input() -> void:
 	for player in players:
-		if !inputs.has(player.slot_number):
-			return false
-	return true
+		if !player.is_local():
+			continue
+		player.input.update_local(player.slot_number + 1)
+		_on_local_input(player)
+
+func _on_local_input(player: Player) -> void:
+	var target_frame: int = current_frame + INPUT_DELAY_FRAMES
+	for frame in range(current_frame, target_frame + 1):
+		if !player_input_packets_by_frame.has(frame):
+			player_input_packets_by_frame[frame] = {}
+		if player_input_packets_by_frame[frame].has(player.slot_number):
+			continue
+		var packet: Dictionary = player.input.to_packet()
+		player_input_packets_by_frame[frame][player.slot_number] = packet
+		if _is_online_multiplayer():
+			for opponent in players:
+				if opponent.is_local():
+					continue
+				NetworkManager.send_input(opponent.peer_id, frame, packet)
+				if packet.rotate_left or packet.rotate_right:
+					print("rotation packet sent: " + str(frame))
 
 func _on_network_input(sender_id: int, frame: int, packet: Dictionary) -> void:
 	var slot_number: int = _get_peer_slot_number(sender_id)
 	if slot_number == -1:
 		return
-	
 	if packet.rotate_left or packet.rotate_right:
 		print("rotation packet received: " + str(frame))
 	
+	#ignore packet sent from self workaround, should just be fixed in rpc once i learn how rpc actually works.
 	var player: Player = players[slot_number]
 	if player.is_local():
 		return
 	
-	if !frame_inputs.has(frame):
-		frame_inputs[frame] = {}
-	frame_inputs[frame][slot_number] = packet
+	if !player_input_packets_by_frame.has(frame):
+		player_input_packets_by_frame[frame] = {}
+	player_input_packets_by_frame[frame][slot_number] = packet
+
+func _frame_has_packet_ready(frame: int) -> bool:
+	if _is_singleplayer():
+		return player_input_packets_by_frame.has(frame)
+	if !player_input_packets_by_frame.has(frame):
+		return false
+	var inputs: Dictionary = player_input_packets_by_frame[frame]
+	for player in players:
+		if !inputs.has(player.slot_number):
+			return false
+	return true
 
 func _set_lobby_seed() -> void:
 	var _time_seed: int = int(Time.get_unix_time_from_system())
@@ -226,9 +236,9 @@ func _get_floor_enemy(floor_number: int) -> String:
 
 func _prep_input_buffer() -> void:
 	for frame in range(INPUT_DELAY_FRAMES):
-		frame_inputs[frame] = {}
+		player_input_packets_by_frame[frame] = {}
 		for player in players:
-			frame_inputs[frame][player.slot_number] = player.input.get_neutral_input()
+			player_input_packets_by_frame[frame][player.slot_number] = player.input.get_neutral_input()
 
 func _on_game_ended() -> void:
 	if layer_bg:
@@ -284,7 +294,7 @@ func _start_match() -> void:
 	_prep_input_buffer()
 	match_in_progress = true
 
-func _try_match_begin() -> void:
+func _attempt_match_begin() -> void:
 	if !_local_ready or !_opponent_ready:
 		return
 	if NetworkManager.is_host():

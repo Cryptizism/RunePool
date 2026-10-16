@@ -137,8 +137,8 @@ func _simulate_frame() -> void:
 				player.input.update_network(player_input_packets_by_frame[current_frame][player.slot_number])
 			player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELTA)
-			#if player.is_local():
-				#player.input.clear_one_shots()
+			if player.is_local():
+				player.input.clear_one_shots()
 	player_input_packets_by_frame.erase(current_frame)
 	current_frame += 1
 

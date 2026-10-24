@@ -9,6 +9,7 @@ const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
 const TIMEOUT_TIME: float = 3.0
 const INPUT_DELAY_FRAMES: int = 10
 const LOCKSTEP_DELTA: float = 1.0 / 60.0
+const CHECKSUM_INTERVAL_FRAMES: int = 60
 
 var generated_seed: int = 0
 var slot_assignments: PackedInt64Array
@@ -145,8 +146,17 @@ func _simulate_frame() -> void:
 			# online one-shots are cleared when packed (see _on_local_input), not here.
 			if !_is_online_multiplayer() and player.is_local():
 				player.input.clear_one_shots()
+		if _is_online_multiplayer() and OS.is_debug_build() and current_frame % CHECKSUM_INTERVAL_FRAMES == 0:
+			_print_checksum()
 	player_input_packets_by_frame.erase(current_frame)
 	current_frame += 1
+
+# compare these lines between instances, any mismatch on the same frame is a desync
+func _print_checksum() -> void:
+	var hashes: Array[int] = []
+	for player in players:
+		hashes.append(player.board.get_hash())
+	print("CHECKSUM frame=%d hashes=%s" % [current_frame, hashes])
 
 func _update_local_input() -> void:
 	for player in players:

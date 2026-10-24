@@ -131,6 +131,7 @@ func _simulate_frame() -> void:
 		var player = players[0]
 		player.board.input = player.input
 		player.board.tick(LOCKSTEP_DELTA)
+		player.input.clear_one_shots()
 	else:
 		for player in players:
 			if !player.is_local() and player_input_packets_by_frame.has(current_frame) and player_input_packets_by_frame[current_frame].has(player.slot_number):

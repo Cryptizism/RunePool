@@ -162,7 +162,9 @@ func _update_local_input() -> void:
 	for player in players:
 		if !player.is_local():
 			continue
-		player.input.update_local(player.slot_number)
+		# online there's one local player per machine, so always read player 1's control mappings
+		var controls_id: int = 0 if _is_online_multiplayer() else player.slot_number
+		player.input.update_local(controls_id)
 		_on_local_input(player)
 
 func _on_local_input(player: Player) -> void:

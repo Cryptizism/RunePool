@@ -147,7 +147,7 @@ func _update_local_input() -> void:
 	for player in players:
 		if !player.is_local():
 			continue
-		player.input.update_local(player.slot_number + 1)
+		player.input.update_local(player.slot_number)
 		_on_local_input(player)
 
 func _on_local_input(player: Player) -> void:

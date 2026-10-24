@@ -142,7 +142,8 @@ func _simulate_frame() -> void:
 			else:
 				player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELTA)
-			if player.is_local():
+			# online one-shots are cleared when packed (see _on_local_input), not here.
+			if !_is_online_multiplayer() and player.is_local():
 				player.input.clear_one_shots()
 	player_input_packets_by_frame.erase(current_frame)
 	current_frame += 1
@@ -162,6 +163,9 @@ func _on_local_input(player: Player) -> void:
 		if player_input_packets_by_frame[frame].has(player.slot_number):
 			continue
 		var packet: Dictionary = player.input.to_packet()
+		if _is_online_multiplayer():
+			# clear here because we know it's been sent in the to_packet() above
+			player.input.clear_one_shots()
 		player_input_packets_by_frame[frame][player.slot_number] = packet
 		if _is_online_multiplayer():
 			for opponent in players:

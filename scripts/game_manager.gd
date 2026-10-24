@@ -220,7 +220,10 @@ func _set_lobby_seed() -> void:
 func _set_slot_assignments() -> void:
 	slot_assignments.clear()
 	if !NetworkManager.is_host():
-		await NetworkManager.slot_assignments_received
+		#assignments may arrive before this scene loads, so read the cached copy
+		if NetworkManager.slot_assignments.is_empty():
+			await NetworkManager.slot_assignments_received
+		_on_slot_assignments_received(NetworkManager.slot_assignments)
 		return
 	slot_assignments.append(multiplayer.get_unique_id()) #Host
 	if _is_local_multiplayer():

@@ -56,6 +56,7 @@ var local_peer_id: int = 1
 var peer: SteamMultiplayerPeer
 var current_lobby_id: int = 0
 var lobby_seed: int = 0
+var slot_assignments: PackedInt64Array
 var is_connected_to_server: bool = false
 
 func _ready() -> void:
@@ -109,6 +110,7 @@ func leave_lobby() -> void:
 	if peer:
 		peer.close()
 	peer = null
+	slot_assignments.clear()
 	lobby_left.emit()
 
 func _on_lobby_created(_result: int, _lobby_id: int) -> void:
@@ -234,6 +236,7 @@ func send_slot_assignments(assignments: PackedInt64Array) -> void:
 
 @rpc("any_peer", "reliable")
 func receive_slot_assignments(assignments: PackedInt64Array) -> void:
+	slot_assignments = assignments
 	slot_assignments_received.emit(assignments)
 
 func send_input(peer_id: int, frame: int, packet: Dictionary) -> void:

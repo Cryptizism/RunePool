@@ -134,9 +134,13 @@ func _simulate_frame() -> void:
 		player.input.clear_one_shots()
 	else:
 		for player in players:
-			if !player.is_local() and player_input_packets_by_frame.has(current_frame) and player_input_packets_by_frame[current_frame].has(player.slot_number):
-				player.input.update_network(player_input_packets_by_frame[current_frame][player.slot_number])
-			player.board.input = player.input
+			if _is_online_multiplayer():
+				# every board (local included) plays this frame from the buffered packet,
+				# so both machines apply the same inputs on the same frame so it's more deterministic
+				player.sim_input.update_network(player_input_packets_by_frame[current_frame][player.slot_number])
+				player.board.input = player.sim_input
+			else:
+				player.board.input = player.input
 			player.board.tick(LOCKSTEP_DELTA)
 			if player.is_local():
 				player.input.clear_one_shots()

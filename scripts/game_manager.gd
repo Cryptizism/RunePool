@@ -6,6 +6,7 @@ var state: State = State.PAUSED
 @onready var layer_bg: TileMapLayer = $"../LayerBG"
 
 const BOARD_SCENE: PackedScene = preload("res://scenes/board.tscn")
+const LEVEL_DATA: Resource = preload("res://scripts/levels.gd")
 const TIMEOUT_TIME: float = 3.0
 const INPUT_DELAY_FRAMES: int = 10
 const LOCKSTEP_DELTA: float = 1.0 / 60.0
@@ -33,6 +34,11 @@ func _ready() -> void:
 func _new_game(level_id: String) -> void:
 	_reset()
 	await _set_lobby_seed()
+	if level_id == "random":
+		#resolve from the shared seed so every board on every machine loads the same level
+		var level_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+		level_rng.seed = generated_seed
+		level_id = LEVEL_DATA.get_random_level_name(level_rng)
 	for i in range(Global.player_count):
 		_create_board(level_id, i)
 	await _set_slot_assignments()

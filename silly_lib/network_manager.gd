@@ -62,6 +62,8 @@ var current_lobby_id: int = 0
 var lobby_seed: int = 0
 var slot_assignments: PackedInt64Array
 var is_connected_to_server: bool = false
+var debug_max_lag_ms: int = 0
+var debug_lag_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func _ready() -> void:
 	Steam.initRelayNetworkAccess()
@@ -122,9 +124,12 @@ func leave_lobby() -> void:
 	slot_assignments.clear()
 	lobby_left.emit()
 
-#region Debug ENet loopback (run two instances with "-- --host" / "-- --join")
+#region Debug ENet loopback (run two instances with "-- --host" / "-- --join", optionally "--lag=150")
 func _check_debug_args() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
+	for arg in args:
+		if arg.begins_with("--lag="):
+			debug_max_lag_ms = arg.trim_prefix("--lag=").to_int()
 	if args.has("--host"):
 		debug_host()
 	elif args.has("--join"):
@@ -294,6 +299,8 @@ func receive_slot_assignments(assignments: PackedInt64Array) -> void:
 	slot_assignments_received.emit(assignments)
 
 func send_input(peer_id: int, frame: int, packet: Dictionary) -> void:
+	if debug_max_lag_ms > 0:
+		await get_tree().create_timer(debug_lag_rng.randf_range(0, debug_max_lag_ms) / 1000.0).timeout
 	receive_input.rpc_id(peer_id, frame, packet)
 
 @rpc("any_peer", "reliable")
